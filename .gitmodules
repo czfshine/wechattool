@@ -1,0 +1,3 @@
+[submodule "wechat-dump"]
+	path = wechat-dump
+	url = https://github.com/ppwwyyxx/wechat-dump.git
