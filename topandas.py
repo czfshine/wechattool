@@ -19,7 +19,7 @@ import pandas as pd
 # config：
 base="D:\\wechat\\"
 
-# parser
+# database parser
 parser= WeChatDBParser(base+"decrypted.db")
 def getallmsg(parser):
     a=[]

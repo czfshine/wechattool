@@ -3,3 +3,9 @@
 .ipynb_checkpoints/
 trying.ipynb
 
+.idea/
+.settings/
+javadoc/
+data/
+*.exe
+
