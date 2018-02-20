@@ -9,3 +9,4 @@ javadoc/
 data/
 *.exe
 
+target/
