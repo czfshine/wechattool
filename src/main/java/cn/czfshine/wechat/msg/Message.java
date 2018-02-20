@@ -6,4 +6,9 @@ package cn.czfshine.wechat.msg;
  */
 
 public class Message {
+
+    private String talker;
+    private String chatroom;
+
+
 }
