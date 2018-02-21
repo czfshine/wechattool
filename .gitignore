@@ -11,3 +11,5 @@ data/
 
 target/
 *.txt
+
+*.class

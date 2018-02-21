@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 public class EmojiMessage  extends Message{
     private String md5;
-    EmojiMessage(ResultSet rs) throws SQLException, DatabaseDamagedException {
+    public EmojiMessage(ResultSet rs) throws SQLException, DatabaseDamagedException {
         super(rs);
         TYPE=MSGTYPE.TYPE_EMOJI;
         init(rs);

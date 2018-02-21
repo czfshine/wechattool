@@ -2,7 +2,10 @@ package cn.czfshine.wechat.msg;
 
 import org.junit.Test; 
 import org.junit.Before; 
-import org.junit.After; 
+import org.junit.After;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /** 
 * MsgDataBase Tester. 
@@ -30,6 +33,7 @@ public void after() throws Exception {
 public void testGetAllChatRoom() throws Exception { 
     MsgDataBase db=new MsgDataBase("data/db/decrypted171028.db");
     db.getAllChatRoom();
+    int a=1;
 } 
 
 
@@ -101,16 +105,18 @@ try {
 @Test
 public void testGetAllMsgssage() throws Exception { 
 //TODO: Test goes here... 
-/* 
-try { 
-   Method method = MsgDataBase.getClass().getMethod("getAllMsgssage"); 
-   method.setAccessible(true); 
-   method.invoke(<Object>, <Parameters>); 
+
+try {
+    MsgDataBase db=new MsgDataBase("data/db/decrypted171028.db");
+    Method method = MsgDataBase.class.getMethod("getAllMsgssage");
+    method.setAccessible(true);
+    method.invoke(db);
+
 } catch(NoSuchMethodException e) { 
 } catch(IllegalAccessException e) { 
-} catch(InvocationTargetException e) { 
+} catch(InvocationTargetException e) {
 } 
-*/ 
+
 } 
 
 /** 

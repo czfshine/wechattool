@@ -1,8 +1,8 @@
 package cn.czfshine.wechat.msg;
-import cn.czfshine.wechat.msg.contant.Contact;
-import cn.czfshine.wechat.msg.contant.Group;
-import cn.czfshine.wechat.msg.contant.Person;
-import cn.czfshine.wechat.msg.contant.Service;
+import cn.czfshine.wechat.contant.Contact;
+import cn.czfshine.wechat.contant.Group;
+import cn.czfshine.wechat.contant.Person;
+import cn.czfshine.wechat.contant.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,38 +70,35 @@ public class MsgDataBase {
     }
 
 
-    public String[] getAllChatRoom(){
+    public List <Contact> getAllChatRoom(){
         List <Contact> chatrooms = new ArrayList<>(contacts.values() );
-        chatrooms.sort(Comparator.comparingInt((Contact a) -> a.getMessages().size()));
+        chatrooms.sort(Comparator.comparingInt((Contact a) -> -a.getMessages().size()));
         for(Contact chatroom:chatrooms){
+            chatroom.sortMessage();
             logger.info("username{}-count{}",chatroom.getNickname(),chatroom.getMessages().size());
         }
-        return null;
+
+        return chatrooms;
     }
 
     private Message[] getAllMsgssage() throws SQLException {
-
-        Statement statement = connection.createStatement();
-
-
         logger.info("开始读取聊天");
         long startTime=System.nanoTime();
-
-        ResultSet rs = statement.executeQuery(
-                "SELECT  msgSvrId,type,isSend,createTime,talker,content,imgPath  FROM message ");
         int count=0;
         ArrayList<Message> msgs=new ArrayList<>();
+
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery(
+                "SELECT  msgSvrId,type,isSend,createTime,talker,content,imgPath  FROM message ");
+
         while (rs.next()) {
             count++;
-
             try {
                 Message msg=parseMsgRow(rs);
                 if(msg!=null) {
                     logger.debug(msg.toString());
-
                     msgs.add(msg);
                 }
-
             }catch (DatabaseDamagedException e) {
                 logger.warn("在数据库{}第{}条消息损坏",datapath,""+count);
             }catch (UnknowMassageTypeException w){
@@ -112,17 +109,25 @@ public class MsgDataBase {
             }
 
         }
-        logger.info("共读取{}条记录，解析成功{}条记录",count,msgs.size());
-        long endTime=System.nanoTime();
 
+        logger.info("共读取{}条记录，解析成功{}条记录",count,msgs.size());
+
+        long endTime=System.nanoTime();
         logger.info("读取解析耗时{}纳秒",endTime-startTime);
 
         Message[] res=new Message[msgs.size()];
+
+        statement.close();
         return msgs.toArray(res);
 
 
     }
 
+
+
+    private Message parseMsgRow(ResultSet rs) throws SQLException, DatabaseDamagedException, UnknowMassageTypeException {
+        return MessageFactory.getMessage(rs);
+    }
     private void popAllMessageToContact() throws SQLException {
 
         Logger logger=LoggerFactory.getLogger("DBmsg");
@@ -136,23 +141,4 @@ public class MsgDataBase {
         }
     }
 
-
-    private Message parseMsgRow(ResultSet rs) throws SQLException, DatabaseDamagedException, UnknowMassageTypeException {
-        int type= rs.getInt("type");
-
-        MSGTYPE msgtype=MSGTYPE.getType(type);
-
-        switch (msgtype){
-            case TYPE_MSG:return new TextMessage(rs);
-            case TYPE_IMG:return new ImageMessage(rs);
-            case TYPE_EMOJI:return new EmojiMessage(rs);
-            case TYPE_SPEAK:return new AudioMessage(rs);
-            case TYPE_VIDEO_FILE:
-                case TYPE_WX_VIDEO:return new VideoMessage(rs);
-        }
-
-        return null;
-
-
-    }
 }

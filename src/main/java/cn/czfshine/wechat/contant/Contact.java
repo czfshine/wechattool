@@ -1,4 +1,4 @@
-package cn.czfshine.wechat.msg.contant;
+package cn.czfshine.wechat.contant;
 
 import cn.czfshine.wechat.msg.Message;
 
@@ -32,7 +32,7 @@ public class Contact {
     }
 
     public void sortMessage(){
-        messages.sort( Comparator.comparingInt((Message m)->(int)m.getTime().getTime().getTime()));
+        messages.sort( Comparator.comparingLong((Message m)->m.getTime().getTime().getTime()));
     }
     public String getUid() {
         return uid;

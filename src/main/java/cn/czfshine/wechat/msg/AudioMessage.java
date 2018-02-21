@@ -10,7 +10,7 @@ import java.sql.SQLException;
 
 public class AudioMessage extends Message {
     private String md5;
-    AudioMessage(ResultSet rs) throws SQLException, DatabaseDamagedException {
+    public AudioMessage(ResultSet rs) throws SQLException, DatabaseDamagedException {
         super(rs);
         TYPE=MSGTYPE.TYPE_SPEAK;
 

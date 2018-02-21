@@ -1,4 +1,4 @@
-package cn.czfshine.wechat.msg.contant;
+package cn.czfshine.wechat.contant;
 
 /**
  * @author:czfshine
