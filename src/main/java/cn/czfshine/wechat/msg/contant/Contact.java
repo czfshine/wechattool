@@ -3,6 +3,7 @@ package cn.czfshine.wechat.msg.contant;
 import cn.czfshine.wechat.msg.Message;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -14,6 +15,11 @@ import java.util.List;
 public class Contact {
     protected  String uid; //唯一标识符
     protected  String nickname; //昵称
+
+    public List<Message> getMessages() {
+        return messages;
+    }
+
     protected List<Message> messages=new ArrayList<>();
 
     public Contact(String uid, String nickname) {
@@ -25,6 +31,9 @@ public class Contact {
         messages.add(msg);
     }
 
+    public void sortMessage(){
+        messages.sort( Comparator.comparingInt((Message m)->(int)m.getTime().getTime().getTime()));
+    }
     public String getUid() {
         return uid;
     }

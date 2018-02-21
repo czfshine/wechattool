@@ -15,6 +15,11 @@ public abstract class Message {
     public  MSGTYPE TYPE;
 
     protected int msgSvrId;
+
+    public Calendar getTime() {
+        return time;
+    }
+
     protected Calendar time;
     protected String talker;
 

@@ -1,53 +1,156 @@
 package cn.czfshine.wechat.msg;
 
+import org.junit.Test; 
+import org.junit.Before; 
+import org.junit.After; 
 
-import cn.czfshine.wechat.msg.contant.Contact;
-import org.junit.Test;
+/** 
+* MsgDataBase Tester. 
+* 
+* @author czfshine
+* @since <pre>02/21/2018</pre> 
+* @version 1.0 
+*/ 
+public class MsgDataBaseTest { 
+
+@Before
+public void before() throws Exception { 
+} 
+
+@After
+public void after() throws Exception { 
+} 
+
+/** 
+* 
+* Method: getAllChatRoom(Message[] msgs) 
+* 
+*/ 
+@Test
+public void testGetAllChatRoom() throws Exception { 
+    MsgDataBase db=new MsgDataBase("data/db/decrypted171028.db");
+    db.getAllChatRoom();
+} 
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+/** 
+* 
+* Method: getSelf() 
+* 
+*/ 
+@Test
+public void testGetSelf() throws Exception { 
+//TODO: Test goes here... 
+/* 
+try { 
+   Method method = MsgDataBase.getClass().getMethod("getSelf"); 
+   method.setAccessible(true); 
+   method.invoke(<Object>, <Parameters>); 
+} catch(NoSuchMethodException e) { 
+} catch(IllegalAccessException e) { 
+} catch(InvocationTargetException e) { 
+} 
+*/ 
+} 
 
-import java.sql.SQLException;
-import java.util.Map;
+/** 
+* 
+* Method: init() 
+* 
+*/ 
+@Test
+public void testInit() throws Exception { 
+//TODO: Test goes here... 
+/* 
+try { 
+   Method method = MsgDataBase.getClass().getMethod("init"); 
+   method.setAccessible(true); 
+   method.invoke(<Object>, <Parameters>); 
+} catch(NoSuchMethodException e) { 
+} catch(IllegalAccessException e) { 
+} catch(InvocationTargetException e) { 
+} 
+*/ 
+} 
 
-/**
- * @author:czfshine
- * @date:2018/2/16 16:00
- */
+/** 
+* 
+* Method: getAllConTact() 
+* 
+*/ 
+@Test
+public void testGetAllConTact() throws Exception { 
+//TODO: Test goes here... 
+/* 
+try { 
+   Method method = MsgDataBase.getClass().getMethod("getAllConTact"); 
+   method.setAccessible(true); 
+   method.invoke(<Object>, <Parameters>); 
+} catch(NoSuchMethodException e) { 
+} catch(IllegalAccessException e) { 
+} catch(InvocationTargetException e) { 
+} 
+*/ 
+} 
 
-public class MsgDataBaseTest {
+/** 
+* 
+* Method: getAllMsgssage() 
+* 
+*/ 
+@Test
+public void testGetAllMsgssage() throws Exception { 
+//TODO: Test goes here... 
+/* 
+try { 
+   Method method = MsgDataBase.getClass().getMethod("getAllMsgssage"); 
+   method.setAccessible(true); 
+   method.invoke(<Object>, <Parameters>); 
+} catch(NoSuchMethodException e) { 
+} catch(IllegalAccessException e) { 
+} catch(InvocationTargetException e) { 
+} 
+*/ 
+} 
 
-    static String testdbpath="data/db/decrypted171028.db";
-    MsgDataBase db= new MsgDataBase(testdbpath);
+/** 
+* 
+* Method: popAllMessageToContact() 
+* 
+*/ 
+@Test
+public void testPopAllMessageToContact() throws Exception { 
+//TODO: Test goes here... 
+/* 
+try { 
+   Method method = MsgDataBase.getClass().getMethod("popAllMessageToContact"); 
+   method.setAccessible(true); 
+   method.invoke(<Object>, <Parameters>); 
+} catch(NoSuchMethodException e) { 
+} catch(IllegalAccessException e) { 
+} catch(InvocationTargetException e) { 
+} 
+*/ 
+} 
 
-    Logger logger = LoggerFactory.getLogger("UnitTest");
+/** 
+* 
+* Method: parseMsgRow(ResultSet rs) 
+* 
+*/ 
+@Test
+public void testParseMsgRow() throws Exception { 
+//TODO: Test goes here... 
+/* 
+try { 
+   Method method = MsgDataBase.getClass().getMethod("parseMsgRow", ResultSet.class); 
+   method.setAccessible(true); 
+   method.invoke(<Object>, <Parameters>); 
+} catch(NoSuchMethodException e) { 
+} catch(IllegalAccessException e) { 
+} catch(InvocationTargetException e) { 
+} 
+*/ 
+} 
 
-    public MsgDataBaseTest() throws SQLException {
-    }
-
-    @Test
-    public void getAllConTactTest() throws SQLException {
-        Map<String,Contact> contacts=db.getAllConTact();
-
-    }
-    @Test
-    public void getAllMegssageTest() throws SQLException {
-        db.getAllMsgssage();
-    }
-
-    @Test
-    public void getAllChatroomTest() throws SQLException {
-
-        String[] res=db.getAllChatRoom(db.getAllMsgssage());
-        for(String x : res){
-            logger.debug(x);
-        }
-    }
-
-    @Test
-    public void popAllMessageToContactTest() throws SQLException {
-        db.popAllMessageToContact();
-    }
-
-}
+} 

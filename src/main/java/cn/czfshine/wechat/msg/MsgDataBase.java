@@ -19,8 +19,9 @@ import java.util.*;
 public class MsgDataBase {
     private String datapath;
     private String selfid="self";
-    Message[] allmsgs=getAllMsgssage();
-    Map<String,Contact> contacts=getAllConTact();
+    Message[] allmsgs;
+    Map<String,Contact> contacts;
+    private Logger logger = LoggerFactory.getLogger("DBofmsg");
     private void getSelf(){
         //TODO
     }
@@ -31,8 +32,9 @@ public class MsgDataBase {
     }
 
     private void init() throws SQLException {
-
         connection = DriverManager.getConnection("jdbc:sqlite:"+datapath);
+        allmsgs=getAllMsgssage();
+        contacts=getAllConTact();
         popAllMessageToContact();
 
     }
@@ -67,21 +69,20 @@ public class MsgDataBase {
         return contacts;
     }
 
-    public String[] getAllChatRoom(Message[] msgs){
-        Set<String> chatrooms=new HashSet<>();
-        for(Message msg :msgs){
-            chatrooms.add(msg.getChatroom());
+
+    public String[] getAllChatRoom(){
+        List <Contact> chatrooms = new ArrayList<>(contacts.values() );
+        chatrooms.sort(Comparator.comparingInt((Contact a) -> a.getMessages().size()));
+        for(Contact chatroom:chatrooms){
+            logger.info("username{}-count{}",chatroom.getNickname(),chatroom.getMessages().size());
         }
-        String [] res=new String[chatrooms.size()];
-        Logger logger = LoggerFactory.getLogger("DBofmsg");
-        logger.info("一共有{}个聊天会话",res.length);
-        return chatrooms.toArray(res);
+        return null;
     }
 
     private Message[] getAllMsgssage() throws SQLException {
 
         Statement statement = connection.createStatement();
-        Logger logger = LoggerFactory.getLogger("DBofmsg");
+
 
         logger.info("开始读取聊天");
         long startTime=System.nanoTime();

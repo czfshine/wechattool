@@ -15,9 +15,7 @@ public class TextOutputTest {
 
     @Test
     public void TextMassageOutputTest() throws SQLException {
-        MsgDataBase db= new MsgDataBase(testdbpath);
-        Message[] msgs=db.getAllMsgssage();
-        TextOutput.toTextFile(msgs);
+        //TODO
         return ;
     }
 }
