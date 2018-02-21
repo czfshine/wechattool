@@ -1,14 +1,15 @@
 package cn.czfshine.wechat.msg;
 
 
+import cn.czfshine.wechat.msg.contant.Contact;
 import org.junit.Test;
 
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.Marker;
 
 import java.sql.SQLException;
+import java.util.Map;
 
 /**
  * @author:czfshine
@@ -18,23 +19,35 @@ import java.sql.SQLException;
 public class MsgDataBaseTest {
 
     static String testdbpath="data/db/decrypted171028.db";
+    MsgDataBase db= new MsgDataBase(testdbpath);
+
+    Logger logger = LoggerFactory.getLogger("UnitTest");
+
+    public MsgDataBaseTest() throws SQLException {
+    }
 
     @Test
-    public void getAllConTactTest(){
+    public void getAllConTactTest() throws SQLException {
+        Map<String,Contact> contacts=db.getAllConTact();
 
-        Logger logger = LoggerFactory.getLogger("");
-
-        logger.info("Hello World");
-        logger.trace("trace level");
-        logger.debug("debug level");
-        logger.info("info level");
-        logger.warn("warn level");
-        logger.error("error level");
     }
     @Test
     public void getAllMegssageTest() throws SQLException {
-        MsgDataBase db= new MsgDataBase(testdbpath);
         db.getAllMsgssage();
+    }
+
+    @Test
+    public void getAllChatroomTest() throws SQLException {
+
+        String[] res=db.getAllChatRoom(db.getAllMsgssage());
+        for(String x : res){
+            logger.debug(x);
+        }
+    }
+
+    @Test
+    public void popAllMessageToContactTest() throws SQLException {
+        db.popAllMessageToContact();
     }
 
 }

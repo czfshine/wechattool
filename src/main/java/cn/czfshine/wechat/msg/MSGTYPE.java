@@ -6,17 +6,23 @@ package cn.czfshine.wechat.msg;
  */
 
 public enum MSGTYPE {
+
+    /*主要消息类型*/
     TYPE_MSG(1),
     TYPE_IMG (3),
     TYPE_SPEAK(34),
-    TYPE_NAMECARD (42),
+    TYPE_WX_VIDEO (62) ,
     TYPE_VIDEO_FILE (43),
     TYPE_EMOJI (47),
+
+    /*提示类*/
+    TYPE_YUYIN(64),//微信语音聊天
+
+    /*未处理*/
+    TYPE_NAMECARD (42),
     TYPE_LOCATION(48),
     TYPE_LINK (49) ,
     TYPE_VOIP (50),
-    TYPE_WX_VIDEO (62) ,
-    TYPE_YUYIN(64),//微信语音
     TYPE_SYSTEM (10000),
     TYPE_CUSTOM_EMOJI (1048625),
     TYPE_REDENVELOPE (436207665),

@@ -2,7 +2,6 @@ package cn.czfshine.wechat.msg;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 
 /**
  * @author:czfshine
@@ -28,6 +27,6 @@ public class TextMessage extends Message {
     }
     @Override
     public String toString(){
-        return String.format("[msg]%s - %s:%s",time.toString(),talker,content);
+        return String.format("[msg]%s - %s:%s",time.getTime(),talker,content);
     }
 }
