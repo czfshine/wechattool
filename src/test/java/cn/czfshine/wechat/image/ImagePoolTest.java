@@ -1,9 +1,12 @@
 package cn.czfshine.wechat.image; 
 
-import org.junit.Test; 
+import cn.czfshine.wechat.msg.MsgDataBase;
+import org.junit.Test;
 import org.junit.Before; 
 import org.junit.After;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 
 /** 
@@ -33,7 +36,7 @@ public void testAdd() throws Exception {
 //TODO: Test goes here... 
     ImageDatabase db=new ImageDatabase("data/db/decrypted171028.db");
     List<BigImage> images = db.getBigImageInfoFromDatabase();
-    ImagePool pool=new ImagePool();
+    ImagePool pool=ImagePool.getThepool();
     for(BigImage image:images){
         pool.add(image);
     }
@@ -48,16 +51,8 @@ public void testAdd() throws Exception {
 @Test
 public void testFindImageFiles() throws Exception { 
 //TODO: Test goes here... 
-/* 
-try { 
-   Method method = ImagePool.getClass().getMethod("findImageFiles", BigImage.class); 
-   method.setAccessible(true); 
-   method.invoke(<Object>, <Parameters>); 
-} catch(NoSuchMethodException e) { 
-} catch(IllegalAccessException e) { 
-} catch(InvocationTargetException e) { 
-} 
-*/ 
+
+
 } 
 
 } 

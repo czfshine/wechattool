@@ -13,6 +13,13 @@ import java.util.*;
 
 public class ImagePool {
 
+    private static ImagePool thepool;
+    static {
+        thepool=new ImagePool();
+    }
+    public static ImagePool getThepool(){
+        return thepool;
+    }
     private Map<String,Image> pool=new HashMap<>();
 
     private String[] imagerootpath={"data/image"};
@@ -34,15 +41,30 @@ public class ImagePool {
                 pool.put(bigimage.getFilename(), bigimage);
             } catch (BigImageFileLoseException e) {
 
-                losefile.add(e.getFilename());
+
                 if(! losefile.contains(e.getFilename())){
                     logger.warn("图片{}文件丢失",e.getFilename());
                 }
+                losefile.add(e.getFilename());
 
             }
 
         }else if (obj instanceof String){
             String md5=(String) obj;
+
+            try {
+                String imageFile = findImageFiles(md5);
+                pool.put("th_"+md5,new Image(md5,imageFile));
+            } catch (ImageFileLoseException e) {
+
+                if(!losefile.contains(e.getMd5())){
+                    logger.warn("图片{}文件丢失",e.getMd5());
+                }
+                losefile.add(e.getMd5());
+
+
+            }
+
         }
     }
 
@@ -58,6 +80,15 @@ public class ImagePool {
         }
 
 
+    }
+
+    private String findImageFiles(String md5) throws ImageFileLoseException {
+        String path;
+        if((path=checkFile(md5))!=null){
+            return path;
+        }else{
+            throw new ImageFileLoseException(md5);
+        }
     }
     private String checkFile(String filename){
         String level1=filename.substring(0,2);
@@ -75,6 +106,26 @@ public class ImagePool {
                 if(imagefile.exists()){
                     return imagefilepath;
                 }
+
+                imagefilepath=imageroot.getPath() + File.separator +
+                        level1 + File.separator+
+                        level2 + File.separator+
+                        "th_"+ filename;
+                imagefile = new File(imagefilepath);
+                if(imagefile.exists()){
+                    return imagefilepath;
+                }
+
+                imagefilepath=imageroot.getPath() + File.separator +
+                        level1 + File.separator+
+                        level2 + File.separator+
+                        filename+".jpg";
+                imagefile = new File(imagefilepath);
+                if(imagefile.exists()){
+                    return imagefilepath;
+                }
+
+
             }
 
         }
