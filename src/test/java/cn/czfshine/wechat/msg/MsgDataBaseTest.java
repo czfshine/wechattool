@@ -107,7 +107,7 @@ public void testGetAllMsgssage() throws Exception {
 //TODO: Test goes here... 
 
 try {
-    MsgDataBase db=new MsgDataBase("data/db/decrypted171028.db");
+    MsgDataBase db=new MsgDataBase("data/db/decrypted180223.db");
     Method method = MsgDataBase.class.getMethod("getAllMsgssage");
     method.setAccessible(true);
     method.invoke(db);
