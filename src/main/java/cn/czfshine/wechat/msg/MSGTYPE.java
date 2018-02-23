@@ -39,6 +39,8 @@ public enum MSGTYPE {
     TYPE_APP_NOTION(318767153,XmlMessage.class),//公众号应用消息
     TYPE_MP_TUIWEN(285212721,XmlMessage.class),//公众号推文
     TYPE_GROUP(10002,XmlMessage.class),//群相关的系统通知
+    TYPE_APP(570425393,XmlMessage.class),
+    TYPE_JUAN(452984881,XmlMessage.class),
 
     /*未处理*/
     //TODO

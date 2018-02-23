@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.*;
 
 /**
+ * 图片池，包括所有聊天记录的图片
  * @author:czfshine
  * @date:2018/2/22 21:38
  */
@@ -17,6 +18,7 @@ public class ImagePool {
     static {
         thepool=new ImagePool();
     }
+
     public static ImagePool getThepool(){
         return thepool;
     }
@@ -27,6 +29,12 @@ public class ImagePool {
     private Set<String> losefile=new HashSet<>();
 
     Logger logger=LoggerFactory.getLogger("impool");
+
+
+    /**
+     * 在数据目录下搜索相应的图片，并将图片加入图片池里
+     * @param obj 可以是BigImage 或者md5的字符串
+     */
     public void add(Object obj){
 
         if(obj instanceof BigImage){
@@ -43,7 +51,7 @@ public class ImagePool {
 
 
                 if(! losefile.contains(e.getFilename())){
-                    logger.warn("图片{}文件丢失",e.getFilename());
+                    //logger.warn("图片{}文件丢失",e.getFilename());
                 }
                 losefile.add(e.getFilename());
 
@@ -58,7 +66,7 @@ public class ImagePool {
             } catch (ImageFileLoseException e) {
 
                 if(!losefile.contains(e.getMd5())){
-                    logger.warn("图片{}文件丢失",e.getMd5());
+                    //logger.warn("图片{}文件丢失",e.getMd5());
                 }
                 losefile.add(e.getMd5());
 
@@ -67,6 +75,8 @@ public class ImagePool {
 
         }
     }
+
+
 
     private String findImageFiles(BigImage bigImage) throws BigImageFileLoseException {
 
@@ -82,6 +92,12 @@ public class ImagePool {
 
     }
 
+
+    /**
+     * @param md5 图片的md5码
+     * @return 实际路径
+     * @throws ImageFileLoseException 图片丢失
+     */
     private String findImageFiles(String md5) throws ImageFileLoseException {
         String path;
         if((path=checkFile(md5))!=null){
@@ -90,6 +106,12 @@ public class ImagePool {
             throw new ImageFileLoseException(md5);
         }
     }
+
+    /**
+     * 检查对应的图片是否在图片目录下
+     * @param filename 待找寻的文件名
+     * @return 实际路径或null
+     */
     private String checkFile(String filename){
         String level1=filename.substring(0,2);
         String level2=filename.substring(2,4);
@@ -130,9 +152,5 @@ public class ImagePool {
 
         }
         return null;
-    }
-
-    public static  void main(String[] args){
-        System.out.println("烦烦烦");
     }
 }

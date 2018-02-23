@@ -12,15 +12,18 @@ import java.util.Date;
  */
 
 public abstract class Message {
-    public  MSGTYPE TYPE;
+    protected long msgSvrId;
 
-    protected int msgSvrId;
-
-    public Calendar getTime() {
+    public Date getTime() {
         return time;
     }
 
-    protected Calendar time;
+    protected Date time;
+
+    public String getTalker() {
+        return talker;
+    }
+
     protected String talker;
 
     public String getChatroom() {
@@ -30,10 +33,9 @@ public abstract class Message {
     protected String chatroom;
 
     Message(ResultSet rs) throws SQLException, DatabaseDamagedException {
-        msgSvrId=rs.getInt("msgSvrId");
+        msgSvrId=rs.getLong("msgSvrId");
         long datastamp=rs.getLong("createTime");
-        time=Calendar.getInstance();
-        time.setTime(new Date(Math.abs(datastamp)));
+        time= new Date(datastamp);
         chatroom=rs.getString("talker");
         if(chatroom==null ||chatroom.equals("")) {
             throw  new DatabaseDamagedException();
@@ -46,6 +48,10 @@ public abstract class Message {
 
     }
 
-
-
+    public Message(long msgSvrId, long datastamp, String talker, String chatroom) {
+        this.msgSvrId = msgSvrId;
+        time= new Date(datastamp);
+        this.talker = talker;
+        this.chatroom = chatroom;
+    }
 }

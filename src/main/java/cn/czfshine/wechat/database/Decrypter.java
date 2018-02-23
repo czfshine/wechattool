@@ -10,19 +10,24 @@ import java.sql.*;
 
 
 /**
+ * 对加密后的微信数据库进行解密[待完成]
  * @author:czfshine
  * @date:2018/2/23 14:17
  */
 
 public class Decrypter {
-    //TODO
-    private static String getKey(String imei,String uin) throws NoSuchAlgorithmException {
-        MessageDigest md5 = MessageDigest.getInstance("MD5");
 
-        DigestUtils.md5Hex((imei+uin));
 
+    /**
+     * 得到密钥
+     * @param imei 手机的imei码
+     * @param uin 微信数据文件里面的uin码
+     * @return 密钥
+     */
+    private static String getKey(String imei,String uin)  {
         return DigestUtils.md5Hex((imei+uin)).substring(0,7);
     }
+
     public static void DecryptDataBase(String encryptpath,String imei,String uin,String outputpath) throws UnsupportedEncodingException, NoSuchAlgorithmException, SQLException {
 
         String key = getKey(imei,uin);

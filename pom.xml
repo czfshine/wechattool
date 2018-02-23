@@ -71,6 +71,13 @@
             <artifactId>couchbase-lite-java-sqlcipher</artifactId>
             <version>1.4.1</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.docx4j/docx4j -->
+        <dependency>
+            <groupId>org.docx4j</groupId>
+            <artifactId>docx4j</artifactId>
+            <version>3.3.6</version>
+        </dependency>
+
 
 
 

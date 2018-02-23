@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 从数据库中提取图片相关的数据
  * @author:czfshine
  * @date:2018/2/22 21:02
  */
@@ -19,6 +20,10 @@ public class ImageDatabase {
 
     Logger logger = LoggerFactory.getLogger("imgdb");
 
+    /**
+     * @param path 数据库路径
+     * @throws SQLException
+     */
     public  ImageDatabase(String path) throws SQLException {
         this.path=path;
         init();
@@ -27,6 +32,7 @@ public class ImageDatabase {
     private void init() throws SQLException {
         connection = DriverManager.getConnection("jdbc:sqlite:"+path);
     }
+
 
     public List<BigImage> getBigImageInfoFromDatabase() throws SQLException {
         Statement statement = connection.createStatement();

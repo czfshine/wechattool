@@ -102,7 +102,7 @@ public class MsgDataBase {
             }catch (DatabaseDamagedException e) {
                 logger.warn("在数据库{}第{}条消息损坏",datapath,""+count);
             }catch (UnknowMassageTypeException w){
-                logger.warn("类型{}未知，内容为：{}\n\t",datapath,""+count,""+w.getId(),rs.getString("content"));
+                logger.warn("类型{}未知，内容为：{}\n\t",rs.getString("type"), rs.getString("content"));
             }catch (Exception e){
                 logger.error("在数据库{}第{}条消息出错",datapath,""+count);
                 throw e;

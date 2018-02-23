@@ -1,4 +1,4 @@
-package cn.czfshine.wechat.display;
+package cn.czfshine.wechat.output;
 
 import cn.czfshine.wechat.msg.Message;
 

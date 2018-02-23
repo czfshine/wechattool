@@ -7,6 +7,8 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
+import javax.swing.*;
+
 /**
  * @author:czfshine
  * @date:18-2-21
@@ -19,6 +21,7 @@ public class GUI extends Application {
     public void start(Stage stage) {
         stage.setTitle("Web View Sample");
         scene = new Scene(new Browser(stage));
+
         stage.setScene(scene);
         stage.show();
     }
@@ -32,6 +35,9 @@ class Browser extends Region {
     final WebEngine webEngine = browser.getEngine();
     public Browser(final Stage stage) {
         webEngine.load("http://baidu.com");
+
+
+
         getChildren().add(browser);
     }
 

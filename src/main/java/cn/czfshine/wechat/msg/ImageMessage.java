@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import static java.lang.System.exit;
 
 /**
+ * 图片
  * @author:czfshine
  * @date:2018/2/20 23:11
  */
@@ -16,15 +17,14 @@ import static java.lang.System.exit;
 public class ImageMessage extends Message {
 
     private String md5;
-
+    public static final MSGTYPE TYPE=MSGTYPE.TYPE_IMG;
     public ImageMessage(ResultSet rs) throws SQLException, DatabaseDamagedException {
         super(rs);
-        TYPE=MSGTYPE.TYPE_IMG;
         init(rs);
     }
 
 
-    public void init(ResultSet rs) throws SQLException {
+    private void init(ResultSet rs) throws SQLException {
         md5 =rs.getString("imgPath");
         String  content=rs.getString("content");
         if(!talker.equals("me")){

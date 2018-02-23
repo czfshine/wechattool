@@ -1,6 +1,7 @@
 package cn.czfshine.wechat.contant;
 
 /**
+ * 公众号
  * @author:czfshine
  * @date:2018/2/21 12:40
  */

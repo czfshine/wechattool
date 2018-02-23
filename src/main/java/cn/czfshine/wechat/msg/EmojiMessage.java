@@ -4,15 +4,17 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
+ * 表情
  * @author:czfshine
  * @date:2018/2/20 23:48
  */
 
 public class EmojiMessage  extends Message{
     private String md5;
+
+    public static final MSGTYPE TYPE=MSGTYPE.TYPE_EMOJI;
     public EmojiMessage(ResultSet rs) throws SQLException, DatabaseDamagedException {
         super(rs);
-        TYPE=MSGTYPE.TYPE_EMOJI;
         init(rs);
     }
 

@@ -9,10 +9,10 @@ import java.sql.SQLException;
  */
 
 public class VideoMessage extends Message {
+    public static final MSGTYPE TYPE=MSGTYPE.TYPE_SPEAK;
     private String md5;
     public VideoMessage(ResultSet rs) throws SQLException, DatabaseDamagedException {
         super(rs);
-        TYPE=MSGTYPE.TYPE_SPEAK;
 
     }
     private void init(ResultSet rs) throws SQLException {

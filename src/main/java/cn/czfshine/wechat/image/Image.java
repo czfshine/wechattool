@@ -1,6 +1,7 @@
 package cn.czfshine.wechat.image;
 
 /**
+ * 图片对象，包括预览图，原图等信息
  * @author:czfshine
  * @date:2018/2/22 22:27
  */

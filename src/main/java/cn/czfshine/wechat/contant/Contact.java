@@ -16,24 +16,39 @@ public class Contact {
     protected  String uid; //唯一标识符
     protected  String nickname; //昵称
 
+    protected List<Message> messages=new ArrayList<>();
+
+
+    /**
+     * @return 得到该对话的所有消息
+     */
     public List<Message> getMessages() {
         return messages;
     }
 
-    protected List<Message> messages=new ArrayList<>();
 
     public Contact(String uid, String nickname) {
         this.uid = uid;
         this.nickname = nickname;
     }
 
+
+    /**
+     * 增加一条消息到该对话中去
+     * @param msg 待增加的消息
+     */
     public void addMessage(Message msg){
         messages.add(msg);
     }
 
+
+    /**
+     * 对当前的所有消息按时间排序
+     */
     public void sortMessage(){
-        messages.sort( Comparator.comparingLong((Message m)->m.getTime().getTime().getTime()));
+        messages.sort( Comparator.comparingLong((Message m)->m.getTime().getTime()));
     }
+
     public String getUid() {
         return uid;
     }
