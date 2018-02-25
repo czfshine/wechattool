@@ -1,5 +1,6 @@
 package cn.czfshine.wechat.msg;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -9,7 +10,7 @@ import java.sql.SQLException;
  * @date:2018/2/21 10:20
  */
 
-public class AudioMessage extends Message {
+public class AudioMessage extends Message implements Serializable {
     private String md5;
     public static final MSGTYPE TYPE = MSGTYPE.TYPE_SPEAK;
 

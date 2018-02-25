@@ -6,8 +6,11 @@ import cn.czfshine.wechat.contant.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.*;
 import java.sql.*;
 import java.util.*;
+
+import static jdk.nashorn.internal.runtime.regexp.joni.Syntax.Java;
 
 /**
  * 用来操作微信聊天数据库，要使用解密后的数据库文件
@@ -16,16 +19,30 @@ import java.util.*;
  * @date:2018/1/15 17:52
  */
 
-public class MsgDataBase {
+public class MsgDataBase implements Serializable {
+    private static final long serialVersionUID = 4766774527154700246L;
     private String datapath;
     private String selfid="self";
     Message[] allmsgs;
     Map<String,Contact> contacts;
-    private Logger logger = LoggerFactory.getLogger("DBofmsg");
+
     private void getSelf(){
         //TODO
     }
-    private Connection connection;
+
+    public static MsgDataBase buildFromFile(String savepath) throws IOException, ClassNotFoundException {
+        ObjectInputStream objectInputStream = new ObjectInputStream(new BufferedInputStream
+                (new FileInputStream( new File(savepath))));
+        return (MsgDataBase) objectInputStream.readObject();
+
+    }
+
+    public void save(String savepath) throws IOException {
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(new File(savepath)));
+        objectOutputStream.writeObject(this);
+    }
+    private  transient Logger logger = LoggerFactory.getLogger("DBofmsg");
+    private transient Connection connection;
     public MsgDataBase(String path) throws SQLException {
         datapath=path;
         init();
@@ -140,5 +157,7 @@ public class MsgDataBase {
             }
         }
     }
+
+
 
 }

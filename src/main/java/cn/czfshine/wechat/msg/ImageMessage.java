@@ -3,6 +3,7 @@ package cn.czfshine.wechat.msg;
 import cn.czfshine.wechat.image.ImagePool;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -14,7 +15,7 @@ import static java.lang.System.exit;
  * @date:2018/2/20 23:11
  */
 
-public class ImageMessage extends Message {
+public class ImageMessage extends Message implements Serializable {
 
     private String md5;
     public static final MSGTYPE TYPE=MSGTYPE.TYPE_IMG;

@@ -4,6 +4,7 @@ import cn.czfshine.wechat.output.PlainTextable;
 import com.sun.deploy.uitoolkit.ui.ConsoleHelper;
 
 import java.io.Console;
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -12,7 +13,7 @@ import java.sql.SQLException;
  * @date:2018/2/20 22:47
  */
 
-public class TextMessage extends Message implements PlainTextable {
+public class TextMessage extends Message implements PlainTextable,Serializable {
     private String content;
     public static final MSGTYPE TYPE=MSGTYPE.TYPE_MSG;
     public TextMessage(ResultSet rs) throws SQLException, DatabaseDamagedException {

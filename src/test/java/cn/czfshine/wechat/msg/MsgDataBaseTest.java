@@ -4,8 +4,10 @@ import org.junit.Test;
 import org.junit.Before; 
 import org.junit.After;
 
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.SQLException;
 
 /** 
 * MsgDataBase Tester. 
@@ -16,6 +18,7 @@ import java.lang.reflect.Method;
 */ 
 public class MsgDataBaseTest { 
 
+    String path="data/db/decrypted171028.db";
 @Before
 public void before() throws Exception { 
 } 
@@ -157,6 +160,19 @@ try {
 } catch(InvocationTargetException e) { 
 } 
 */ 
-} 
+}
+
+    @Test
+    public void testSave() throws SQLException, IOException {
+        new MsgDataBase(path).save("data/output/test1.obj");
+    }
+
+    @Test
+    public void testBuildFromFile() throws SQLException, IOException, ClassNotFoundException {
+        MsgDataBase db = MsgDataBase.buildFromFile("data/output/test1.obj");
+        System.out.println(db.allmsgs.length);
+    }
+
+
 
 } 

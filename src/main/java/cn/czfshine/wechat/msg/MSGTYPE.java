@@ -1,11 +1,13 @@
 package cn.czfshine.wechat.msg;
 
+import java.io.Serializable;
+
 /**
  * @author:czfshine
  * @date:2018/2/20 22:02
  */
 
-public enum MSGTYPE {
+public enum MSGTYPE implements Serializable {
 
     /**主要消息类型**/
     TYPE_MSG(1,TextMessage.class),//

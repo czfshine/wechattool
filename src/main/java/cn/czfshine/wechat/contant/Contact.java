@@ -2,6 +2,7 @@ package cn.czfshine.wechat.contant;
 
 import cn.czfshine.wechat.msg.Message;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -12,7 +13,9 @@ import java.util.List;
  * @date:2018/2/9 22:27
  */
 
-public class Contact {
+public class Contact implements Serializable {
+    public  static long serialVersionUID =1802252205;
+
     protected  String uid; //唯一标识符
     protected  String nickname; //昵称
 

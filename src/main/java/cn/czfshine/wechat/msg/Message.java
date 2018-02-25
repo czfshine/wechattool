@@ -1,5 +1,6 @@
 package cn.czfshine.wechat.msg;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
@@ -11,7 +12,8 @@ import java.util.Date;
  * @date : 2018/1/16 22:19
  */
 
-public abstract class Message {
+public abstract class Message implements Serializable {
+    public  static long serialVersionUID =1802252205;
     protected long msgSvrId;
 
     public Date getTime() {

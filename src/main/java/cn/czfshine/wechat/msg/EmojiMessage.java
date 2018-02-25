@@ -1,5 +1,6 @@
 package cn.czfshine.wechat.msg;
 
+import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -9,7 +10,7 @@ import java.sql.SQLException;
  * @date:2018/2/20 23:48
  */
 
-public class EmojiMessage  extends Message{
+public class EmojiMessage  extends Message implements Serializable {
     private String md5;
 
     public static final MSGTYPE TYPE=MSGTYPE.TYPE_EMOJI;
