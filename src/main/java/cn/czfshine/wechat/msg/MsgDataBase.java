@@ -38,10 +38,16 @@ public class MsgDataBase implements Serializable {
     }
 
     public void save(String savepath) throws IOException {
-        ObjectOutputStream objectOutputStream = new ObjectOutputStream(new FileOutputStream(new File(savepath)));
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(new BufferedOutputStream
+                (new FileOutputStream(new File(savepath))));
         objectOutputStream.writeObject(this);
+        objectOutputStream.close();
     }
-    private  transient Logger logger = LoggerFactory.getLogger("DBofmsg");
+
+    private  transient static Logger logger ;
+    static {
+        logger= LoggerFactory.getLogger("DBofmsg");
+    }
     private transient Connection connection;
     public MsgDataBase(String path) throws SQLException {
         datapath=path;
@@ -92,7 +98,7 @@ public class MsgDataBase implements Serializable {
         chatrooms.sort(Comparator.comparingInt((Contact a) -> -a.getMessages().size()));
         for(Contact chatroom:chatrooms){
             chatroom.sortMessage();
-            logger.info("username{}-count{}",chatroom.getNickname(),chatroom.getMessages().size());
+            logger.debug("username{}-count{}",chatroom.getNickname(),chatroom.getMessages().size());
         }
 
         return chatrooms;

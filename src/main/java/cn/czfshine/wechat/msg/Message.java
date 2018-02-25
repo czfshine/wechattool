@@ -13,7 +13,8 @@ import java.util.Date;
  */
 
 public abstract class Message implements Serializable {
-    public  static long serialVersionUID =1802252205;
+
+    private static final long serialVersionUID = -2508535085230745489L;
     protected long msgSvrId;
 
     public Date getTime() {
