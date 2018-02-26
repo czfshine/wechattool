@@ -9,6 +9,10 @@ package cn.czfshine.wechat.image;
 public class BigImage extends Image {
 
 
+    public Long getMsgid() {
+        return msgid;
+    }
+
     private Long msgid;
 
     private String filename;

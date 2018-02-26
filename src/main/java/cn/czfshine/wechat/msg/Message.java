@@ -17,6 +17,11 @@ import java.util.Date;
 public abstract class Message implements Serializable {
 
     private static final long serialVersionUID = -2508535085230745489L;
+
+    public long getMsgSvrId() {
+        return msgSvrId;
+    }
+
     protected long msgSvrId;
 
     public Date getTime() {

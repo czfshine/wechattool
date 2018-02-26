@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -12,11 +13,15 @@ import java.util.*;
  * @date:2018/2/22 21:38
  */
 
-public class ImagePool {
+public class ImagePool  implements Serializable {
 
+    private static final long serialVersionUID = -6992428681849691079L;
     private static ImagePool thepool;
     static {
         thepool=new ImagePool();
+    }
+    public static void LoadPool(ImagePool pool){
+        thepool=pool;
     }
 
     public static ImagePool getThepool(){
@@ -24,9 +29,13 @@ public class ImagePool {
     }
     private Map<String,Image> pool=new HashMap<>();
 
+    private Map<Long,Image> bigimagepool=new HashMap<>();
+
     private String[] imagerootpath={"data/image"};
 
     private Set<String> losefile=new HashSet<>();
+
+    private Set<String> losethumbnailfile=new HashSet<>();
 
     Logger logger=LoggerFactory.getLogger("impool");
 
@@ -45,8 +54,7 @@ public class ImagePool {
             try {
 
                 String path=findImageFiles(bigimage);
-
-                pool.put(bigimage.getFilename(), bigimage);
+                bigimagepool.put(bigimage.getMsgid(),bigimage);
             } catch (BigImageFileLoseException e) {
 
 
@@ -65,10 +73,10 @@ public class ImagePool {
                 pool.put("th_"+md5,new Image(md5,imageFile));
             } catch (ImageFileLoseException e) {
 
-                if(!losefile.contains(e.getMd5())){
+                if(!losethumbnailfile.contains(e.getMd5())){
                     //logger.warn("图片{}文件丢失",e.getMd5());
                 }
-                losefile.add(e.getMd5());
+                losethumbnailfile.add(e.getMd5());
 
 
             }
@@ -152,5 +160,19 @@ public class ImagePool {
 
         }
         return null;
+    }
+
+    public  int getThumbnailFileCount(){
+        return pool.size();
+    }
+    public  int getLoseThumbnailFileCount(){
+        return losethumbnailfile.size();
+    }
+    public BigImage getBigImageFromMsgid(long msgid){
+        return (BigImage) bigimagepool.getOrDefault(msgid,null);
+    }
+
+    public Image getThumbnaImageByMd5(String md5){
+        return pool.getOrDefault("th_"+md5,null);
     }
 }

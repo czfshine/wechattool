@@ -17,6 +17,10 @@ import static java.lang.System.exit;
 
 public class ImageMessage extends Message implements Serializable {
 
+    public String getMd5() {
+        return md5;
+    }
+
     private String md5;
     public static final MSGTYPE TYPE=MSGTYPE.TYPE_IMG;
     public ImageMessage(ResultSet rs) throws SQLException, DatabaseDamagedException {
@@ -33,8 +37,11 @@ public class ImageMessage extends Message implements Serializable {
                 talker = content.substring(0,content.indexOf(":"));
             }
         }
+
         if(md5.startsWith("THUMBNAIL_DIRPATH://th_")){
-            ImagePool.getThepool().add(md5.substring(23));
+            md5=md5.substring(23);
+            ImagePool.getThepool().add(md5);
+
         }else{
             LoggerFactory.getLogger("imgmsg").error("错误的图片文件名{}",md5);
         }

@@ -1,5 +1,8 @@
 package cn.czfshine.wechat.msg;
 import cn.czfshine.wechat.contant.*;
+import cn.czfshine.wechat.image.BigImage;
+import cn.czfshine.wechat.image.ImageDatabase;
+import cn.czfshine.wechat.image.ImagePool;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,6 +40,7 @@ public class MsgDataBase implements Serializable {
 
         MsgDataBase msgDataBase = (MsgDataBase) objectInputStream.readObject();
         contactInfo.addContacts(msgDataBase.contacts);
+        ImagePool.LoadPool(msgDataBase.imagePool);
         return msgDataBase;
 
     }
@@ -49,19 +53,33 @@ public class MsgDataBase implements Serializable {
     }
 
     private  transient static Logger logger ;
+    private  ImagePool imagePool;
     static {
         logger= LoggerFactory.getLogger("DBofmsg");
+
     }
+    {
+        imagePool=ImagePool.getThepool();
+    }
+    private transient ImageDatabase imageDatabase;
     private transient Connection connection;
     public MsgDataBase(String path) throws SQLException {
         datapath=path;
         connection = DriverManager.getConnection("jdbc:sqlite:"+datapath);
+
         init();
     }
 
     private void init() throws SQLException {
-
+        imageDatabase=new ImageDatabase(datapath);
+        List<BigImage> images = imageDatabase.getBigImageInfoFromDatabase();
+        for(BigImage image:images){
+            imagePool.add(image);
+        }
         allmsgs=getAllMsgssage();
+        logger.info("一共有{}条图片消息，丢失{}张预览图",
+                imagePool.getLoseThumbnailFileCount()+imagePool.getThumbnailFileCount(),
+                imagePool.getLoseThumbnailFileCount());
         contacts=getAllConTact();
         popAllMessageToContact();
 
@@ -127,6 +145,7 @@ public class MsgDataBase implements Serializable {
                 if(msg!=null) {
                     logger.debug(msg.toString());
                     msgs.add(msg);
+                    longMessageMap.put(rs.getLong("msgSvrId"),msg);
                 }
             }catch (DatabaseDamagedException e) {
                 logger.warn("在数据库{}第{}条消息损坏",datapath,""+count);
@@ -170,6 +189,9 @@ public class MsgDataBase implements Serializable {
         }
     }
 
-
+    private Map<Long,Message> longMessageMap=new HashMap<>();
+    public Message getMsgFromMsgId(long id){
+        return longMessageMap.getOrDefault(id,null);
+    }
 
 }
