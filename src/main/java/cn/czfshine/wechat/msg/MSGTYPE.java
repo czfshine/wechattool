@@ -10,15 +10,14 @@ import java.io.Serializable;
 public enum MSGTYPE implements Serializable {
 
     /**主要消息类型**/
-    TYPE_MSG(1,TextMessage.class),//
+    TYPE_MSG(1,TextMessage.class,"文本"),
+    TYPE_SPEAK(34,AudioMessage.class,"语音"),
 
-    TYPE_SPEAK(34,AudioMessage.class),
+    TYPE_WX_VIDEO (62,VideoMessage.class,"视频") ,
+    TYPE_VIDEO_FILE (43,VideoMessage.class,"视频文件"),
 
-    TYPE_WX_VIDEO (62,VideoMessage.class) ,
-    TYPE_VIDEO_FILE (43,VideoMessage.class),
-
-    TYPE_IMG (3,ImageMessage.class),
-    TYPE_EMOJI (47,EmojiMessage.class),
+    TYPE_IMG (3,ImageMessage.class,"图片"),
+    TYPE_EMOJI (47,EmojiMessage.class,"表情"),
 
     /**提示类**/
     TYPE_YUYIN(64,PromptMessage.class),//微信语音聊天
@@ -50,6 +49,7 @@ public enum MSGTYPE implements Serializable {
 
     private int id;
 
+    private String typename="";
     public Class getClazz() {
         return clazz;
     }
@@ -59,6 +59,11 @@ public enum MSGTYPE implements Serializable {
         id=typeid;
         clazz=cl;
     }
+    MSGTYPE(int typeid, Class cl ,String typename){
+        id=typeid;
+        clazz=cl;
+        this.typename=typename;
+    }
 
     public static MSGTYPE getType(int typeid) throws UnknowMassageTypeException {
         for(MSGTYPE t:MSGTYPE.values()){
@@ -67,5 +72,12 @@ public enum MSGTYPE implements Serializable {
             }
         }
         throw new UnknowMassageTypeException(typeid);
+    }
+
+    @Override
+    public String toString() {
+        if(!typename.equals(""))
+            return typename;
+        return "无名类型"+id;
     }
 }

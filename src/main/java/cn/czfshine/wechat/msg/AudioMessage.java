@@ -11,7 +11,9 @@ import java.sql.SQLException;
  */
 
 public class AudioMessage extends Message implements Serializable {
+    private static final long serialVersionUID = -7734023615186363037L;
     private String md5;
+
     public static final MSGTYPE TYPE = MSGTYPE.TYPE_SPEAK;
 
     public AudioMessage(ResultSet rs) throws SQLException, DatabaseDamagedException {

@@ -18,4 +18,12 @@ public class Person extends Contact {
         this.remark = remark;
         this.contactLabelIds = contactLabelIds;
     }
+
+    @Override
+    public String getNickname() {
+        if(!remark.equals("")){
+            return remark;
+        }
+        return super.getNickname();
+    }
 }

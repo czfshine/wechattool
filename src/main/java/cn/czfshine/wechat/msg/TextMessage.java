@@ -3,6 +3,7 @@ package cn.czfshine.wechat.msg;
 import cn.czfshine.wechat.output.Docxable;
 import cn.czfshine.wechat.output.PlainTextable;
 import com.sun.deploy.uitoolkit.ui.ConsoleHelper;
+import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.Console;
 import java.io.Serializable;
@@ -17,7 +18,10 @@ import java.sql.SQLException;
 public class TextMessage extends Message implements PlainTextable,Serializable,Docxable {
     private static final long serialVersionUID = -7223261076407562700L;
     private String content;
-    public static final MSGTYPE TYPE=MSGTYPE.TYPE_MSG;
+
+
+    public static final MSGTYPE TYPE = MSGTYPE.TYPE_MSG;
+
     public TextMessage(ResultSet rs) throws SQLException, DatabaseDamagedException {
         super(rs);
         init(rs);
@@ -47,8 +51,6 @@ public class TextMessage extends Message implements PlainTextable,Serializable,D
         StringBuilder sb=new StringBuilder();
         sb.append(getHead(this));
         sb.append("\n\t");
-        sb.append("文本长度"+content.length());
-        content=content.replaceAll("\013","");//todo !  !!!!!
         sb.append(content.replaceAll("\n","\n\t"));
 
         return sb.toString();
@@ -56,9 +58,7 @@ public class TextMessage extends Message implements PlainTextable,Serializable,D
 
     @Override
     public String getDocxxml() {
-        content=content.replaceAll("\013","");
-        content=content.replaceAll("[<&>]","");//todo
-        System.out.println(String.format("<w:p " +
+        String patt="<w:p " +
                 "xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:w10=\"urn:schemas-microsoft-com:office:word\">" +
                 "w:rsidR=\"00CA063F\" w:rsidRPr=\"00386596\" w:rsidRDefault=\"00386596\" w:rsidP=\"00386596\">\n" +
                 "\t<w:pPr>\n" +
@@ -79,29 +79,8 @@ public class TextMessage extends Message implements PlainTextable,Serializable,D
                 "\t\t</w:rPr>\n" +
                 "\t\t<w:t>\"%s\"</w:t>\n" +
                 "\t</w:r>\n" +
-                "</w:p>",content));
-        return  String.format("<w:p " +
-                "xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:w10=\"urn:schemas-microsoft-com:office:word\">" +
-                "w:rsidR=\"00CA063F\" w:rsidRPr=\"00386596\" w:rsidRDefault=\"00386596\" w:rsidP=\"00386596\">\n" +
-                "\t<w:pPr>\n" +
-                "\t\t<w:ind w:left=\"420\"/>\n" +
-                "\t\t<w:rPr>\n" +
-                "\t\t\t<w:rFonts w:ascii=\"微软雅黑\" w:eastAsia=\"微软雅黑\" w:hAnsi=\"微软雅黑\"/>\n" +
-                "\t\t\t<w:sz w:val=\"24\"/>\n" +
-                "\t\t\t<w:szCs w:val=\"24\"/>\n" +
-                "\t\t\t<w:lang w:eastAsia=\"zh-CN\"/>\n" +
-                "\t\t</w:rPr>\n" +
-                "\t</w:pPr>\n" +
-                "\t<w:r w:rsidRPr=\"00386596\">\n" +
-                "\t\t<w:rPr>\n" +
-                "\t\t\t<w:rFonts w:ascii=\"微软雅黑\" w:eastAsia=\"微软雅黑\" w:hAnsi=\"微软雅黑\"/>\n" +
-                "\t\t\t<w:sz w:val=\"24\"/>\n" +
-                "\t\t\t<w:szCs w:val=\"24\"/>\n" +
-                "\t\t\t<w:lang w:eastAsia=\"zh-CN\"/>\n" +
-                "\t\t</w:rPr>\n" +
-                "\t\t<w:t>\"%s\"</w:t>\n" +
-                "\t</w:r>\n" +
-                "</w:p>",content);
+                "</w:p>";
+        return  String.format(patt,StringEscapeUtils.escapeXml11(content).replaceAll("&#[\\d]+",""));
 
     }
 }

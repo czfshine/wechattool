@@ -1,8 +1,5 @@
 package cn.czfshine.wechat.msg;
-import cn.czfshine.wechat.contant.Contact;
-import cn.czfshine.wechat.contant.Group;
-import cn.czfshine.wechat.contant.Person;
-import cn.czfshine.wechat.contant.Service;
+import cn.czfshine.wechat.contant.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,6 +20,10 @@ public class MsgDataBase implements Serializable {
     private static final long serialVersionUID = 4766774527154700246L;
     private String datapath;
     private String selfid="self";
+    private static  ContactInfo contactInfo;
+    static {
+        contactInfo=ContactInfo.getInstance();
+    }
     Message[] allmsgs;
     Map<String,Contact> contacts;
 
@@ -32,8 +33,11 @@ public class MsgDataBase implements Serializable {
 
     public static MsgDataBase buildFromFile(String savepath) throws IOException, ClassNotFoundException {
         ObjectInputStream objectInputStream = new ObjectInputStream(new BufferedInputStream
-                (new FileInputStream( new File(savepath))));
-        return (MsgDataBase) objectInputStream.readObject();
+                (new FileInputStream( new File(savepath)),1024*1024));
+
+        MsgDataBase msgDataBase = (MsgDataBase) objectInputStream.readObject();
+        contactInfo.addContacts(msgDataBase.contacts);
+        return msgDataBase;
 
     }
 
@@ -51,14 +55,16 @@ public class MsgDataBase implements Serializable {
     private transient Connection connection;
     public MsgDataBase(String path) throws SQLException {
         datapath=path;
+        connection = DriverManager.getConnection("jdbc:sqlite:"+datapath);
         init();
     }
 
     private void init() throws SQLException {
-        connection = DriverManager.getConnection("jdbc:sqlite:"+datapath);
+
         allmsgs=getAllMsgssage();
         contacts=getAllConTact();
         popAllMessageToContact();
+
 
     }
 

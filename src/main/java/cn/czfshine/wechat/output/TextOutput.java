@@ -10,13 +10,14 @@ import java.io.*;
  */
 
 public class TextOutput {
-    public static void toTextFile(Message[] msgs){
-        try(FileWriter fos=new FileWriter( new File("testoutput.txt"));) {
+    public static void toTextFile(Message[] msgs,OutputStream file){
+        try(BufferedOutputStream bufferedOutputStream=new BufferedOutputStream(file)) {
             int len=msgs.length;
             for(int i=0;i<len;i++){
                 try {
-                    fos.write(msgs[i].toString());
-                    fos.write("\n");
+                    if(msgs[i] instanceof PlainTextable)
+                    bufferedOutputStream.write(((PlainTextable)msgs[i]).toPlainText().getBytes());
+                    bufferedOutputStream.write('\n');
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -30,4 +31,5 @@ public class TextOutput {
         }
 
     }
+
 }

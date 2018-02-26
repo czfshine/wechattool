@@ -1,5 +1,7 @@
 package cn.czfshine.wechat.msg;
 
+import cn.czfshine.wechat.contant.ContactInfo;
+
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -56,5 +58,27 @@ public abstract class Message implements Serializable {
         time= new Date(datastamp);
         this.talker = talker;
         this.chatroom = chatroom;
+    }
+
+    protected static MSGTYPE TYPE;
+
+    public  MSGTYPE getType() {
+        try {
+            return (MSGTYPE) this.getClass().getField("TYPE").get(this);
+        } catch (NoSuchFieldException e) {
+            System.out.println("没有TYPE域"+this.getClass());
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static transient ContactInfo contactInfo;
+    static {
+        contactInfo=ContactInfo.getInstance();
+    }
+
+    public String getTalkerName(){
+        return contactInfo.getUsernameFromUid(talker);
     }
 }
