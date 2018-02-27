@@ -1,14 +1,10 @@
 package cn.czfshine.wechat.output;
 
 import cn.czfshine.wechat.contant.Contact;
-import cn.czfshine.wechat.msg.ImageMessage;
 import cn.czfshine.wechat.msg.Message;
 import cn.czfshine.wechat.msg.MessageUtils;
 import cn.czfshine.wechat.msg.MsgDataBase;
-import cn.czfshine.wechat.output.docx.DocxFile;
-import cn.czfshine.wechat.output.docx.ImagePart;
-import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
-import org.apache.commons.lang3.StringEscapeUtils;
+import cn.czfshine.wechat.output.docx.DocxFileClas;
 import org.docx4j.Docx4J;
 import org.docx4j.openpackaging.exceptions.Docx4JException;
 import org.docx4j.openpackaging.packages.WordprocessingMLPackage;
@@ -17,14 +13,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.xml.bind.JAXBException;
-import javax.xml.bind.SchemaOutputResolver;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.lang.System.exit;
 
 /**
  * @author:czfshine
@@ -42,16 +34,17 @@ public class DocxOutput {
         int count=0;
         for(int i=0;i<msgs.length;i++){
             try{
-            if(msgs[i] instanceof Docxable){
-                mdp.addParagraph((((Docxable )msgs[i]).getDocxHead(msgs[i])));
-                mdp.addParagraph((((Docxable )msgs[i]).getDocxxml()));
-                count++;
-            }else{
-                messages.add(msgs[i]);
-            }
+//            //if(msgs[i] instanceof Docxable){
+//                //mdp.addParagraph((((Docxable )msgs[i]).getDocxHead(msgs[i])));
+//                //mdp.addParagraph((((Docxable )msgs[i]).getDocxxml()));
+//                //todo
+//                count++;
+//            }else{
+//                messages.add(msgs[i]);
+//            }
             }catch (Exception e){
                 messages.add(msgs[i]);
-                logger.warn("第{}条消息解析出错，内容为{}",i,(((Docxable )msgs[i]).getDocxxml()));
+                //logger.warn("第{}条消息解析出错，内容为{}",i,(((Docxable )msgs[i]).getDocxxml()));
                 e.printStackTrace();
             }
         }
@@ -76,7 +69,7 @@ public class DocxOutput {
             List<Message> messages = contact.getMessages();
             if(messages.size()>0)
                 try {
-                    DocxFile.toDocxFile("data/output/doc/" + contact.getNickname() + ".docx", messages);
+                    DocxFileClas.toDocxFile("data/output/doc/" + contact.getNickname() + ".docx", messages);
                 }catch (Exception e){
                 e.printStackTrace();
                 }

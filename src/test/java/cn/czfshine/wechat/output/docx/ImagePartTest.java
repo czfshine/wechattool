@@ -6,7 +6,6 @@ import cn.czfshine.wechat.image.ImagePool;
 import cn.czfshine.wechat.msg.ImageMessage;
 import cn.czfshine.wechat.msg.Message;
 import cn.czfshine.wechat.msg.MsgDataBase;
-import cn.czfshine.wechat.output.TextOutput;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
@@ -15,8 +14,6 @@ import org.junit.Before;
 import org.junit.After;
 
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Enumeration;
 import java.util.List;
@@ -57,10 +54,19 @@ public void testToDocx() throws Exception {
             new FileOutputStream("data/output/imagrpart.docx"));
     Enumeration<ZipArchiveEntry> entries = in.getEntries();
     ZipArchiveEntry e;
-    DocxFile.copyZipFile(in, append, entries);
+    ZipArchiveEntry e1;
+    while(entries.hasMoreElements()){
+        e1 = entries.nextElement();
+        append.putArchiveEntry(e1);
+
+        if (!e1.isDirectory()) {
+            copy(in.getInputStream(e1), append);
+        }
+        append.closeArchiveEntry();
+    }
 
 
-        Method method = ImagePart.class.getDeclaredMethod("getImage", ImageMessage.class);
+    Method method = ImagePart.class.getDeclaredMethod("getImage", ImageMessage.class);
         method.setAccessible(true);
         for(Message msg:messages) {
             if (msg instanceof ImageMessage) {

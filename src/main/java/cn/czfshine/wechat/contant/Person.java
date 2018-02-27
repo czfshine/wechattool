@@ -21,7 +21,7 @@ public class Person extends Contact {
 
     @Override
     public String getNickname() {
-        if(!remark.equals("")){
+        if(remark.length()!=0){
             return remark;
         }
         return super.getNickname();
