@@ -20,7 +20,7 @@ public class ImagePool  implements Serializable {
     static {
         thepool=new ImagePool();
     }
-    public static void LoadPool(ImagePool pool){
+    public static void loadPool(ImagePool pool){
         thepool=pool;
     }
 
@@ -53,7 +53,7 @@ public class ImagePool  implements Serializable {
             }
             try {
 
-                String path=findImageFiles(bigimage);
+                findImageFiles(bigimage);
                 bigimagepool.put(bigimage.getMsgid(),bigimage);
             } catch (BigImageFileLoseException e) {
 
@@ -86,13 +86,13 @@ public class ImagePool  implements Serializable {
 
 
 
-    private String findImageFiles(BigImage bigImage) throws BigImageFileLoseException {
+    private void findImageFiles(BigImage bigImage) throws BigImageFileLoseException {
 
         String filename=bigImage.getFilename();
         String path;
         if((path=checkFile(filename))!=null){
             bigImage.setPath(path);
-            return path;
+            return ;
         }else{
             throw new BigImageFileLoseException(bigImage);
         }
@@ -125,7 +125,11 @@ public class ImagePool  implements Serializable {
         String level2=filename.substring(2,4);
         for(String path:imagerootpath){
             File root = new File(path);
-            for(File imageroot : root.listFiles(File::isDirectory)){
+            File[] files = root.listFiles(File::isDirectory);
+            if(files==null){
+                continue;
+            }
+            for(File imageroot :files ){
 
                 //todo
                 String imagefilepath=imageroot.getPath() + File.separator +

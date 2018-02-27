@@ -25,11 +25,11 @@ public class DecrypterTest {
     }
 
     /**
-     * Method: DecryptDataBase(String encryptpath, String imei, String uin, String outputpath)
+     * Method: decryptDataBase(String encryptpath, String imei, String uin, String outputpath)
      */
     @Test
     public void testDecryptDataBase() throws Exception {
-        Decrypter.DecryptDataBase("", "866427", "-13", "");
+        Decrypter.decryptDataBase("", "866427", "-13", "");
     }
 
 

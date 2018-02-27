@@ -23,8 +23,8 @@ public abstract class Message implements Serializable {
 
     protected long msgSvrId;
 
-    public Date getTime() {
-        return time;
+    public long getTime() {
+        return time.getTime();
     }
 
     protected Date time;

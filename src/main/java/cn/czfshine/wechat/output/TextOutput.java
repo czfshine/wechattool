@@ -16,7 +16,7 @@ public class TextOutput {
             for(int i=0;i<len;i++){
                 try {
                     if(msgs[i] instanceof PlainTextable)
-                    bufferedOutputStream.write(((PlainTextable)msgs[i]).toPlainText().getBytes());
+                    bufferedOutputStream.write(((PlainTextable)msgs[i]).toPlainText().getBytes("UTF-8"));
                     bufferedOutputStream.write('\n');
                 } catch (IOException e) {
                     e.printStackTrace();

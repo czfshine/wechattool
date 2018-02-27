@@ -50,7 +50,7 @@ public class DocxOutput {
         }
 
         logger.info("导出{}条信息成功，其中{}条消息未导出",count,msgs.length-count);
-        MessageUtils.StatisType(messages);
+        MessageUtils.statisType(messages);
         Docx4J.save(wordMLPackage, new java.io.File("./data/output/doc.docx"), Docx4J.FLAG_SAVE_ZIP_FILE);
 
     }
@@ -63,7 +63,7 @@ public class DocxOutput {
         MsgDataBase msgDataBase = MsgDataBase.buildFromFile("data/output/test1.obj");
 
         List<Contact> allChatRoom = msgDataBase.getAllChatRoom().subList(30,32);
-        new File("data/output/doc/").mkdirs();
+        boolean mkdirs = new File("data/output/doc/").mkdirs();
 
         for(Contact contact:allChatRoom){
             List<Message> messages = contact.getMessages();

@@ -9,7 +9,7 @@ import java.io.Serializable;
  */
 
 public class Image implements Serializable {
-    public  static long serialVersionUID =1802252205;
+    public  static final long serialVersionUID =1802252205;
 
     public String getMd5() {
         return md5;

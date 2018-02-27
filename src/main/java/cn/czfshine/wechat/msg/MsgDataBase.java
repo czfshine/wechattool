@@ -38,7 +38,8 @@ public class MsgDataBase implements Serializable {
 
         MsgDataBase msgDataBase = (MsgDataBase) objectInputStream.readObject();
         contactInfo.addContacts(msgDataBase.contacts);
-        ImagePool.LoadPool(msgDataBase.imagePool);
+        ImagePool.loadPool(msgDataBase.imagePool);
+        objectInputStream.close();
         return msgDataBase;
 
     }
@@ -88,29 +89,31 @@ public class MsgDataBase implements Serializable {
     private Map<String,Contact> getAllConTact() throws SQLException {
         Map<String,Contact> contacts=new HashMap<>();
 
-        Statement statement = connection.createStatement();
-        Logger logger = LoggerFactory.getLogger("DBofmsg");
+        try (Statement statement = connection.createStatement()) {
+            Logger logger = LoggerFactory.getLogger("DBofmsg");
 
-        ResultSet rs = statement.executeQuery("SELECT username,alias,conRemark,nickname,type,verifyFlag,contactLabelIds FROM rcontact");
-        int count=0;
-        while (rs.next()) {
-            count++;
-            String username=rs.getString("username");
-            String nickname=rs.getString("nickname");
+            ResultSet rs = statement.executeQuery("SELECT username,alias,conRemark,nickname,type,verifyFlag,contactLabelIds FROM rcontact");
+            int count = 0;
+            while (rs.next()) {
+                count++;
+                String username = rs.getString("username");
+                String nickname = rs.getString("nickname");
 
-            if(username.endsWith("@chatroom")){
-                contacts.put(username,new Group(username,nickname));
-            }else if(username.startsWith("gh_")){
-                contacts.put(username,new Service(username,nickname));
-            }else{
-                String alias=rs.getString("alias");
-                String conRemark=rs.getString("conRemark");
-                String contactLabelIds=rs.getString("contactLabelIds");
-                contacts.put(username,new Person(username,nickname,alias,conRemark,contactLabelIds));
+                if (username.endsWith("@chatroom")) {
+                    contacts.put(username, new Group(username, nickname));
+                } else if (username.startsWith("gh_")) {
+                    contacts.put(username, new Service(username, nickname));
+                } else {
+                    String alias = rs.getString("alias");
+                    String conRemark = rs.getString("conRemark");
+                    String contactLabelIds = rs.getString("contactLabelIds");
+                    contacts.put(username, new Person(username, nickname, alias, conRemark, contactLabelIds));
+                }
             }
-        }
 
-        logger.info("一共有{}个用户信息",contacts.size());
+            logger.info("一共有{}个用户信息", contacts.size());
+            statement.close();
+        }
         return contacts;
     }
 
@@ -132,38 +135,41 @@ public class MsgDataBase implements Serializable {
         int count=0;
         ArrayList<Message> msgs=new ArrayList<>();
 
-        Statement statement = connection.createStatement();
-        ResultSet rs = statement.executeQuery(
-                "SELECT  msgSvrId,type,isSend,createTime,talker,content,imgPath  FROM message ");
 
-        while (rs.next()) {
-            count++;
-            try {
-                Message msg=parseMsgRow(rs);
-                if(msg!=null) {
-                    logger.debug(msg.toString());
-                    msgs.add(msg);
-                    longMessageMap.put(rs.getLong("msgSvrId"),msg);
+        Message[] res;
+        try (Statement statement = connection.createStatement()) {
+            ResultSet rs = statement.executeQuery(
+                    "SELECT  msgSvrId,type,isSend,createTime,talker,content,imgPath  FROM message ");
+
+            while (rs.next()) {
+                count++;
+                try {
+                    Message msg = parseMsgRow(rs);
+                    if (msg != null) {
+                        logger.debug(msg.toString());
+                        msgs.add(msg);
+                        longMessageMap.put(rs.getLong("msgSvrId"), msg);
+                    }
+                } catch (DatabaseDamagedException e) {
+                    logger.warn("在数据库{}第{}条消息损坏", datapath, "" + count);
+                } catch (UnknowMassageTypeException w) {
+                    logger.warn("类型{}未知，内容为：{}\n\t", rs.getString("type"), rs.getString("content"));
+                } catch (Exception e) {
+                    logger.error("在数据库{}第{}条消息出错", datapath, "" + count);
+                    throw e;
                 }
-            }catch (DatabaseDamagedException e) {
-                logger.warn("在数据库{}第{}条消息损坏",datapath,""+count);
-            }catch (UnknowMassageTypeException w){
-                logger.warn("类型{}未知，内容为：{}\n\t",rs.getString("type"), rs.getString("content"));
-            }catch (Exception e){
-                logger.error("在数据库{}第{}条消息出错",datapath,""+count);
-                throw e;
+
             }
 
+            logger.info("共读取{}条记录，解析成功{}条记录", count, msgs.size());
+
+            long endTime = System.nanoTime();
+            logger.info("读取解析耗时{}纳秒", endTime - startTime);
+
+            res = new Message[msgs.size()];
+
+            statement.close();
         }
-
-        logger.info("共读取{}条记录，解析成功{}条记录",count,msgs.size());
-
-        long endTime=System.nanoTime();
-        logger.info("读取解析耗时{}纳秒",endTime-startTime);
-
-        Message[] res=new Message[msgs.size()];
-
-        statement.close();
         return msgs.toArray(res);
 
 

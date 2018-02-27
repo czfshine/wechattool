@@ -72,7 +72,7 @@ public class DocxFile {
     }
 
     public void toDocxFile() throws IOException, NotMessageOfContactException {
-        new File("data/output/docx/").mkdirs();
+        boolean mkdirs = new File("data/output/docx/").mkdirs();
         toDocxFile("data/output/docx/"+contact.getNickname().replaceAll("[/\\\\:*?<>|]","")+".docx");
     }
 
@@ -197,17 +197,17 @@ public class DocxFile {
 
         outfile.putArchiveEntry(new ZipArchiveEntry("word/document.xml"));
 
-        outfile.write(DOCHEAD.getBytes());
-        outfile.write(allxmlcontant.toString().getBytes());
-        outfile.write(DOCTAIL.getBytes());
+        outfile.write(DOCHEAD.getBytes("utf-8"));
+        outfile.write(allxmlcontant.toString().getBytes("utf-8"));
+        outfile.write(DOCTAIL.getBytes("utf-8"));
         outfile.closeArchiveEntry();
     }
 
     private void writeRelationShip() throws IOException {
         outfile.putArchiveEntry(new ZipArchiveEntry("word/_rels/document.xml.rels"));
-        outfile.write(RELATIONSHIPSHEAD.getBytes());
-        outfile.write(RelationshipsXml.toString().getBytes());
-        outfile.write(RELATIONSHIPSTAIL.getBytes());
+        outfile.write(RELATIONSHIPSHEAD.getBytes("utf-8"));
+        outfile.write(RelationshipsXml.toString().getBytes("utf-8"));
+        outfile.write(RELATIONSHIPSTAIL.getBytes("utf-8"));
         outfile.closeArchiveEntry();
     }
     private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒");
@@ -349,7 +349,7 @@ public class DocxFile {
                 "    <w:bookmarkEnd w:id=\"0\"/>\n" +
                 "</w:p>";
     }
-    public static  String  RELATIONSHIPSHEAD;
+    public static final String  RELATIONSHIPSHEAD;
 
     static {
         RELATIONSHIPSHEAD = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
@@ -366,6 +366,6 @@ public class DocxFile {
                 "\n" +
                 "<Relationship Target=\"fontTable.xml\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable\" Id=\"rId5\"/>";
     }
-    public static  String  RELATIONSHIPSTAIL="</Relationships>";
+    public static final String  RELATIONSHIPSTAIL="</Relationships>";
 
 }

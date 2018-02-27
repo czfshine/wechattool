@@ -35,23 +35,27 @@ public class ImageDatabase {
 
 
     public List<BigImage> getBigImageInfoFromDatabase() throws SQLException {
-        Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery("SELECT msgSvrId, bigImgPath, thumbImgPath FROM ImgInfo2");
-        logger.info("开始读取图片记录");
+        List<BigImage> bigImages;
+        try (Statement statement = connection.createStatement()) {
+            int count;
+            try (ResultSet resultSet = statement.executeQuery("SELECT msgSvrId, bigImgPath, thumbImgPath FROM ImgInfo2")) {
+                logger.info("开始读取图片记录");
 
-        List<BigImage> bigImages =new ArrayList<>();
+                bigImages = new ArrayList<>();
 
-        int count=0;
-        while(resultSet.next()){
-            count++;
-            long msgid=resultSet.getLong("msgSvrId");
-            String bigimg= resultSet.getString("bigImgPath");
-            if(!bigimg.startsWith("SERVERID://")){
-                bigImages.add(new BigImage(msgid,bigimg));
+                count = 0;
+                while (resultSet.next()) {
+                    count++;
+                    long msgid = resultSet.getLong("msgSvrId");
+                    String bigimg = resultSet.getString("bigImgPath");
+                    if (!bigimg.startsWith("SERVERID://")) {
+                        bigImages.add(new BigImage(msgid, bigimg));
+                    }
+
+                }
             }
-
+            logger.info("一共有{}条图片记录，本地只有{}张原图", count, bigImages.size());
         }
-        logger.info("一共有{}条图片记录，本地只有{}张原图",count, bigImages.size());
         return bigImages;
     }
 }

@@ -14,7 +14,7 @@ import java.util.List;
  */
 
 public class Contact implements Serializable {
-    public  static long serialVersionUID =1802252205;
+    public  static final long serialVersionUID =1802252205;
 
     protected  String uid; //唯一标识符
     protected  String nickname; //昵称
@@ -49,7 +49,7 @@ public class Contact implements Serializable {
      * 对当前的所有消息按时间排序
      */
     public void sortMessage(){
-        messages.sort( Comparator.comparingLong((Message m)->m.getTime().getTime()));
+        messages.sort( Comparator.comparingLong((Message m)->m.getTime()));
     }
 
     public String getUid() {
