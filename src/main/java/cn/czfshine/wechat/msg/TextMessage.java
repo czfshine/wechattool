@@ -2,10 +2,8 @@ package cn.czfshine.wechat.msg;
 
 
 import cn.czfshine.wechat.output.PlainTextable;
-import com.sun.deploy.uitoolkit.ui.ConsoleHelper;
 import org.apache.commons.lang3.StringEscapeUtils;
 
-import java.io.Console;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;

@@ -1,12 +1,9 @@
-package cn.czfshine.wechat.image; 
+package cn.czfshine.wechat.image;
 
-import cn.czfshine.wechat.msg.MsgDataBase;
-import org.junit.Test;
-import org.junit.Before; 
 import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.List;
 
 /** 

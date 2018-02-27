@@ -7,8 +7,6 @@ import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static java.lang.System.exit;
-
 /**
  * 图片
  * @author:czfshine

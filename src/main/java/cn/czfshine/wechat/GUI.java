@@ -7,8 +7,6 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 
-import javax.swing.*;
-
 /**
  * @author:czfshine
  * @date:18-2-21

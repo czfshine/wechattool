@@ -1,10 +1,8 @@
 package cn.czfshine.wechat.msg;
 
-import org.junit.Test; 
-import org.junit.Before; 
 import org.junit.After;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;

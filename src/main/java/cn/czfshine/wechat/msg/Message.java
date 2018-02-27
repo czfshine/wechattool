@@ -5,7 +5,6 @@ import cn.czfshine.wechat.contant.ContactInfo;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Calendar;
 import java.util.Date;
 
 

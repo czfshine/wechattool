@@ -3,7 +3,6 @@ package cn.czfshine.wechat.msg;
 import org.junit.Test;
 
 import java.sql.SQLException;
-import java.util.Scanner;
 
 /**
  * @author:czfshine

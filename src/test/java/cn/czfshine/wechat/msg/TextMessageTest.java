@@ -1,10 +1,8 @@
-package cn.czfshine.wechat.msg; 
+package cn.czfshine.wechat.msg;
 
-import org.junit.Test; 
-import org.junit.Before; 
 import org.junit.After;
-
-import javax.swing.*;
+import org.junit.Before;
+import org.junit.Test;
 
 /** 
 * TextMessage Tester. 

@@ -17,9 +17,12 @@
                     <source>8</source>
                     <target>8</target>
                 </configuration>
+
             </plugin>
         </plugins>
     </build>
+
+    <packaging>jar</packaging>
 
 
     <dependencies>
@@ -58,12 +61,6 @@
             <version>2.10.0</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/commons.codec/commons-codec -->
-        <dependency>
-            <groupId>commons.codec</groupId>
-            <artifactId>commons-codec</artifactId>
-            <version>1.6</version>
-        </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.couchbase.lite/couchbase-lite-java-sqlcipher -->
         <dependency>

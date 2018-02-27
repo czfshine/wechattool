@@ -10,8 +10,6 @@ import java.io.*;
 import java.sql.*;
 import java.util.*;
 
-import static jdk.nashorn.internal.runtime.regexp.joni.Syntax.Java;
-
 /**
  * 用来操作微信聊天数据库，要使用解密后的数据库文件
  *

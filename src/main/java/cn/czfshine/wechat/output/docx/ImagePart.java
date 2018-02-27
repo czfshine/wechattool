@@ -1,20 +1,20 @@
 package cn.czfshine.wechat.output.docx;
 
-import cn.czfshine.wechat.image.BigImage;
 import cn.czfshine.wechat.image.Image;
 import cn.czfshine.wechat.image.ImagePool;
 import cn.czfshine.wechat.msg.ImageMessage;
-import cn.czfshine.wechat.msg.Message;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.utils.IOUtils;
-import sun.nio.ch.IOUtil;
 
 import javax.imageio.ImageIO;
 import javax.imageio.ImageReader;
 import javax.imageio.stream.ImageInputStream;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.Iterator;
 
