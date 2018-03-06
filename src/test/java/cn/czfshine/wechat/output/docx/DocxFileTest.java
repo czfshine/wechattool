@@ -34,7 +34,7 @@ public void after() throws Exception {
 */ 
 @Test
 public void testToDocxFileFilepath() throws Exception {
-    Contact contact = dataBase.getAllChatRoom().get(99);
+    Contact contact = dataBase.getAllChatRoom().get(1);
     new DocxFile(contact).toDocxFile();
 //TODO: Test goes here... 
 }

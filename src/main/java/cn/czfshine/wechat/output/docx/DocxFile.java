@@ -10,13 +10,19 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
 import org.apache.commons.compress.archivers.zip.ZipFile;
 import org.apache.commons.compress.utils.IOUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import javax.imageio.IIOException;
 import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.FileImageInputStream;
+import javax.imageio.stream.ImageInputStream;
 import java.io.*;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Enumeration;
+import java.util.Iterator;
 
 import static org.apache.commons.compress.utils.IOUtils.copy;
 
@@ -26,9 +32,6 @@ import static org.apache.commons.compress.utils.IOUtils.copy;
  */
 
 public class DocxFile {
-
-    private Contact contact;
-
     public DocxFile(Contact contact) throws IOException, NotMessageOfContactException {
         this.contact=contact;
         if(contact.getMessages().size()==0){
@@ -36,13 +39,6 @@ public class DocxFile {
         }
         init();
     }
-
-    private void init() throws IOException {
-        allxmlcontant=new StringBuilder(contact.getMessages().size()*1000);//todo
-        in = new ZipFile("data/in/in.docx");
-    }
-    private String outputfilepath;
-
     public void toDocxFile(String filepath) throws IOException, NotMessageOfContactException {
         outputfilepath=filepath;
         initDocx();
@@ -54,210 +50,30 @@ public class DocxFile {
 
         writeDocx();
     }
-
-    private void getAllMessageXml() throws IOException {
-        for(Message msg:contact.getMessages()){
-            if(msg instanceof TextMessage){
-                addTextMessage((TextMessage) msg);
-                continue;
-            }
-
-            if(msg instanceof  ImageMessage){
-                addImageMessage((ImageMessage)msg);
-                continue;
-            }
-
-            //todo
-        }
-    }
-
     public void toDocxFile() throws IOException, NotMessageOfContactException {
         boolean mkdirs = new File("data/output/docx/").mkdirs();
         toDocxFile("data/output/docx/"+contact.getNickname().replaceAll("[/\\\\:*?<>|]","")+".docx");
     }
 
-
-    private void putHeadXml(Message message){
-        formatHead(DATE_FORMAT.format(message.getTime()),
-                message.getTalkerName());
-    }
-    private String getTextXml(TextMessage message){
-        return  String.format(TEXTPATT,message.getContent().replaceAll("&#[\\d]+",""));
-
-    }
-
-    private void addTextMessage(TextMessage message){
-        putHeadXml(message);
-        addParagraph(getTextXml(message));
-    }
-
-    private static  final ImagePool imagePool=ImagePool.getThepool();
-    private String getImagePath(ImageMessage message){
-
-        long id =message.getMsgSvrId();
-        Image image =imagePool.getBigImageFromMsgid(id);
-
-        if(image==null){
-            image =imagePool.getThumbnaImageByMd5(message.getMd5());
-            if(image==null){
-                return null;
-            }
-        }
-        return image.getPath();
-    }
-
-    private StringBuilder RelationshipsXml=new StringBuilder();
-
-    private String copyImageFile(String filepath) throws IOException {
-        File file = new File(filepath);
-
-        outfile.putArchiveEntry(new ZipArchiveEntry("word/media/"+file.getName()));
-        BufferedInputStream stream = new BufferedInputStream(new FileInputStream(file));
-        IOUtils.copy(stream,outfile);
-        outfile.closeArchiveEntry();
-        return file.getName();
-    }
-    private void addRelationships(String id,String filepath) throws IOException {
-        String filename=copyImageFile(filepath);
-        RelationshipsXml.append(formatRelation(id,filename));
-    }
-
-    private String formatRelation(String id,String filename){
-        return String.format(RELATIONPATT,"media/"+filename,id);
-    }
-
-    private int id=10086;
-    private String newId(){
-        id++;
-        return "rId"+id;
-    }
-
-    private static final int maxHeight=3600000;//图片高度
-    private void addImageMessage(ImageMessage message) throws IOException {
-        String imagepath=getImagePath(message);
-        String id=newId();
-        addRelationships(id,imagepath);
-        double imageProportion = getImageProportion(imagepath);
-        addParagraph(formatImageMessage((int) (maxHeight*imageProportion),
-               maxHeight,id,new File(imagepath).getName()));
-
-    }
-
-    private double getImageProportion(String imagepath) throws IOException {
-        BufferedImage img = ImageIO.read(new File(imagepath));
-        return (0.0+img.getWidth())/img.getHeight();
-    }
-
-    private String  formatImageMessage(int x,int y,String id,String filename){
-        return MessageFormat.format(IMAGEPATT,""+x,""+y,""+id, ""+filename);
-    }
-
-    private StringBuilder allxmlcontant;
-
-    private void addParagraph(String pxml){
-
-        allxmlcontant.append(pxml);
-    }
-
-    private ZipArchiveOutputStream outfile;
-    private void initDocx() throws IOException {
-        outfile= new ZipArchiveOutputStream( new BufferedOutputStream(
-                new FileOutputStream(outputfilepath)));
-        copyZipFile();
-    }
-
-
-    private ZipFile in;
-    private void copyZipFile() throws IOException {
-        Enumeration<ZipArchiveEntry> entries = in.getEntries();
-        ZipArchiveEntry e;
-        ZipArchiveEntry e1;
-        while(entries.hasMoreElements()){
-            e1 = entries.nextElement();
-            outfile.putArchiveEntry(e1);
-
-            if (!e1.isDirectory()) {
-                copy(in.getInputStream(e1), outfile);
-            }
-            outfile.closeArchiveEntry();
-        }
-    }
-
-    private void writeDocx() throws IOException {
-        writeDocument();
-        writeRelationShip();
-        //todo
-        outfile.flush();
-        outfile.close();
-        in.close();
-
-    }
-
-    private void writeDocument() throws IOException {
-
-        outfile.putArchiveEntry(new ZipArchiveEntry("word/document.xml"));
-
-        outfile.write(DOCHEAD.getBytes("utf-8"));
-        outfile.write(allxmlcontant.toString().getBytes("utf-8"));
-        outfile.write(DOCTAIL.getBytes("utf-8"));
-        outfile.closeArchiveEntry();
-    }
-
-    private void writeRelationShip() throws IOException {
-        outfile.putArchiveEntry(new ZipArchiveEntry("word/_rels/document.xml.rels"));
-        outfile.write(RELATIONSHIPSHEAD.getBytes("utf-8"));
-        outfile.write(RelationshipsXml.toString().getBytes("utf-8"));
-        outfile.write(RELATIONSHIPSTAIL.getBytes("utf-8"));
-        outfile.closeArchiveEntry();
-    }
-    private final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒");
+    private final static ImagePool imagePool;
+    private final static int maxHeight = 3600000;//图片高度
+    private final static SimpleDateFormat DATE_FORMAT;
     private final static String HEADHEAD;
     private final static String HEADCON;
     private final static String HEADTAI;
-    private void formatHead(String format, String talkerName) {
-        allxmlcontant.append(HEADHEAD);
-        allxmlcontant.append(format);
-        allxmlcontant.append(HEADCON);
-        allxmlcontant.append(talkerName);
-        allxmlcontant.append(HEADTAI);
-    }
-    static {
-        HEADHEAD = "<w:p xmlns:v=\"urn:schemas-microsoft-com:vml \"\n" +
-                "     xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\"\n" +
-                "        xmlns:o=\"urn:schemas-microsoft-com:office:office \"\n" +
-                "        xmlns:w10=\"urn:schemas-microsoft-com:office:word\"\n" +
-                "        w:rsidR=\"00386596\" w:rsidRDefault=\"00386596\">\n" +
-                "    <w:pPr>\n" +
-                "        <w:rPr>\n" +
-                "            <w:lang w:eastAsia=\"zh-CN\"/>\n" +
-                "        </w:rPr>\n" +
-                "    </w:pPr>\n" +
-                "    <w:r w:rsidRPr=\"00386596\">\n" +
-                "        <w:rPr>\n" +
-                "            <w:rFonts w:ascii=\"黑体\" w:eastAsia=\"黑体\" w:hAnsi=\"黑体\"/>\n" +
-                "            <w:sz w:val=\"24\"/>\n" +
-                "            <w:szCs w:val=\"24\"/>\n" +
-                "            <w:lang w:eastAsia=\"zh-CN\"/>\n" +
-                "        </w:rPr>\n" +
-                "        <w:t>" ;
-        HEADCON="</w:t>\n" +
-                "    </w:r>\n" +
-                "    <w:r w:rsidRPr=\"00386596\">\n" +
-                "        <w:rPr>\n" +
-                "            <w:b/>\n" +
-                "            <w:sz w:val=\"32\"/>\n" +
-                "            <w:szCs w:val=\"32\"/>\n" +
-                "            <w:highlight w:val=\"green\"/>\n" +
-                "            <w:lang w:eastAsia=\"zh-CN\"/>\n" +
-                "        </w:rPr>\n" +
-                "        <w:t>";
-        HEADTAI="</w:t>\n" +
-                "    </w:r>\n" +
-                "</w:p>";
-    }
+    private final static String TEXTPATT;
+    private final static String IMAGEPATT;
+    private final static String RELATIONSHIPSHEAD;
+    private final static String DOCHEAD;
+    private final static String RELATIONPATT;
+    private final static String DOCTAIL;
+    private final static String RELATIONSHIPSTAIL;
 
-    private final static   String TEXTPATT;
     static {
+
+        imagePool = ImagePool.getThepool();
+        DATE_FORMAT = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒");
+
         TEXTPATT = "<w:p " +
                 "xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:w10=\"urn:schemas-microsoft-com:office:word\">" +
                 "w:rsidR=\"00CA063F\" w:rsidRPr=\"00386596\" w:rsidRDefault=\"00386596\" w:rsidP=\"00386596\">\n" +
@@ -280,19 +96,15 @@ public class DocxFile {
                 "\t\t<w:t><![CDATA[%s]]></w:t>\n" +
                 "\t</w:r>\n" +
                 "</w:p>";
-    }
+        DOCHEAD = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
+                "<w:document xmlns:wpc=\"http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas\" xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:wp14=\"http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing\" xmlns:wp=\"http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing\" xmlns:w10=\"urn:schemas-microsoft-com:office:word\" xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:w14=\"http://schemas.microsoft.com/office/word/2010/wordml\" xmlns:w15=\"http://schemas.microsoft.com/office/word/2012/wordml\" xmlns:wpg=\"http://schemas.microsoft.com/office/word/2010/wordprocessingGroup\" xmlns:wpi=\"http://schemas.microsoft.com/office/word/2010/wordprocessingInk\" xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\" xmlns:wps=\"http://schemas.microsoft.com/office/word/2010/wordprocessingShape\" mc:Ignorable=\"w14 w15 wp14\"><w:body>";
 
-    private static final String DOCHEAD="<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
-            "<w:document xmlns:wpc=\"http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas\" xmlns:mc=\"http://schemas.openxmlformats.org/markup-compatibility/2006\" xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:r=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships\" xmlns:m=\"http://schemas.openxmlformats.org/officeDocument/2006/math\" xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:wp14=\"http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing\" xmlns:wp=\"http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing\" xmlns:w10=\"urn:schemas-microsoft-com:office:word\" xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\" xmlns:w14=\"http://schemas.microsoft.com/office/word/2010/wordml\" xmlns:w15=\"http://schemas.microsoft.com/office/word/2012/wordml\" xmlns:wpg=\"http://schemas.microsoft.com/office/word/2010/wordprocessingGroup\" xmlns:wpi=\"http://schemas.microsoft.com/office/word/2010/wordprocessingInk\" xmlns:wne=\"http://schemas.microsoft.com/office/word/2006/wordml\" xmlns:wps=\"http://schemas.microsoft.com/office/word/2010/wordprocessingShape\" mc:Ignorable=\"w14 w15 wp14\"><w:body>";
-    private  static final String DOCTAIL=" \n" +
-            "<w:sectPr w:rsidR=\"00D320F1\"><w:pgSz w:w=\"11906\" w:h=\"16838\"/><w:pgMar w:top=\"1440\" w:right=\"1800\" w:bottom=\"1440\" w:left=\"1800\" w:header=\"851\" w:footer=\"992\" w:gutter=\"0\"/><w:cols w:space=\"425\"/><w:docGrid w:type=\"lines\" w:linePitch=\"312\"/></w:sectPr></w:body></w:document>";
+        DOCTAIL = " \n" +
+                "<w:sectPr w:rsidR=\"00D320F1\"><w:pgSz w:w=\"11906\" w:h=\"16838\"/><w:pgMar w:top=\"1440\" w:right=\"1800\" w:bottom=\"1440\" w:left=\"1800\" w:header=\"851\" w:footer=\"992\" w:gutter=\"0\"/><w:cols w:space=\"425\"/><w:docGrid w:type=\"lines\" w:linePitch=\"312\"/></w:sectPr></w:body></w:document>";
 
-    private static final String RELATIONPATT="<Relationship Target=\"%s\" " +
-            "Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Id=\"%s\"/>";
+        RELATIONPATT = "<Relationship Target=\"%s\" " +
+                "Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/image\" Id=\"%s\"/>";
 
-    private static final String IMAGEPATT;
-
-    static {
         IMAGEPATT = "<w:p w:rsidR=\"00DC4272\" w:rsidRPr=\"00DC4272\" w:rsidRDefault=\"00DC4272\">\n" +
                 "    <w:pPr>\n" +
                 "        <w:ind w:left=\"420\"/>\n" +
@@ -348,10 +160,6 @@ public class DocxFile {
                 "    <w:bookmarkStart w:id=\"0\" w:name=\"_GoBack\"/>\n" +
                 "    <w:bookmarkEnd w:id=\"0\"/>\n" +
                 "</w:p>";
-    }
-    public static final String  RELATIONSHIPSHEAD;
-
-    static {
         RELATIONSHIPSHEAD = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\n" +
                 "\n" +
                 "<Relationships xmlns=\"http://schemas.openxmlformats.org/package/2006/relationships\">\n" +
@@ -365,7 +173,211 @@ public class DocxFile {
                 "<Relationship Target=\"theme/theme1.xml\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/theme\" Id=\"rId6\"/>\n" +
                 "\n" +
                 "<Relationship Target=\"fontTable.xml\" Type=\"http://schemas.openxmlformats.org/officeDocument/2006/relationships/fontTable\" Id=\"rId5\"/>";
-    }
-    public static final String  RELATIONSHIPSTAIL="</Relationships>";
 
+        HEADHEAD = "<w:p xmlns:v=\"urn:schemas-microsoft-com:vml \"\n" +
+                "     xmlns:w=\"http://schemas.openxmlformats.org/wordprocessingml/2006/main\"\n" +
+                "        xmlns:o=\"urn:schemas-microsoft-com:office:office \"\n" +
+                "        xmlns:w10=\"urn:schemas-microsoft-com:office:word\"\n" +
+                "        w:rsidR=\"00386596\" w:rsidRDefault=\"00386596\">\n" +
+                "    <w:pPr>\n" +
+                "        <w:rPr>\n" +
+                "            <w:lang w:eastAsia=\"zh-CN\"/>\n" +
+                "        </w:rPr>\n" +
+                "    </w:pPr>\n" +
+                "    <w:r w:rsidRPr=\"00386596\">\n" +
+                "        <w:rPr>\n" +
+                "            <w:rFonts w:ascii=\"黑体\" w:eastAsia=\"黑体\" w:hAnsi=\"黑体\"/>\n" +
+                "            <w:sz w:val=\"24\"/>\n" +
+                "            <w:szCs w:val=\"24\"/>\n" +
+                "            <w:lang w:eastAsia=\"zh-CN\"/>\n" +
+                "        </w:rPr>\n" +
+                "        <w:t>";
+        HEADCON = "</w:t>\n" +
+                "    </w:r>\n" +
+                "    <w:r w:rsidRPr=\"00386596\">\n" +
+                "        <w:rPr>\n" +
+                "            <w:b/>\n" +
+                "            <w:sz w:val=\"32\"/>\n" +
+                "            <w:szCs w:val=\"32\"/>\n" +
+                "            <w:highlight w:val=\"green\"/>\n" +
+                "            <w:lang w:eastAsia=\"zh-CN\"/>\n" +
+                "        </w:rPr>\n" +
+                "        <w:t>";
+        HEADTAI = "</w:t>\n" +
+                "    </w:r>\n" +
+                "</w:p>";
+        RELATIONSHIPSTAIL = "</Relationships>";
+    }
+
+    private String outputfilepath;
+    private Contact contact;
+    private int id = 10086;
+    private StringBuilder allxmlcontant;
+    private ZipArchiveOutputStream outfile;
+    private ZipFile in;
+
+    private void init() throws IOException {
+        allxmlcontant = new StringBuilder(contact.getMessages().size() * 1000);//todo
+        in = new ZipFile("data/in/in.docx");
+    }
+    private void putHeadXml(@NotNull Message message){
+        formatHead(DATE_FORMAT.format(message.getTime()),
+                message.getTalkerName());
+    }
+    private String getTextXml(@NotNull TextMessage message){
+        return  String.format(TEXTPATT,message.getContent().replaceAll("&#[\\d]+",""));
+
+    }
+    private void addTextMessage(TextMessage message){
+        putHeadXml(message);
+        addParagraph(getTextXml(message));
+    }
+    @Nullable
+    private String getImagePath(@NotNull ImageMessage message){
+
+        long id =message.getMsgSvrId();
+        Image image =imagePool.getBigImageFromMsgid(id);
+
+        if(image==null){
+            image =imagePool.getThumbnaImageByMd5(message.getMd5());
+            if(image==null){
+                return null;
+            }
+        }
+        return image.getPath();
+    }
+    private StringBuilder RelationshipsXml=new StringBuilder();
+    @NotNull
+    private String copyImageFile(String filepath) throws IOException {
+        File file = new File(filepath);
+
+        outfile.putArchiveEntry(new ZipArchiveEntry("word/media/"+file.getName()));
+        BufferedInputStream stream = new BufferedInputStream(new FileInputStream(file));
+        IOUtils.copy(stream,outfile);
+        outfile.closeArchiveEntry();
+        return file.getName();
+    }
+    private void addRelationships(String id,String filepath) throws IOException {
+        String filename=copyImageFile(filepath);
+        RelationshipsXml.append(formatRelation(id,filename));
+    }
+    private String formatRelation(String id,String filename){
+        return String.format(RELATIONPATT,"media/"+filename,id);
+    }
+    @NotNull
+    private String newId(){
+        id++;
+        return "rId"+id;
+    }
+    private void getAllMessageXml() throws IOException {
+        for (Message msg : contact.getMessages()) {
+            if (msg instanceof TextMessage) {
+                addTextMessage((TextMessage) msg);
+                continue;
+            }
+
+            if (msg instanceof ImageMessage) {
+                addImageMessage((ImageMessage) msg);
+                continue;
+            }
+
+            //todo
+        }
+    }
+    private void addImageMessage(ImageMessage message) throws IOException {
+        String imagepath=getImagePath(message);
+        if (imagepath == null) {
+            putHeadXml(message);
+            return;
+        }
+        putHeadXml(message);
+        String id=newId();
+        addRelationships(id,imagepath);
+        double imageProportion = getImageProportion(imagepath);
+        addParagraph(formatImageMessage((int) (maxHeight*imageProportion),
+               maxHeight,id,new File(imagepath).getName()));
+
+    }
+    @NotNull
+    private String  formatImageMessage(int x, int y, String id, String filename){
+        return MessageFormat.format(IMAGEPATT,""+x,""+y,""+id, ""+filename);
+    }
+    private void addParagraph(String pxml){
+
+        allxmlcontant.append(pxml);
+    }
+    private void initDocx() throws IOException {
+        outfile= new ZipArchiveOutputStream( new BufferedOutputStream(
+                new FileOutputStream(outputfilepath)));
+        copyZipFile();
+    }
+    private void copyZipFile() throws IOException {
+        Enumeration<ZipArchiveEntry> entries = in.getEntries();
+        ZipArchiveEntry e;
+        ZipArchiveEntry e1;
+        while(entries.hasMoreElements()){
+            e1 = entries.nextElement();
+            outfile.putArchiveEntry(e1);
+
+            if (!e1.isDirectory()) {
+                copy(in.getInputStream(e1), outfile);
+            }
+            outfile.closeArchiveEntry();
+        }
+    }
+    private void writeDocx() throws IOException {
+        writeDocument();
+        writeRelationShip();
+        //todo
+        outfile.flush();
+        outfile.close();
+        in.close();
+
+    }
+    private void writeDocument() throws IOException {
+
+        outfile.putArchiveEntry(new ZipArchiveEntry("word/document.xml"));
+
+        outfile.write(DOCHEAD.getBytes("utf-8"));
+        outfile.write(allxmlcontant.toString().getBytes("utf-8"));
+        outfile.write(DOCTAIL.getBytes("utf-8"));
+        outfile.closeArchiveEntry();
+    }
+    private void writeRelationShip() throws IOException {
+        outfile.putArchiveEntry(new ZipArchiveEntry("word/_rels/document.xml.rels"));
+        outfile.write(RELATIONSHIPSHEAD.getBytes("utf-8"));
+        outfile.write(RelationshipsXml.toString().getBytes("utf-8"));
+        outfile.write(RELATIONSHIPSTAIL.getBytes("utf-8"));
+        outfile.closeArchiveEntry();
+    }
+    private void formatHead(String format, String talkerName) {
+        allxmlcontant.append(HEADHEAD);
+        allxmlcontant.append(format);
+        allxmlcontant.append(HEADCON);
+        allxmlcontant.append(talkerName);
+        allxmlcontant.append(HEADTAI);
+    }
+    private double getImageProportion(String imagepath) {
+        String suffix = "jpg";
+        Iterator<ImageReader> iter = ImageIO.getImageReadersBySuffix(suffix);
+        int width = 0, height = 0;
+        if (iter.hasNext()) {
+            ImageReader reader = iter.next();
+            try {
+                ImageInputStream stream = new FileImageInputStream(new File(
+                        imagepath));
+                reader.setInput(stream);
+                width = reader.getWidth(reader.getMinIndex());
+                height = reader.getHeight(reader.getMinIndex());
+
+            } catch (IIOException e) {
+                //todo
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                reader.dispose();
+            }
+        }
+        return (0.0 + width) / height;
+    }
 }

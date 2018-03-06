@@ -6,7 +6,6 @@ import cn.czfshine.wechat.msg.MsgDataBase
 import cn.czfshine.wechat.msg.TextMessage
 
 
-
 fun main(args:Array<String>){
     val dataBase = MsgDataBase.buildFromFile("data/output/test1.obj")
     val chatRooms = dataBase.allChatRoom
