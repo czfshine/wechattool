@@ -3,7 +3,7 @@
 
 
 # Usage
-
+> 参考[wechat-dump](https://github.com/ppwwyyxx/wechat-dump)提供的步骤从手机获取数据库和图片文件夹，本项目假设数据库已解密
 ## 目录结构
 > 仅推荐
 * 当前工作目录
@@ -96,5 +96,13 @@ fun main(args:Array<String>){
 
 }
 ```
-
+## 导出docx
+目前只支持文本和图片，docx的样式可在‘src/main/java/cn/czfshine/wechat/output/docx/DocxFile.java’里面修改（就是那一大串xml字符串，具体所代表的意思看微软官方的文档）
+```java
+    MsgDataBase msgDataBase = new MsgDataBase("data/db/decrypted171028.db");
+    List<Contact> allChatRoom = msgDataBase.getAllChatRoom();
+    List<Message> messages = allChatRoom.get(0).getMessages();
+    Message[] msg = new Message[messages.size()];
+    DocxOutput.toDocx( messages.toArray(msg));
+```
 
