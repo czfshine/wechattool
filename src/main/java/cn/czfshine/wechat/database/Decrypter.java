@@ -21,6 +21,7 @@ public class Decrypter {
 
     /**
      * 得到密钥
+     * todo
      * @param imei 手机的imei码
      * @param uin 微信数据文件里面的uin码
      * @return 密钥

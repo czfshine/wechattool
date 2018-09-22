@@ -1,5 +1,6 @@
 package cn.czfshine.wechat.msg;
 
+import cn.czfshine.wechat.database.MsgDataBase;
 import org.junit.Test;
 
 import java.sql.SQLException;

@@ -1,5 +1,6 @@
 package cn.czfshine.wechat.msg;
 
+import cn.czfshine.wechat.database.DatabaseDamagedException;
 import cn.czfshine.wechat.image.ImagePool;
 import org.slf4j.LoggerFactory;
 

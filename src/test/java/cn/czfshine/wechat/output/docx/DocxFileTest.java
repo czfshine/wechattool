@@ -1,7 +1,7 @@
 package cn.czfshine.wechat.output.docx; 
 
 import cn.czfshine.wechat.contant.Contact;
-import cn.czfshine.wechat.msg.MsgDataBase;
+import cn.czfshine.wechat.database.MsgDataBase;
 import org.junit.Test;
 import org.junit.Before; 
 import org.junit.After;

@@ -6,13 +6,13 @@ package cn.czfshine.wechat.contant;
  * @date:2018/2/21 12:41
  */
 
-public class Person extends Contact {
+public class PersonContact extends Contact {
 
     private String wxid;
     private String remark; //备注
     private String contactLabelIds; //标签列表
 
-    public Person(String uid, String nickname, String wxid, String remark, String contactLabelIds) {
+    public PersonContact(String uid, String nickname, String wxid, String remark, String contactLabelIds) {
         super(uid, nickname);
         this.wxid = wxid;
         this.remark = remark;

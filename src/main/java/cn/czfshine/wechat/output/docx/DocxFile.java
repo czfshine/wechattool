@@ -57,6 +57,7 @@ public class DocxFile {
 
     private final static ImagePool imagePool;
     private final static int maxHeight = 3600000;//图片高度
+    private final static int maxWidth = 5000000;//图片宽度
     private final static SimpleDateFormat DATE_FORMAT;
     private final static String HEADHEAD;
     private final static String HEADCON;
@@ -294,8 +295,13 @@ public class DocxFile {
         String id=newId();
         addRelationships(id,imagepath);
         double imageProportion = getImageProportion(imagepath);
-        addParagraph(formatImageMessage((int) (maxHeight*imageProportion),
+        if(imageProportion<1){
+            addParagraph(formatImageMessage((int) (maxHeight*imageProportion),
                maxHeight,id,new File(imagepath).getName()));
+        }else{
+            addParagraph(formatImageMessage(maxWidth,
+                    (int) (maxWidth*imageProportion),id,new File(imagepath).getName()));
+        }
 
     }
     @NotNull

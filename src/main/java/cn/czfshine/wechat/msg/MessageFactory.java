@@ -1,5 +1,7 @@
 package cn.czfshine.wechat.msg;
 
+import cn.czfshine.wechat.database.DatabaseDamagedException;
+
 import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
 import java.sql.SQLException;

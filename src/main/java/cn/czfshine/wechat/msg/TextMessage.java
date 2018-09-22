@@ -1,6 +1,7 @@
 package cn.czfshine.wechat.msg;
 
 
+import cn.czfshine.wechat.database.DatabaseDamagedException;
 import cn.czfshine.wechat.output.PlainTextable;
 import org.apache.commons.lang3.StringEscapeUtils;
 

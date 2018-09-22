@@ -1,5 +1,6 @@
 package cn.czfshine.wechat.msg;
 
+import cn.czfshine.wechat.database.MsgDataBase;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

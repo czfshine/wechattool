@@ -1,6 +1,7 @@
 package cn.czfshine.wechat.msg;
 
 import cn.czfshine.wechat.contant.ContactInfo;
+import cn.czfshine.wechat.database.DatabaseDamagedException;
 
 import java.io.Serializable;
 import java.sql.ResultSet;

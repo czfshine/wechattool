@@ -35,12 +35,12 @@
 ## 基本使用
 
 * Java版
-``` java
+```java
 import cn.czfshine.wechat.contant.Contact;
 import cn.czfshine.wechat.image.ImagePool;
 import cn.czfshine.wechat.msg.ImageMessage;
 import cn.czfshine.wechat.msg.Message;
-import cn.czfshine.wechat.msg.MsgDataBase;
+import cn.czfshine.wechat.database.MsgDataBase;
 import cn.czfshine.wechat.msg.TextMessage;
 
 import java.sql.SQLException;
@@ -98,7 +98,7 @@ fun main(args:Array<String>){
 ```
 ## 导出docx
 目前只支持文本和图片，docx的样式可在‘src/main/java/cn/czfshine/wechat/output/docx/DocxFile.java’里面修改（就是那一大串xml字符串，具体所代表的意思看微软官方的文档）
-```java
+``` java
     MsgDataBase msgDataBase = new MsgDataBase("data/db/decrypted171028.db");
     List<Contact> allChatRoom = msgDataBase.getAllChatRoom();
     List<Message> messages = allChatRoom.get(0).getMessages();

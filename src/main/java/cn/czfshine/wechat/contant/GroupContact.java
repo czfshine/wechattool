@@ -6,8 +6,8 @@ package cn.czfshine.wechat.contant;
  * @date:2018/2/21 12:37
  */
 
-public class Group extends Contact {
-    public Group(String uid, String nickname) {
+public class GroupContact extends Contact {
+    public GroupContact(String uid, String nickname) {
         super(uid,  nickname);
     }
 }

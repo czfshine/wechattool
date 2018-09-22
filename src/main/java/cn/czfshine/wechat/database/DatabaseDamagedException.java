@@ -1,4 +1,4 @@
-package cn.czfshine.wechat.msg;
+package cn.czfshine.wechat.database;
 
 /**
  *

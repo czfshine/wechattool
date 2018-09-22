@@ -2,7 +2,7 @@ package cn.czfshine.wechat.example
 
 import cn.czfshine.wechat.image.ImagePool
 import cn.czfshine.wechat.msg.ImageMessage
-import cn.czfshine.wechat.msg.MsgDataBase
+import cn.czfshine.wechat.database.MsgDataBase
 import cn.czfshine.wechat.msg.TextMessage
 
 
