@@ -1,6 +1,6 @@
 package cn.czfshine.wechat.contant;
 
-import cn.czfshine.wechat.msg.Message;
+import cn.czfshine.wechat.msg.BaseMessage;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -19,13 +19,13 @@ public class Contact implements Serializable {
     protected  String uid; //唯一标识符
     protected  String nickname; //昵称
 
-    protected List<Message> messages=new ArrayList<>();
+    protected List<BaseMessage> messages=new ArrayList<>();
 
 
     /**
      * @return 得到该对话的所有消息
      */
-    public List<Message> getMessages() {
+    public List<BaseMessage> getMessages() {
         return messages;
     }
 
@@ -40,7 +40,7 @@ public class Contact implements Serializable {
      * 增加一条消息到该对话中去
      * @param msg 待增加的消息
      */
-    public void addMessage(Message msg){
+    public void addMessage(BaseMessage msg){
         messages.add(msg);
     }
 
@@ -49,7 +49,7 @@ public class Contact implements Serializable {
      * 对当前的所有消息按时间排序
      */
     public void sortMessage(){
-        messages.sort( Comparator.comparingLong((Message m)->m.getTime()));
+        messages.sort( Comparator.comparingLong((BaseMessage m)->m.getTime()));
     }
 
     public String getUid() {

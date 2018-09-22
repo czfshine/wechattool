@@ -1,6 +1,6 @@
 package cn.czfshine.wechat.output;
 
-import cn.czfshine.wechat.msg.Message;
+import cn.czfshine.wechat.msg.BaseMessage;
 
 import java.io.*;
 
@@ -10,13 +10,14 @@ import java.io.*;
  */
 
 public class TextOutput {
-    public static void toTextFile(Message[] msgs,OutputStream file){
+    public static void toTextFile(BaseMessage[] msgs, OutputStream file){
         try(BufferedOutputStream bufferedOutputStream=new BufferedOutputStream(file)) {
             int len=msgs.length;
             for(int i=0;i<len;i++){
                 try {
-                    if(msgs[i] instanceof PlainTextable)
-                    bufferedOutputStream.write(((PlainTextable)msgs[i]).toPlainText().getBytes("UTF-8"));
+                    if(msgs[i] instanceof PlainTextable) {
+                        bufferedOutputStream.write(((PlainTextable) msgs[i]).toPlainText().getBytes("UTF-8"));
+                    }
                     bufferedOutputStream.write('\n');
                 } catch (IOException e) {
                     e.printStackTrace();

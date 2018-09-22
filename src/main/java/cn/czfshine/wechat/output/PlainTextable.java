@@ -1,6 +1,6 @@
 package cn.czfshine.wechat.output;
 
-import cn.czfshine.wechat.msg.Message;
+import cn.czfshine.wechat.msg.BaseMessage;
 
 import java.text.SimpleDateFormat;
 
@@ -10,12 +10,12 @@ import java.text.SimpleDateFormat;
  */
 
 public interface PlainTextable {
-    public String toPlainText();
+    String toPlainText();
 
 
-    default String getHead(Message msg){
-        SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒");
-        return  String.format("%s     [%s]:",DATE_FORMAT.format(msg.getTime()),msg.getTalkerName());
+    default String getHead(BaseMessage msg){
+        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒");
+        return  String.format("%s     [%s]:",dateformat.format(msg.getTime()),msg.getTalkerName());
 
     };
 }

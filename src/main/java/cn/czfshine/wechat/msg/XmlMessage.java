@@ -9,7 +9,7 @@ import java.sql.SQLException;
  * @author:czfshine
  * @date:18-2-21
  **/
-public class XmlMessage extends Message {
+public class XmlMessage extends BaseMessage {
     public  final MSGTYPE TYPE;
     protected String xml;
     public XmlMessage(ResultSet rs) throws SQLException, DatabaseDamagedException, UnknowMassageTypeException {

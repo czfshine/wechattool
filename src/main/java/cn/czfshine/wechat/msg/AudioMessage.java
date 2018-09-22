@@ -12,7 +12,7 @@ import java.sql.SQLException;
  * @date:2018/2/21 10:20
  */
 
-public class AudioMessage extends Message implements Serializable {
+public class AudioMessage extends BaseMessage implements Serializable {
     private static final long serialVersionUID = -7734023615186363037L;
     private String md5;
 

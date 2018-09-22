@@ -14,9 +14,9 @@ import java.util.Map;
 
 public class MessageUtils {
     private  static  Logger logger= LoggerFactory.getLogger("msgutils");
-    public static void statisType(Message[] msgs){
-        Map<MSGTYPE,Integer> data = new HashMap<>();
-        for (Message m :
+    public static void statisType(BaseMessage[] msgs){
+        Map<MSGTYPE,Integer> data = new HashMap<>(100);
+        for (BaseMessage m :
                 msgs) {
             data.put(m.getType(),data.getOrDefault(m.getType(),0)+1);
         }
@@ -28,7 +28,7 @@ public class MessageUtils {
 
 
     }
-    public static void statisType(List<Message> msgs) {
-        statisType(msgs.toArray(new Message[msgs.size()]));
+    public static void statisType(List<BaseMessage> msgs) {
+        statisType(msgs.toArray(new BaseMessage[msgs.size()]));
     }
 }

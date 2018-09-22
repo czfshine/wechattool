@@ -3,6 +3,7 @@ package cn.czfshine.wechat.image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.InputStream;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,13 +38,12 @@ public class ImageDatabase {
     public List<BigImage> getBigImageInfoFromDatabase() throws SQLException {
         List<BigImage> bigImages;
         try (Statement statement = connection.createStatement()) {
-            int count;
-            try (ResultSet resultSet = statement.executeQuery("SELECT msgSvrId, bigImgPath, thumbImgPath FROM ImgInfo2")) {
+            int count=0;
+            try (ResultSet resultSet = statement.executeQuery("SELECT msgSvrId, bigImgPath FROM ImgInfo2")) {
                 logger.info("开始读取图片记录");
 
                 bigImages = new ArrayList<>();
 
-                count = 0;
                 while (resultSet.next()) {
                     count++;
                     long msgid = resultSet.getLong("msgSvrId");

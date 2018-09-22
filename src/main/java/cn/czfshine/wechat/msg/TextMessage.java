@@ -14,7 +14,7 @@ import java.sql.SQLException;
  * @date:2018/2/20 22:47
  */
 
-public class TextMessage extends Message implements PlainTextable,Serializable {
+public class TextMessage extends BaseMessage implements PlainTextable,Serializable {
     private static final long serialVersionUID = -7223261076407562700L;
 
     public String getContent() {
@@ -38,7 +38,7 @@ public class TextMessage extends Message implements PlainTextable,Serializable {
 
     private void init(ResultSet rs) throws SQLException, DatabaseDamagedException {
         content=rs.getString("content");
-        if(!talker.equals("me")){
+        if(!"me".equals(talker)){
             if(chatroom.endsWith("@chatroom")){
                 talker = content.substring(0,content.indexOf(":"));
                 content=StringEscapeUtils.escapeXml11(content.substring(content.indexOf(":")+2));

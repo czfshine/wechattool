@@ -76,8 +76,9 @@ public enum MSGTYPE implements Serializable {
 
     @Override
     public String toString() {
-        if(!typename.equals(""))
+        if(!"".equals(typename)) {
             return typename;
+        }
         return "无名类型"+id;
     }
 }

@@ -23,7 +23,7 @@ public class TextOutputTest {
         MsgDataBase msgDataBase = MsgDataBase.buildFromFile("data/output/test1.obj");
 
         Contact contact = msgDataBase.getAllChatRoom().get(0);
-        List<Message> messages = contact.getMessages();
-        TextOutput.toTextFile(messages.toArray(new Message[0]),new FileOutputStream("data/output/out.txt"));
+        List<BaseMessage> messages = contact.getMessages();
+        TextOutput.toTextFile(messages.toArray(new BaseMessage[0]),new FileOutputStream("data/output/out.txt"));
     }
 }

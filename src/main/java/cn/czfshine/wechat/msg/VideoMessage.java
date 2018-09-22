@@ -10,7 +10,7 @@ import java.sql.SQLException;
  * @date:2018/2/21 10:20
  */
 
-public class VideoMessage extends Message {
+public class VideoMessage extends BaseMessage {
     public static final MSGTYPE TYPE=MSGTYPE.TYPE_SPEAK;
     private String md5;
     public VideoMessage(ResultSet rs) throws SQLException, DatabaseDamagedException {

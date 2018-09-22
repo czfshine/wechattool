@@ -3,8 +3,8 @@ package cn.czfshine.wechat.output.docx;
 import cn.czfshine.wechat.contant.Contact;
 import cn.czfshine.wechat.image.Image;
 import cn.czfshine.wechat.image.ImagePool;
+import cn.czfshine.wechat.msg.BaseMessage;
 import cn.czfshine.wechat.msg.ImageMessage;
-import cn.czfshine.wechat.msg.Message;
 import cn.czfshine.wechat.msg.TextMessage;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveOutputStream;
@@ -55,9 +55,9 @@ public class DocxFile {
         toDocxFile("data/output/docx/"+contact.getNickname().replaceAll("[/\\\\:*?<>|]","")+".docx");
     }
 
-    private final static ImagePool imagePool;
-    private final static int maxHeight = 3600000;//图片高度
-    private final static int maxWidth = 5000000;//图片宽度
+    private static ImagePool imagePool;
+    private static int maxHeight = 3600000;//图片高度
+    private static int maxWidth = 5000000;//图片宽度
     private final static SimpleDateFormat DATE_FORMAT;
     private final static String HEADHEAD;
     private final static String HEADCON;
@@ -221,7 +221,7 @@ public class DocxFile {
         allxmlcontant = new StringBuilder(contact.getMessages().size() * 1000);//todo
         in = new ZipFile("data/in/in.docx");
     }
-    private void putHeadXml(@NotNull Message message){
+    private void putHeadXml(@NotNull BaseMessage message){
         formatHead(DATE_FORMAT.format(message.getTime()),
                 message.getTalkerName());
     }
@@ -247,7 +247,7 @@ public class DocxFile {
         }
         return image.getPath();
     }
-    private StringBuilder RelationshipsXml=new StringBuilder();
+    private StringBuilder relationshipsXml =new StringBuilder();
     @NotNull
     private String copyImageFile(String filepath) throws IOException {
         File file = new File(filepath);
@@ -260,7 +260,7 @@ public class DocxFile {
     }
     private void addRelationships(String id,String filepath) throws IOException {
         String filename=copyImageFile(filepath);
-        RelationshipsXml.append(formatRelation(id,filename));
+        relationshipsXml.append(formatRelation(id,filename));
     }
     private String formatRelation(String id,String filename){
         return String.format(RELATIONPATT,"media/"+filename,id);
@@ -271,7 +271,7 @@ public class DocxFile {
         return "rId"+id;
     }
     private void getAllMessageXml() throws IOException {
-        for (Message msg : contact.getMessages()) {
+        for (BaseMessage msg : contact.getMessages()) {
             if (msg instanceof TextMessage) {
                 addTextMessage((TextMessage) msg);
                 continue;
@@ -352,7 +352,7 @@ public class DocxFile {
     private void writeRelationShip() throws IOException {
         outfile.putArchiveEntry(new ZipArchiveEntry("word/_rels/document.xml.rels"));
         outfile.write(RELATIONSHIPSHEAD.getBytes("utf-8"));
-        outfile.write(RelationshipsXml.toString().getBytes("utf-8"));
+        outfile.write(relationshipsXml.toString().getBytes("utf-8"));
         outfile.write(RELATIONSHIPSTAIL.getBytes("utf-8"));
         outfile.closeArchiveEntry();
     }

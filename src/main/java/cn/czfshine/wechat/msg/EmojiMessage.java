@@ -12,7 +12,7 @@ import java.sql.SQLException;
  * @date:2018/2/20 23:48
  */
 
-public class EmojiMessage  extends Message implements Serializable {
+public class EmojiMessage  extends BaseMessage implements Serializable {
     private String md5;
 
     public static final MSGTYPE TYPE=MSGTYPE.TYPE_EMOJI;

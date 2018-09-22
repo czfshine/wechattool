@@ -88,7 +88,7 @@ try {
 
 /** 
 * 
-* Method: getHeadXml(Message message) 
+* Method: getHeadXml(BaseMessage message)
 * 
 */ 
 @Test
@@ -96,7 +96,7 @@ public void testGetHeadXml() throws Exception {
 //TODO: Test goes here... 
 /* 
 try { 
-   Method method = DocxFile.getClass().getMethod("getHeadXml", Message.class); 
+   Method method = DocxFile.getClass().getMethod("getHeadXml", BaseMessage.class);
    method.setAccessible(true); 
    method.invoke(<Object>, <Parameters>); 
 } catch(NoSuchMethodException e) { 

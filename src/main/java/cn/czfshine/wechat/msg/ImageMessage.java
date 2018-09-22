@@ -14,7 +14,7 @@ import java.sql.SQLException;
  * @date:2018/2/20 23:11
  */
 
-public class ImageMessage extends Message implements Serializable {
+public class ImageMessage extends BaseMessage implements Serializable {
 
     public String getMd5() {
         return md5;
@@ -31,7 +31,7 @@ public class ImageMessage extends Message implements Serializable {
     private void init(ResultSet rs) throws SQLException {
         md5 =rs.getString("imgPath");
         String  content=rs.getString("content");
-        if(!talker.equals("me")){
+        if(!"me".equals(talker)){
             if(chatroom.endsWith("@chatroom")){
                 talker = content.substring(0,content.indexOf(":"));
             }

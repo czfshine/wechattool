@@ -3,7 +3,7 @@ import cn.czfshine.wechat.contant.*;
 import cn.czfshine.wechat.image.BigImage;
 import cn.czfshine.wechat.image.ImageDatabase;
 import cn.czfshine.wechat.image.ImagePool;
-import cn.czfshine.wechat.msg.Message;
+import cn.czfshine.wechat.msg.BaseMessage;
 import cn.czfshine.wechat.msg.MessageFactory;
 import cn.czfshine.wechat.msg.UnknowMassageTypeException;
 import org.slf4j.Logger;
@@ -29,7 +29,7 @@ public class MsgDataBase implements Serializable {
     static {
         contactInfo=ContactInfo.getInstance();
     }
-    Message[] allmsgs;
+    BaseMessage[] allmsgs;
     Map<String,Contact> contacts;
 
     private  transient static Logger logger ;
@@ -50,6 +50,7 @@ public class MsgDataBase implements Serializable {
         connection = DriverManager.getConnection("jdbc:sqlite:"+datapath);
         init();
     }
+
 
     /**
      * 所有会话列表，包括个人会话，微信群，服务号等
@@ -102,12 +103,15 @@ public class MsgDataBase implements Serializable {
         objectOutputStream.writeObject(this);
         objectOutputStream.close();
     }
+
     private void init() throws SQLException {
         imageDatabase=new ImageDatabase(datapath);
         List<BigImage> images = imageDatabase.getBigImageInfoFromDatabase();
+
         for(BigImage image:images){
             imagePool.add(image);
         }
+
         allmsgs=getAllMsgssage();
         logger.info("一共有{}条图片消息，丢失{}张预览图",
                 imagePool.getLoseThumbnailFileCount()+imagePool.getThumbnailFileCount(),
@@ -121,7 +125,7 @@ public class MsgDataBase implements Serializable {
     /* 会话信息 */
     private Map<String,Contact> getAllConTact() throws SQLException {
         logger.info("开始读取会话列表");
-        Map<String,Contact> contacts=new HashMap<>();
+        Map<String,Contact> contacts=new HashMap<>(1000);
 
         try (Statement statement = connection.createStatement()) {
             Logger logger = LoggerFactory.getLogger("DBofmsg");
@@ -152,14 +156,14 @@ public class MsgDataBase implements Serializable {
         }
         return contacts;
     }
-    private Message[] getAllMsgssage() throws SQLException {
+    private BaseMessage[] getAllMsgssage() throws SQLException {
         logger.info("开始读取聊天记录");
 
         long startTime=System.nanoTime();
         int count=0;
-        ArrayList<Message> msgs=new ArrayList<>();
+        ArrayList<BaseMessage> msgs=new ArrayList<>();
 
-        Message[] res;
+        BaseMessage[] res;
         try (Statement statement = connection.createStatement()) {
 
             ResultSet rs = statement.executeQuery(
@@ -168,7 +172,7 @@ public class MsgDataBase implements Serializable {
             while (rs.next()) {
                 count++;
                 try {
-                    Message msg = parseMsgRow(rs);
+                    BaseMessage msg = parseMsgRow(rs);
                     if (msg != null) {
                         logger.debug(msg.toString());
                         msgs.add(msg);
@@ -190,7 +194,7 @@ public class MsgDataBase implements Serializable {
             long endTime = System.nanoTime();
             logger.info("读取解析耗时{}纳秒", endTime - startTime);
 
-            res = new Message[msgs.size()];
+            res = new BaseMessage[msgs.size()];
 
             statement.close();
         }
@@ -201,14 +205,14 @@ public class MsgDataBase implements Serializable {
 
 
 
-    private Message parseMsgRow(ResultSet rs) throws SQLException, DatabaseDamagedException, UnknowMassageTypeException {
+    private BaseMessage parseMsgRow(ResultSet rs) throws SQLException, DatabaseDamagedException, UnknowMassageTypeException {
         return MessageFactory.getMessage(rs);
     }
 
     private void popAllMessageToContact() throws SQLException {
 
         Logger logger=LoggerFactory.getLogger("DBmsg");
-        for(Message msg:allmsgs){
+        for(BaseMessage msg:allmsgs){
             String chatroom=msg.getChatroom();
             if(contacts.containsKey(chatroom)){
                 contacts.get(chatroom).addMessage(msg);
@@ -221,8 +225,8 @@ public class MsgDataBase implements Serializable {
         //TODO
     }
 
-    private Map<Long,Message> longMessageMap=new HashMap<>();
-    public Message getMsgFromMsgId(long id){
+    private Map<Long,BaseMessage> longMessageMap=new HashMap<>();
+    public BaseMessage getMsgFromMsgId(long id){
         return longMessageMap.getOrDefault(id,null);
     }
 

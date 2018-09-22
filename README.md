@@ -39,7 +39,7 @@
 import cn.czfshine.wechat.contant.Contact;
 import cn.czfshine.wechat.image.ImagePool;
 import cn.czfshine.wechat.msg.ImageMessage;
-import cn.czfshine.wechat.msg.Message;
+import cn.czfshine.wechat.msg.BaseMessage;
 import cn.czfshine.wechat.database.MsgDataBase;
 import cn.czfshine.wechat.msg.TextMessage;
 

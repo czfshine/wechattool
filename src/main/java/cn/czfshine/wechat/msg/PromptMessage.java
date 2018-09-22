@@ -9,7 +9,7 @@ import java.sql.SQLException;
  * @author:czfshine
  * @date:18-2-21
  **/
-public class PromptMessage extends Message {
+public class PromptMessage extends BaseMessage {
     private String text;
     public static final MSGTYPE TYPE=MSGTYPE.TYPE_YUYIN;
     public PromptMessage(ResultSet rs) throws SQLException, DatabaseDamagedException {
