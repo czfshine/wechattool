@@ -42,6 +42,7 @@ public enum MSGTYPE implements Serializable {
     TYPE_GROUP(10002,XmlMessage.class),//群相关的系统通知
     TYPE_APP(570425393,XmlMessage.class),
     TYPE_JUAN(452984881,XmlMessage.class),
+    TYPE_CLOUD(35,XmlMessage.class),
 
     /*未处理*/
     //TODO

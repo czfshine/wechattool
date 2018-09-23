@@ -6,9 +6,11 @@ import cn.czfshine.wechat.image.ImagePool;
 import cn.czfshine.wechat.msg.BaseMessage;
 import cn.czfshine.wechat.msg.MessageFactory;
 import cn.czfshine.wechat.msg.UnknowMassageTypeException;
+import org.docx4j.openpackaging.Base;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.imageio.plugins.bmp.BMPImageWriteParam;
 import java.io.*;
 import java.sql.*;
 import java.util.*;
@@ -29,7 +31,7 @@ public class MsgDataBase implements Serializable {
     static {
         contactInfo=ContactInfo.getInstance();
     }
-    BaseMessage[] allmsgs;
+    List<BaseMessage> allmsgs;
     Map<String,Contact> contacts;
 
     private  transient static Logger logger ;
@@ -156,7 +158,11 @@ public class MsgDataBase implements Serializable {
         }
         return contacts;
     }
-    private BaseMessage[] getAllMsgssage() throws SQLException {
+    public  List<BaseMessage> getMessages(){
+        return allmsgs;
+    }
+    private List<BaseMessage> getAllMsgssage() throws SQLException {
+
         logger.info("开始读取聊天记录");
 
         long startTime=System.nanoTime();
@@ -176,7 +182,6 @@ public class MsgDataBase implements Serializable {
                     if (msg != null) {
                         logger.debug(msg.toString());
                         msgs.add(msg);
-                        longMessageMap.put(rs.getLong("msgSvrId"), msg);
                     }
                 } catch (DatabaseDamagedException e) {
                     logger.warn("在数据库{}第{}条消息损坏", datapath, "" + count);
@@ -194,11 +199,10 @@ public class MsgDataBase implements Serializable {
             long endTime = System.nanoTime();
             logger.info("读取解析耗时{}纳秒", endTime - startTime);
 
-            res = new BaseMessage[msgs.size()];
 
-            statement.close();
         }
-        return msgs.toArray(res);
+        msgs.sort( Comparator.comparingLong((BaseMessage m)->m.getTime()));
+        return msgs;
 
 
     }
@@ -209,7 +213,7 @@ public class MsgDataBase implements Serializable {
         return MessageFactory.getMessage(rs);
     }
 
-    private void popAllMessageToContact() throws SQLException {
+    private void popAllMessageToContact()  {
 
         Logger logger=LoggerFactory.getLogger("DBmsg");
         for(BaseMessage msg:allmsgs){
@@ -221,13 +225,4 @@ public class MsgDataBase implements Serializable {
             }
         }
     }
-    private void getSelf(){
-        //TODO
-    }
-
-    private Map<Long,BaseMessage> longMessageMap=new HashMap<>();
-    public BaseMessage getMsgFromMsgId(long id){
-        return longMessageMap.getOrDefault(id,null);
-    }
-
 }
