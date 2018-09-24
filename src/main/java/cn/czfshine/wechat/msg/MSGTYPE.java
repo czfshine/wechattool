@@ -60,6 +60,7 @@ public enum MSGTYPE implements Serializable {
         id=typeid;
         clazz=cl;
     }
+
     MSGTYPE(int typeid, Class cl ,String typename){
         id=typeid;
         clazz=cl;

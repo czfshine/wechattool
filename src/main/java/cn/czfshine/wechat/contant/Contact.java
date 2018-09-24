@@ -1,6 +1,8 @@
 package cn.czfshine.wechat.contant;
 
 import cn.czfshine.wechat.msg.BaseMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -57,5 +59,33 @@ public class Contact implements Serializable {
     }
     public String getNickname() {
         return nickname;
+    }
+    public enum CONTACTTYPE{
+        SYSTEM, //系统
+        SERVICE,//公众号
+        APP,//应用
+        SELF,//本人
+        FRIEND,//朋友
+        PERSON,//个人（非朋友）群友
+        UNKONWN //未知类型
+    }
+    //todo:废弃
+    public static  CONTACTTYPE getType(int type){
+        Logger logger = LoggerFactory.getLogger("CONTYPE");
+        switch (type){
+            case 0:
+                return CONTACTTYPE.SERVICE;
+            case 1: return CONTACTTYPE.SELF;
+            case 2: break;
+            case 3:
+                return CONTACTTYPE.SERVICE;
+            case 4: break;
+
+            case 33:
+                return CONTACTTYPE.APP;
+
+            default:logger.warn("未知用户类型{}",type); return CONTACTTYPE.UNKONWN;
+        }
+        return CONTACTTYPE.UNKONWN;
     }
 }

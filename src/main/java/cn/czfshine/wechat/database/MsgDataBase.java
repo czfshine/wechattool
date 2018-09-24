@@ -110,22 +110,27 @@ public class MsgDataBase implements Serializable {
     }
 
     private void init() throws SQLException {
+        /*
         imageDatabase=new ImageDatabase(datapath);
         List<BigImage> images = imageDatabase.getBigImageInfoFromDatabase();
 
         for(BigImage image:images){
             imagePool.add(image);
         }
-
+        */
+        contacts=getAllConTact();
         allmsgs=getAllMsgssage();
+        /*
         logger.info("一共有{}条图片消息，丢失{}张预览图",
                 imagePool.getLoseThumbnailFileCount()+imagePool.getThumbnailFileCount(),
                 imagePool.getLoseThumbnailFileCount());
-        contacts=getAllConTact();
+        */
         //popAllMessageToContact();
 
 
     }
+
+
 
     /* 会话信息 */
     private Map<String,Contact> getAllConTact() throws SQLException {
@@ -135,13 +140,20 @@ public class MsgDataBase implements Serializable {
         try (Statement statement = connection.createStatement()) {
             Logger logger = LoggerFactory.getLogger("DBofmsg");
 
+            // 会话ID，微信号，备注，昵称，会话类型，标签列表
             ResultSet rs = statement.executeQuery(
-                    "SELECT username,alias,conRemark,nickname,type,verifyFlag,contactLabelIds FROM rcontact");
-
+                    "SELECT username,alias,conRemark,nickname,type,contactLabelIds " +
+                            "FROM rcontact");
             while (rs.next()) {
 
                 String username = rs.getString("username");
                 String nickname = rs.getString("nickname");
+                String alias = rs.getString("alias");
+                String conRemark = rs.getString("conRemark");
+                String contactLabelIds = rs.getString("contactLabelIds");
+
+                long type = rs.getInt("type");
+
 
 
                 if (username.endsWith("@chatroom")) { //微信群
@@ -149,9 +161,6 @@ public class MsgDataBase implements Serializable {
                 } else if (username.startsWith("gh_")) { //服务号
                     contacts.put(username, new ServiceContact(username, nickname));
                 } else { //其他的假设是个人聊天
-                    String alias = rs.getString("alias");
-                    String conRemark = rs.getString("conRemark");
-                    String contactLabelIds = rs.getString("contactLabelIds");
                     contacts.put(username, new PersonContact(username, nickname, alias, conRemark, contactLabelIds));
                 }
             }
