@@ -1,5 +1,6 @@
 package cn.czfshine.wechat.msg;
 
+import cn.czfshine.wechat.contant.ContactUID;
 import cn.czfshine.wechat.database.DatabaseDamagedException;
 
 import java.sql.ResultSet;
@@ -19,6 +20,6 @@ public class PromptMessage extends BaseMessage {
 
     public void init(ResultSet rs) throws SQLException {
         text=rs.getString("content");
-        talker="SYSTEM";
+        talker= ContactUID.SYSTEM;
     }
 }

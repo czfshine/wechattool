@@ -223,7 +223,7 @@ public class DocxFile {
     }
     private void putHeadXml(@NotNull BaseMessage message){
         formatHead(DATE_FORMAT.format(message.getTime()),
-                message.getTalkerName());
+                "");//TODO
     }
     private String getTextXml(@NotNull TextMessage message){
         return  String.format(TEXTPATT,message.getContent().replaceAll("&#[\\d]+",""));

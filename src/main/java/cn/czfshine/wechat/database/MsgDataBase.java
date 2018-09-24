@@ -60,13 +60,16 @@ public class MsgDataBase implements Serializable {
      */
     public List <Contact> getAllChatRoom(){
         List <Contact> chatrooms = new ArrayList<>(contacts.values() );
-        chatrooms.sort(Comparator.comparingInt((Contact a) -> -a.getMessages().size()));
-        for(Contact chatroom:chatrooms){
+        chatrooms.sort(Comparator.comparing((a)->a.getUid()));
+        /*for(Contact chatroom:chatrooms){
             chatroom.sortMessage();
             logger.debug("username{}-count{}",chatroom.getNickname(),chatroom.getMessages().size());
-        }
-
+        }*/
         return chatrooms;
+    }
+
+    public Map<String,Contact> getContacts(){
+        return contacts;
     }
 
     /**
@@ -119,7 +122,7 @@ public class MsgDataBase implements Serializable {
                 imagePool.getLoseThumbnailFileCount()+imagePool.getThumbnailFileCount(),
                 imagePool.getLoseThumbnailFileCount());
         contacts=getAllConTact();
-        popAllMessageToContact();
+        //popAllMessageToContact();
 
 
     }

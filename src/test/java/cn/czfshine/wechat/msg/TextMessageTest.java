@@ -38,6 +38,7 @@ public void testToString() throws Exception {
 */ 
 @Test
 public void testToPlainText() throws Exception {
+    /*
     TextMessage message = new TextMessage(123, 12345678, "me", "233333", "whoareyou");
     System.out.println(message.toPlainText());
     message = new TextMessage(123, 12345678, "me", "233333", "你是谁");
@@ -50,7 +51,7 @@ public void testToPlainText() throws Exception {
             "fgfdgdgdgdfgd\n");
     System.out.println(message.toPlainText());
     message = new TextMessage(123, 12345678, "me", "233333", "whoareyou");
-    System.out.println(message.toPlainText());
+    System.out.println(message.toPlainText());*/
 
 
 }

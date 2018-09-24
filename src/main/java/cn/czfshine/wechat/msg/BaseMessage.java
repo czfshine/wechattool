@@ -1,6 +1,7 @@
 package cn.czfshine.wechat.msg;
 
 import cn.czfshine.wechat.contant.ContactInfo;
+import cn.czfshine.wechat.contant.ContactUID;
 import cn.czfshine.wechat.database.DatabaseDamagedException;
 
 import java.io.Serializable;
@@ -30,11 +31,11 @@ public abstract class BaseMessage implements Serializable {
 
     protected Date time;
 
-    public String getTalker() {
+    public ContactUID getTalker() {
         return talker;
     }
 
-    protected String talker;
+    protected ContactUID talker;
 
     public String getChatroom() {
         return chatroom;
@@ -47,18 +48,20 @@ public abstract class BaseMessage implements Serializable {
         long datastamp=rs.getLong("createTime");
         time= new Date(datastamp);
         chatroom=rs.getString("talker");
+
         if(chatroom==null || "".equals(chatroom)) {
             throw  new DatabaseDamagedException();
         }
-        talker=chatroom;
+        talker = new ContactUID(chatroom);
+
         int isSend=rs.getInt(   "isSend");
         if(isSend==1){
-            talker="me";
+            talker=ContactUID.ME;
         }
 
     }
 
-    public BaseMessage(long msgSvrId, long datastamp, String talker, String chatroom) {
+    public BaseMessage(long msgSvrId, long datastamp, ContactUID talker, String chatroom) {
         this.msgSvrId = msgSvrId;
         time= new Date(datastamp);
         this.talker = talker;
@@ -76,15 +79,6 @@ public abstract class BaseMessage implements Serializable {
             e.printStackTrace();
         }
         return null;
-    }
-
-    private static transient ContactInfo contactInfo;
-    static {
-        contactInfo=ContactInfo.getInstance();
-    }
-
-    public String getTalkerName(){
-        return contactInfo.getUsernameFromUid(talker);
     }
 
     /**

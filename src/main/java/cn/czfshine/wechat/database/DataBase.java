@@ -1,14 +1,13 @@
 package cn.czfshine.wechat.database;
 
+import cn.czfshine.wechat.contant.Contact;
 import cn.czfshine.wechat.msg.BaseMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author:czfshine
@@ -17,11 +16,8 @@ import java.util.List;
 
 public class DataBase {
 
-    private List<MsgDataBase> msgDataBases;
-    private static  Logger logger;
-    static {
-        logger = LoggerFactory.getLogger("Database");
-    }
+    private List<BaseMessage> allMessage;
+    private Map<String, Contact> allContact;
     public DataBase(List<String> datafiles){
         logger.info("开始解析数据库：");
         msgDataBases=new LinkedList<>();
@@ -36,11 +32,19 @@ public class DataBase {
                 e.printStackTrace();
             }
         }
-        MergeAllMesage();
+        MergeDatabases();
     }
 
     public List<BaseMessage> getAllMessage(){
         return allMessage;
+    }
+    public Map<String,Contact> getAllContact(){
+        return allContact;
+    }
+    private List<MsgDataBase> msgDataBases;
+    private static  Logger logger;
+    static {
+        logger = LoggerFactory.getLogger("Database");
     }
 
     private MsgDataBase readMsgDB(String path) throws SQLException, IOException, ClassNotFoundException {
@@ -52,14 +56,19 @@ public class DataBase {
         }
     }
 
-    private List<BaseMessage> allMessage;
-    private void MergeAllMesage(){
+
+    private void MergeDatabases(){
         logger.info("开始合并数据库：");
-        List<BaseMessage> res=new ArrayList<>();
+        List<BaseMessage> msgres=new ArrayList<>();
+
+        Map<String, Contact> contactMap = new HashMap<>();
+
         for(MsgDataBase db : msgDataBases){
-            res=MergeMessageList(res,db.getMessages());
+            msgres=MergeMessageList(msgres,db.getMessages());
+            contactMap=MergeContact(contactMap,db.getContacts());
         }
-        allMessage=res;
+        allMessage=msgres;
+        allContact=contactMap;
     }
 
     private List<BaseMessage> MergeMessageList(List<BaseMessage> a,List<BaseMessage> b){
@@ -99,4 +108,18 @@ public class DataBase {
         return res;
     }
 
+
+    private Map<String,Contact> MergeContact(final Map<String,Contact> a, final Map<String,Contact> b){
+        Map<String, Contact> res = new HashMap<>();
+        res.putAll(a);
+        for(String k:b.keySet()){
+            if(res.containsKey(k)){
+                res.merge(k, b.get(k),(o,n)->n);
+            }else{
+                res.put(k, b.get(k));
+            }
+        }
+        logger.info("合并会话消息，总数{},重复{}", res.size(), a.size() + b.size() - res.size());
+        return res;
+    }
 }
