@@ -36,7 +36,7 @@
 
 * Java版
 ```java
-import cn.czfshine.wechat.contant.Contact;
+import cn.czfshine.wechat.contant.Chatroom;
 import cn.czfshine.wechat.image.ImagePool;
 import cn.czfshine.wechat.msg.ImageMessage;
 import cn.czfshine.wechat.msg.BaseMessage;
@@ -56,10 +56,10 @@ public class Main{
         //得到会话列表(已经按消息数量排序了）
         List<Contact> allChatRoom = db.getAllChatRoom();
         //取第一个会话
-        Contact contact = allChatRoom.get(0);
-        System.out.println("会话名称："+contact.getNickname());
+        Contact chatroom = allChatRoom.get(0);
+        System.out.println("会话名称："+chatroom.getNickname());
         //获取信息列表（按时间排序了）
-        List<Message> messages = contact.getMessages();
+        List<Message> messages = chatroom.getMessages();
         Message message = messages.get(0);
         
         System.out.println(message.getTalkerName());

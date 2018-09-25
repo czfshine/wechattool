@@ -1,6 +1,6 @@
 package cn.czfshine.wechat.database;
 
-import cn.czfshine.wechat.contant.Contact;
+import cn.czfshine.wechat.contant.Chatroom;
 import cn.czfshine.wechat.msg.BaseMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,7 +17,7 @@ import java.util.*;
 public class DataBase {
 
     private List<BaseMessage> allMessage;
-    private Map<String, Contact> allContact;
+    private Map<String, Chatroom> allContact;
     public DataBase(List<String> datafiles){
         logger.info("开始解析数据库：");
         msgDataBases=new LinkedList<>();
@@ -38,7 +38,7 @@ public class DataBase {
     public List<BaseMessage> getAllMessage(){
         return allMessage;
     }
-    public Map<String,Contact> getAllContact(){
+    public Map<String, Chatroom> getAllContact(){
         return allContact;
     }
     private List<MsgDataBase> msgDataBases;
@@ -61,7 +61,7 @@ public class DataBase {
         logger.info("开始合并数据库：");
         List<BaseMessage> msgres=new ArrayList<>();
 
-        Map<String, Contact> contactMap = new HashMap<>();
+        Map<String, Chatroom> contactMap = new HashMap<>();
 
         for(MsgDataBase db : msgDataBases){
             msgres=MergeMessageList(msgres,db.getMessages());
@@ -109,8 +109,8 @@ public class DataBase {
     }
 
 
-    private Map<String,Contact> MergeContact(final Map<String,Contact> a, final Map<String,Contact> b){
-        Map<String, Contact> res = new HashMap<>();
+    private Map<String, Chatroom> MergeContact(final Map<String, Chatroom> a, final Map<String, Chatroom> b){
+        Map<String, Chatroom> res = new HashMap<>();
         res.putAll(a);
         for(String k:b.keySet()){
             if(res.containsKey(k)){

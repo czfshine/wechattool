@@ -1,6 +1,6 @@
 package cn.czfshine.wechat.output.docx;
 
-import cn.czfshine.wechat.contant.Contact;
+import cn.czfshine.wechat.contant.Chatroom;
 import cn.czfshine.wechat.image.Image;
 import cn.czfshine.wechat.image.ImagePool;
 import cn.czfshine.wechat.msg.BaseMessage;
@@ -32,9 +32,9 @@ import static org.apache.commons.compress.utils.IOUtils.copy;
  */
 
 public class DocxFile {
-    public DocxFile(Contact contact) throws IOException, NotMessageOfContactException {
-        this.contact=contact;
-        if(contact.getMessages().size()==0){
+    public DocxFile(Chatroom chatroom) throws IOException, NotMessageOfContactException {
+        this.chatroom = chatroom;
+        if(chatroom.getMessages().size()==0){
             throw new NotMessageOfContactException();
         }
         init();
@@ -52,7 +52,7 @@ public class DocxFile {
     }
     public void toDocxFile() throws IOException, NotMessageOfContactException {
         boolean mkdirs = new File("data/output/docx/").mkdirs();
-        toDocxFile("data/output/docx/"+contact.getNickname().replaceAll("[/\\\\:*?<>|]","")+".docx");
+        toDocxFile("data/output/docx/"+ chatroom.getNickname().replaceAll("[/\\\\:*?<>|]","")+".docx");
     }
 
     private static ImagePool imagePool;
@@ -211,14 +211,14 @@ public class DocxFile {
     }
 
     private String outputfilepath;
-    private Contact contact;
+    private Chatroom chatroom;
     private int id = 10086;
     private StringBuilder allxmlcontant;
     private ZipArchiveOutputStream outfile;
     private ZipFile in;
 
     private void init() throws IOException {
-        allxmlcontant = new StringBuilder(contact.getMessages().size() * 1000);//todo
+        allxmlcontant = new StringBuilder(chatroom.getMessages().size() * 1000);//todo
         in = new ZipFile("data/in/in.docx");
     }
     private void putHeadXml(@NotNull BaseMessage message){
@@ -271,7 +271,7 @@ public class DocxFile {
         return "rId"+id;
     }
     private void getAllMessageXml() throws IOException {
-        for (BaseMessage msg : contact.getMessages()) {
+        for (BaseMessage msg : chatroom.getMessages()) {
             if (msg instanceof TextMessage) {
                 addTextMessage((TextMessage) msg);
                 continue;

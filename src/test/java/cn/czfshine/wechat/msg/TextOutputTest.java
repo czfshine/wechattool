@@ -1,6 +1,6 @@
 package cn.czfshine.wechat.msg;
 
-import cn.czfshine.wechat.contant.Contact;
+import cn.czfshine.wechat.contant.Chatroom;
 import cn.czfshine.wechat.database.MsgDataBase;
 import cn.czfshine.wechat.output.TextOutput;
 import org.junit.Test;
@@ -22,8 +22,8 @@ public class TextOutputTest {
     public void TextMassageOutputTest() throws SQLException, IOException, ClassNotFoundException {
         MsgDataBase msgDataBase = MsgDataBase.buildFromFile("data/output/test1.obj");
 
-        Contact contact = msgDataBase.getAllChatRoom().get(0);
-        List<BaseMessage> messages = contact.getMessages();
+        Chatroom chatroom = msgDataBase.getAllChatRoom().get(0);
+        List<BaseMessage> messages = chatroom.getMessages();
         TextOutput.toTextFile(messages.toArray(new BaseMessage[0]),new FileOutputStream("data/output/out.txt"));
     }
 }

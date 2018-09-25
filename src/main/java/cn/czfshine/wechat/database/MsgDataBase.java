@@ -1,16 +1,13 @@
 package cn.czfshine.wechat.database;
 import cn.czfshine.wechat.contant.*;
-import cn.czfshine.wechat.image.BigImage;
 import cn.czfshine.wechat.image.ImageDatabase;
 import cn.czfshine.wechat.image.ImagePool;
 import cn.czfshine.wechat.msg.BaseMessage;
 import cn.czfshine.wechat.msg.MessageFactory;
 import cn.czfshine.wechat.msg.UnknowMassageTypeException;
-import org.docx4j.openpackaging.Base;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.imageio.plugins.bmp.BMPImageWriteParam;
 import java.io.*;
 import java.sql.*;
 import java.util.*;
@@ -32,7 +29,7 @@ public class MsgDataBase implements Serializable {
         contactInfo=ContactInfo.getInstance();
     }
     List<BaseMessage> allmsgs;
-    Map<String,Contact> contacts;
+    Map<String, Chatroom> contacts;
 
     private  transient static Logger logger ;
     private  ImagePool imagePool;
@@ -58,17 +55,17 @@ public class MsgDataBase implements Serializable {
      * 所有会话列表，包括个人会话，微信群，服务号等
      * @return
      */
-    public List <Contact> getAllChatRoom(){
-        List <Contact> chatrooms = new ArrayList<>(contacts.values() );
+    public List <Chatroom> getAllChatRoom(){
+        List <Chatroom> chatrooms = new ArrayList<>(contacts.values() );
         chatrooms.sort(Comparator.comparing((a)->a.getUid()));
-        /*for(Contact chatroom:chatrooms){
+        /*for(Chatroom chatroom:chatrooms){
             chatroom.sortMessage();
             logger.debug("username{}-count{}",chatroom.getNickname(),chatroom.getMessages().size());
         }*/
         return chatrooms;
     }
 
-    public Map<String,Contact> getContacts(){
+    public Map<String, Chatroom> getContacts(){
         return contacts;
     }
 
@@ -133,9 +130,9 @@ public class MsgDataBase implements Serializable {
 
 
     /* 会话信息 */
-    private Map<String,Contact> getAllConTact() throws SQLException {
+    private Map<String, Chatroom> getAllConTact() throws SQLException {
         logger.info("开始读取会话列表");
-        Map<String,Contact> contacts=new HashMap<>(1000);
+        Map<String, Chatroom> contacts=new HashMap<>(1000);
 
         try (Statement statement = connection.createStatement()) {
             Logger logger = LoggerFactory.getLogger("DBofmsg");
@@ -157,11 +154,11 @@ public class MsgDataBase implements Serializable {
 
 
                 if (username.endsWith("@chatroom")) { //微信群
-                    contacts.put(username, new GroupContact(username, nickname));
+                    contacts.put(username, new GroupChatroom(username, nickname));
                 } else if (username.startsWith("gh_")) { //服务号
-                    contacts.put(username, new ServiceContact(username, nickname));
+                    contacts.put(username, new ServiceChatroom(username, nickname));
                 } else { //其他的假设是个人聊天
-                    contacts.put(username, new PersonContact(username, nickname, alias, conRemark, contactLabelIds));
+                    contacts.put(username, new PersonChatroom(username, nickname, alias, conRemark, contactLabelIds));
                 }
             }
 
@@ -225,16 +222,4 @@ public class MsgDataBase implements Serializable {
         return MessageFactory.getMessage(rs);
     }
 
-    private void popAllMessageToContact()  {
-
-        Logger logger=LoggerFactory.getLogger("DBmsg");
-        for(BaseMessage msg:allmsgs){
-            String chatroom=msg.getChatroom();
-            if(contacts.containsKey(chatroom)){
-                contacts.get(chatroom).addMessage(msg);
-            }else{
-                logger.warn("聊天室id:{}有聊天记录，但是在rcontact里面没有",chatroom);
-            }
-        }
-    }
 }

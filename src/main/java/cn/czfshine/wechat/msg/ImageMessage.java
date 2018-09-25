@@ -1,6 +1,6 @@
 package cn.czfshine.wechat.msg;
 
-import cn.czfshine.wechat.contant.ContactUID;
+import cn.czfshine.wechat.contant.Talker;
 import cn.czfshine.wechat.database.DatabaseDamagedException;
 import cn.czfshine.wechat.image.ImagePool;
 import org.slf4j.LoggerFactory;
@@ -32,10 +32,10 @@ public class ImageMessage extends BaseMessage implements Serializable {
     private void init(ResultSet rs) throws SQLException {
         md5 =rs.getString("imgPath");
         String  content=rs.getString("content");
-        if(!ContactUID.ME.equals(talker)){
-            if(chatroom.endsWith("@chatroom")){
-                talker = new ContactUID(content.substring(0,content.indexOf(":")));
-            }
+        if(!Talker.ME.equals(talker)){
+            /*if(chatroom.endsWith("@chatroom")){
+                talker = new Talker(content.substring(0,content.indexOf(":")));
+            }*/
         }
 
         if(md5.startsWith("THUMBNAIL_DIRPATH://th_")){

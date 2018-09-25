@@ -1,7 +1,8 @@
 package cn.czfshine.wechat.msg;
 
 
-import cn.czfshine.wechat.contant.ContactUID;
+import cn.czfshine.wechat.contant.Chatroom;
+import cn.czfshine.wechat.contant.Talker;
 import cn.czfshine.wechat.database.DatabaseDamagedException;
 import cn.czfshine.wechat.output.PlainTextable;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -32,7 +33,7 @@ public class TextMessage extends BaseMessage implements PlainTextable,Serializab
         init(rs);
     }
 
-    public TextMessage(long msgSvrId, long datastamp, ContactUID talker, String chatroom, String content) {
+    public TextMessage(long msgSvrId, long datastamp, Talker talker, Chatroom chatroom, String content) {
         super(msgSvrId, datastamp, talker, chatroom);
         this.content = StringEscapeUtils.escapeXml11(content);
     }
@@ -40,10 +41,10 @@ public class TextMessage extends BaseMessage implements PlainTextable,Serializab
     private void init(ResultSet rs) throws SQLException, DatabaseDamagedException {
         content=rs.getString("content");
         if(!"me".equals(talker)){
-            if(chatroom.endsWith("@chatroom")){
-                talker = new ContactUID(content.substring(0, content.indexOf(":")));
+            /*if(chatroom.endsWith("@chatroom")){
+                talker = new Talker(content.substring(0, content.indexOf(":")));
                 content=StringEscapeUtils.escapeXml11(content.substring(content.indexOf(":")+2));
-            }
+            }*/
         }
     }
     @Override

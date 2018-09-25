@@ -16,7 +16,7 @@ import java.util.Set;
 public class ContactInfo {
 
     private static ContactInfo contactInfo;
-    private  Map<String,Contact> contactMap=new HashMap<>();
+    private  Map<String, Chatroom> contactMap=new HashMap<>();
     private static Logger logger=LoggerFactory.getLogger("coninfo");
     static {
         contactInfo=new ContactInfo();
@@ -25,19 +25,19 @@ public class ContactInfo {
         return contactInfo;
     }
     private transient Set<String> loseuser=new HashSet<>();
-    public void addContacts(Contact[] contacts){
-        for(Contact c:contacts){
+    public void addContacts(Chatroom[] chatrooms){
+        for(Chatroom c: chatrooms){
             contactMap.put(c.getUid(),c);
         }
     }
-    public void addContacts(Map<String,Contact> stringContactMap){
+    public void addContacts(Map<String, Chatroom> stringContactMap){
         contactMap.putAll(stringContactMap);
     }
 
     public String getUsernameFromUid(String uid){
-        Contact contact = contactMap.getOrDefault(uid,null);
-        if(contact!=null){
-            return contact.getNickname();
+        Chatroom chatroom = contactMap.getOrDefault(uid,null);
+        if(chatroom !=null){
+            return chatroom.getNickname();
         }
         if(!loseuser.contains(uid)){
             loseuser.add(uid);

@@ -1,7 +1,7 @@
 package cn.czfshine.wechat.msg;
 
-import cn.czfshine.wechat.contant.ContactInfo;
-import cn.czfshine.wechat.contant.ContactUID;
+import cn.czfshine.wechat.contant.Chatroom;
+import cn.czfshine.wechat.contant.Talker;
 import cn.czfshine.wechat.database.DatabaseDamagedException;
 
 import java.io.Serializable;
@@ -31,37 +31,39 @@ public abstract class BaseMessage implements Serializable {
 
     protected Date time;
 
-    public ContactUID getTalker() {
+    public Talker getTalker() {
         return talker;
     }
 
-    protected ContactUID talker;
+    protected Talker talker;
 
-    public String getChatroom() {
+    public Chatroom getChatroom() {
         return chatroom;
     }
 
-    protected String chatroom;
+    protected Chatroom chatroom;
 
     BaseMessage(ResultSet rs) throws SQLException, DatabaseDamagedException {
         msgSvrId=rs.getLong("msgSvrId");
         long datastamp=rs.getLong("createTime");
         time= new Date(datastamp);
-        chatroom=rs.getString("talker");
+
+        //todo
+        /*chatroom=rs.getString("talker");
 
         if(chatroom==null || "".equals(chatroom)) {
             throw  new DatabaseDamagedException();
         }
-        talker = new ContactUID(chatroom);
+        talker = new Talker(chatroom);
 
         int isSend=rs.getInt(   "isSend");
         if(isSend==1){
-            talker=ContactUID.ME;
-        }
+            talker=Talker.ME;
+        }*/
 
     }
 
-    public BaseMessage(long msgSvrId, long datastamp, ContactUID talker, String chatroom) {
+    public BaseMessage(long msgSvrId, long datastamp, Talker talker, Chatroom chatroom) {
         this.msgSvrId = msgSvrId;
         time= new Date(datastamp);
         this.talker = talker;
@@ -90,8 +92,9 @@ public abstract class BaseMessage implements Serializable {
     public boolean equals(Object obj) {
         if(obj instanceof BaseMessage){
             BaseMessage b=(BaseMessage) obj;
+            /*
             return this.time.equals(b.time) &&
-                    this.talker.equals(b.talker);
+                    this.talker.equals(b.talker);*/
         }
         return false;
     }

@@ -6,13 +6,14 @@ package cn.czfshine.wechat.contant;
  * @date:2018/2/21 12:41
  */
 
-public class PersonContact extends Contact {
+public class PersonChatroom extends Chatroom {
 
     private String wxid;
     private String remark; //备注
     private String contactLabelIds; //标签列表
 
-    public PersonContact(String uid, String nickname, String wxid, String remark, String contactLabelIds) {
+    private Talker talker;
+    public PersonChatroom(String uid, String nickname, String wxid, String remark, String contactLabelIds) {
         super(uid, nickname);
         this.wxid = wxid;
         this.remark = remark;
@@ -25,5 +26,9 @@ public class PersonContact extends Contact {
             return remark;
         }
         return super.getNickname();
+    }
+
+    public Talker getTalker(){
+        return talker;
     }
 }

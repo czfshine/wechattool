@@ -1,6 +1,6 @@
 package cn.czfshine.wechat.output.docx; 
 
-import cn.czfshine.wechat.contant.Contact;
+import cn.czfshine.wechat.contant.Chatroom;
 import cn.czfshine.wechat.database.MsgDataBase;
 import org.junit.Test;
 import org.junit.Before; 
@@ -34,17 +34,17 @@ public void after() throws Exception {
 */ 
 @Test
 public void testToDocxFileFilepath() throws Exception {
-    Contact contact = dataBase.getAllChatRoom().get(1);
-    new DocxFile(contact).toDocxFile();
+    Chatroom chatroom = dataBase.getAllChatRoom().get(1);
+    new DocxFile(chatroom).toDocxFile();
 //TODO: Test goes here... 
 }
 
     @Test
     public void testToDocxFileAll()  {
-        List<Contact> allChatRoom = dataBase.getAllChatRoom();
-        for(Contact contact : allChatRoom){
+        List<Chatroom> allChatRoom = dataBase.getAllChatRoom();
+        for(Chatroom chatroom : allChatRoom){
             try {
-                new DocxFile(contact).toDocxFile();
+                new DocxFile(chatroom).toDocxFile();
             }catch (NotMessageOfContactException e){
                 //todo
             }

@@ -15,7 +15,7 @@ import java.util.List;
  * @date:2018/2/9 22:27
  */
 
-public class Contact implements Serializable {
+public class Chatroom implements Serializable {
     public  static final long serialVersionUID =1802252205;
 
     protected  String uid; //唯一标识符
@@ -32,7 +32,7 @@ public class Contact implements Serializable {
     }
 
 
-    public Contact(String uid, String nickname) {
+    public Chatroom(String uid, String nickname) {
         this.uid = uid;
         this.nickname = nickname;
     }
