@@ -4,6 +4,7 @@ package cn.czfshine.wechat.msg;
 import cn.czfshine.wechat.contant.Chatroom;
 import cn.czfshine.wechat.contant.Talker;
 import cn.czfshine.wechat.database.DatabaseDamagedException;
+import cn.czfshine.wechat.database.pojo.MessageDO;
 import cn.czfshine.wechat.output.PlainTextable;
 import org.apache.commons.lang3.StringEscapeUtils;
 
@@ -28,23 +29,18 @@ public class TextMessage extends BaseMessage implements PlainTextable,Serializab
 
     public static final MSGTYPE TYPE = MSGTYPE.TYPE_MSG;
 
-    public TextMessage(ResultSet rs) throws SQLException, DatabaseDamagedException {
-        super(rs);
-        init(rs);
+    public TextMessage(MessageDO messageDO) throws SQLException, DatabaseDamagedException {
+        super(messageDO);
+        init(messageDO);
     }
+    private void init(MessageDO messageDO) throws SQLException, DatabaseDamagedException {
+        content= messageDO.getContant();
 
-    public TextMessage(long msgSvrId, long datastamp, Talker talker, Chatroom chatroom, String content) {
-        super(msgSvrId, datastamp, talker, chatroom);
-        this.content = StringEscapeUtils.escapeXml11(content);
-    }
-
-    private void init(ResultSet rs) throws SQLException, DatabaseDamagedException {
-        content=rs.getString("content");
-        if(!"me".equals(talker)){
-            /*if(chatroom.endsWith("@chatroom")){
-                talker = new Talker(content.substring(0, content.indexOf(":")));
+        if(!talker.getUsername().equals("me")){
+            if(chatroom.getUid().endsWith("@chatroom")){
+                talker = Talker.getInstance(content.substring(0, content.indexOf(":")));
                 content=StringEscapeUtils.escapeXml11(content.substring(content.indexOf(":")+2));
-            }*/
+            }
         }
     }
     @Override

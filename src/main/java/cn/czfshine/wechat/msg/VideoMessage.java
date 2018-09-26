@@ -1,6 +1,7 @@
 package cn.czfshine.wechat.msg;
 
 import cn.czfshine.wechat.database.DatabaseDamagedException;
+import cn.czfshine.wechat.database.pojo.MessageDO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,11 +14,11 @@ import java.sql.SQLException;
 public class VideoMessage extends BaseMessage {
     public static final MSGTYPE TYPE=MSGTYPE.TYPE_SPEAK;
     private String md5;
-    public VideoMessage(ResultSet rs) throws SQLException, DatabaseDamagedException {
-        super(rs);
-
+    public VideoMessage(MessageDO messageDO) throws SQLException, DatabaseDamagedException {
+        super(messageDO);
+        init(messageDO);
     }
-    private void init(ResultSet rs) throws SQLException {
-        md5=rs.getString("imgPath");
+    private void init(MessageDO messageDO) throws SQLException {
+        md5=messageDO.getImgPath();
     }
 }

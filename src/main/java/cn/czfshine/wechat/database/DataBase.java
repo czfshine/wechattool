@@ -64,8 +64,8 @@ public class DataBase {
         Map<String, Chatroom> contactMap = new HashMap<>();
 
         for(MsgDataBase db : msgDataBases){
-            msgres=MergeMessageList(msgres,db.getMessages());
-            contactMap=MergeContact(contactMap,db.getContacts());
+           /* msgres=MergeMessageList(msgres,db.getMessages());
+            contactMap=MergeContact(contactMap,db.getContacts());*///todo
         }
         allMessage=msgres;
         allContact=contactMap;

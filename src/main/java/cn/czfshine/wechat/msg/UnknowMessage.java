@@ -1,6 +1,7 @@
 package cn.czfshine.wechat.msg;
 
 import cn.czfshine.wechat.database.DatabaseDamagedException;
+import cn.czfshine.wechat.database.pojo.MessageDO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,7 +12,7 @@ import java.sql.SQLException;
  **/
 public class UnknowMessage extends BaseMessage {
 
-    UnknowMessage(ResultSet rs) throws SQLException, DatabaseDamagedException {
+    UnknowMessage(MessageDO rs) throws SQLException, DatabaseDamagedException {
         super(rs);
     }
 }

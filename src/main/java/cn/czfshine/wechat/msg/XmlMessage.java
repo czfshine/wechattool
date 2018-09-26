@@ -1,6 +1,7 @@
 package cn.czfshine.wechat.msg;
 
 import cn.czfshine.wechat.database.DatabaseDamagedException;
+import cn.czfshine.wechat.database.pojo.MessageDO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,12 +13,12 @@ import java.sql.SQLException;
 public class XmlMessage extends BaseMessage {
     public  final MSGTYPE TYPE;
     protected String xml;
-    public XmlMessage(ResultSet rs) throws SQLException, DatabaseDamagedException, UnknowMassageTypeException {
-        super(rs);
-        TYPE=MSGTYPE.getType(rs.getInt("type"));
-
+    public XmlMessage(MessageDO messageDO) throws SQLException, DatabaseDamagedException, UnknowMassageTypeException {
+        super(messageDO);
+        TYPE=MSGTYPE.getType(messageDO.getType());
+        init(messageDO);
     }
-    public  void init(ResultSet rs) throws SQLException {
-        xml=rs.getString("content");
+    public  void init(MessageDO messageDO) throws SQLException {
+        xml=messageDO.getContant();
     }
 }

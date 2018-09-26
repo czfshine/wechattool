@@ -50,7 +50,7 @@ public class Chatroom implements Serializable {
     /**
      * 对当前的所有消息按时间排序
      */
-    public void sortMessage(){
+    private void sortMessage(){
         messages.sort( Comparator.comparingLong((BaseMessage m)->m.getTime()));
     }
 
@@ -60,6 +60,8 @@ public class Chatroom implements Serializable {
     public String getNickname() {
         return nickname;
     }
+
+
     public enum CONTACTTYPE{
         SYSTEM, //系统
         SERVICE,//公众号

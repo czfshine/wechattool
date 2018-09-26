@@ -80,7 +80,7 @@ fun main(args: Array<String>) {
     val talker=message.talker
 
     //我们可以获得如下的数据
-    println(talker.uid)//唯一标识符
+    println(talker.username)//唯一标识符
     println(talker.nickname)//昵称
     println(talker.messages)
 

@@ -1,6 +1,7 @@
 package cn.czfshine.wechat.msg;
 
 import cn.czfshine.wechat.database.DatabaseDamagedException;
+import cn.czfshine.wechat.database.pojo.MessageDO;
 
 import java.io.Serializable;
 import java.sql.ResultSet;
@@ -18,13 +19,13 @@ public class AudioMessage extends BaseMessage implements Serializable {
 
     public static final MSGTYPE TYPE = MSGTYPE.TYPE_SPEAK;
 
-    public AudioMessage(ResultSet rs) throws SQLException, DatabaseDamagedException {
-        super(rs);
-        init(rs);
+    public AudioMessage(MessageDO messageDO) throws SQLException, DatabaseDamagedException {
+        super(messageDO);
+        init(messageDO);
 
     }
 
-    private void init(ResultSet rs) throws SQLException {
-        md5 = rs.getString("imgPath");
+    private void init(MessageDO messageDO) throws SQLException {
+        md5 = messageDO.getImgPath();
     }
 }

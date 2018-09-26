@@ -15,4 +15,13 @@ public class ServiceChatroom extends Chatroom {
     public ServiceChatroom(String uid, String nickname) {
         super(uid, nickname);
     }
+
+    @Override
+    public String toString() {
+        return "ServiceChatroom{" +
+                "talker=" + talker +
+                ", uid='" + uid + '\'' +
+                ", nickname='" + nickname + '\'' +
+                '}';
+    }
 }

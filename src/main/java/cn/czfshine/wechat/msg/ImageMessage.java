@@ -2,6 +2,7 @@ package cn.czfshine.wechat.msg;
 
 import cn.czfshine.wechat.contant.Talker;
 import cn.czfshine.wechat.database.DatabaseDamagedException;
+import cn.czfshine.wechat.database.pojo.MessageDO;
 import cn.czfshine.wechat.image.ImagePool;
 import org.slf4j.LoggerFactory;
 
@@ -23,19 +24,20 @@ public class ImageMessage extends BaseMessage implements Serializable {
 
     private String md5;
     public static final MSGTYPE TYPE=MSGTYPE.TYPE_IMG;
-    public ImageMessage(ResultSet rs) throws SQLException, DatabaseDamagedException {
-        super(rs);
-        init(rs);
+    public ImageMessage(MessageDO messageDO) throws SQLException, DatabaseDamagedException {
+        super(messageDO);
+        init(messageDO);
     }
 
 
-    private void init(ResultSet rs) throws SQLException {
-        md5 =rs.getString("imgPath");
-        String  content=rs.getString("content");
-        if(!Talker.ME.equals(talker)){
-            /*if(chatroom.endsWith("@chatroom")){
-                talker = new Talker(content.substring(0,content.indexOf(":")));
-            }*/
+    private void init(MessageDO messageDO) throws SQLException {
+        md5 =messageDO.getImgPath();
+        String  content=messageDO.getContant();
+
+        if(!talker.getUsername().equals("me")){
+            if(chatroom.getUid().endsWith("@chatroom")){
+                talker = Talker.getInstance(content.substring(0,content.indexOf(":")));
+            }
         }
 
         if(md5.startsWith("THUMBNAIL_DIRPATH://th_")){

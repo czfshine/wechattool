@@ -172,7 +172,7 @@ try {
     @Test
     public void testBuildFromFile() throws SQLException, IOException, ClassNotFoundException {
         MsgDataBase db = MsgDataBase.buildFromFile("data/output/test1.obj");
-        System.out.println(db.allmsgs.size());
+        //System.out.println(db.allmsgs.size());
     }
 
 

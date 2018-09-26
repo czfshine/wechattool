@@ -24,4 +24,22 @@ public class GroupChatroom extends Chatroom {
 
     private List<Talker> talkers;
 
+
+    public void AddMember(Talker member){
+        members.add(member);
+    }
+
+    public void AddTalker(Talker talker){
+        talkers.add(talker);
+    }
+
+    @Override
+    public String toString() {
+        return "GroupChatroom{" +
+                "members=" + members +
+                ", talkers=" + talkers +
+                ", uid='" + uid + '\'' +
+                ", nickname='" + nickname + '\'' +
+                '}';
+    }
 }

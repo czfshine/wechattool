@@ -8,27 +8,23 @@ package cn.czfshine.wechat.contant;
 
 public class PersonChatroom extends Chatroom {
 
-    private String wxid;
-    private String remark; //备注
-    private String contactLabelIds; //标签列表
 
     private Talker talker;
-    public PersonChatroom(String uid, String nickname, String wxid, String remark, String contactLabelIds) {
+    public PersonChatroom(String uid, String nickname, Talker talker) {
         super(uid, nickname);
-        this.wxid = wxid;
-        this.remark = remark;
-        this.contactLabelIds = contactLabelIds;
+        this.talker=talker;
+
+    }
+    public Talker getTalker(){
+        return talker;
     }
 
     @Override
-    public String getNickname() {
-        if(remark.length()!=0){
-            return remark;
-        }
-        return super.getNickname();
-    }
-
-    public Talker getTalker(){
-        return talker;
+    public String toString() {
+        return "PersonChatroom{" +
+                "talker=" + talker +
+                ", uid='" + uid + '\'' +
+                ", nickname='" + nickname + '\'' +
+                '}';
     }
 }

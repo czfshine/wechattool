@@ -1,8 +1,10 @@
 package cn.czfshine.wechat.msg;
 
 import cn.czfshine.wechat.contant.Chatroom;
+import cn.czfshine.wechat.contant.ChatroomFactory;
 import cn.czfshine.wechat.contant.Talker;
 import cn.czfshine.wechat.database.DatabaseDamagedException;
+import cn.czfshine.wechat.database.pojo.MessageDO;
 
 import java.io.Serializable;
 import java.sql.ResultSet;
@@ -40,35 +42,25 @@ public abstract class BaseMessage implements Serializable {
     public Chatroom getChatroom() {
         return chatroom;
     }
-
     protected Chatroom chatroom;
 
-    BaseMessage(ResultSet rs) throws SQLException, DatabaseDamagedException {
-        msgSvrId=rs.getLong("msgSvrId");
-        long datastamp=rs.getLong("createTime");
-        time= new Date(datastamp);
+    BaseMessage(MessageDO messageDO) throws SQLException, DatabaseDamagedException {
+        msgSvrId=messageDO.getMsgid();
+        time= new Date(messageDO.getCreateTime());
 
-        //todo
-        /*chatroom=rs.getString("talker");
-
-        if(chatroom==null || "".equals(chatroom)) {
+        chatroom= ChatroomFactory.getChatroom(messageDO.getTalker());
+        if(chatroom==null) {
             throw  new DatabaseDamagedException();
         }
-        talker = new Talker(chatroom);
 
-        int isSend=rs.getInt(   "isSend");
+        talker = Talker.getInstance(messageDO.getTalker());
+        int isSend=messageDO.getIsSend();
         if(isSend==1){
-            talker=Talker.ME;
-        }*/
+            talker=Talker.getInstance("me");
+        }
 
     }
 
-    public BaseMessage(long msgSvrId, long datastamp, Talker talker, Chatroom chatroom) {
-        this.msgSvrId = msgSvrId;
-        time= new Date(datastamp);
-        this.talker = talker;
-        this.chatroom = chatroom;
-    }
 
     protected static MSGTYPE TYPE;
 

@@ -2,6 +2,7 @@ package cn.czfshine.wechat.msg;
 
 import cn.czfshine.wechat.contant.Talker;
 import cn.czfshine.wechat.database.DatabaseDamagedException;
+import cn.czfshine.wechat.database.pojo.MessageDO;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,13 +14,13 @@ import java.sql.SQLException;
 public class PromptMessage extends BaseMessage {
     private String text;
     public static final MSGTYPE TYPE=MSGTYPE.TYPE_YUYIN;
-    public PromptMessage(ResultSet rs) throws SQLException, DatabaseDamagedException {
-        super(rs);
-        init(rs);
+    public PromptMessage(MessageDO messageDO) throws SQLException, DatabaseDamagedException {
+        super(messageDO);
+        init(messageDO);
     }
 
-    public void init(ResultSet rs) throws SQLException {
-        text=rs.getString("content");
-        talker= Talker.SYSTEM;
+    public void init(MessageDO messageDO) throws SQLException {
+        text=messageDO.getContant();
+        talker= Talker.getInstance("system");
     }
 }

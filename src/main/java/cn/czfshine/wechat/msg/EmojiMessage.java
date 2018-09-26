@@ -1,6 +1,7 @@
 package cn.czfshine.wechat.msg;
 
 import cn.czfshine.wechat.database.DatabaseDamagedException;
+import cn.czfshine.wechat.database.pojo.MessageDO;
 
 import java.io.Serializable;
 import java.sql.ResultSet;
@@ -16,13 +17,13 @@ public class EmojiMessage  extends BaseMessage implements Serializable {
     private String md5;
 
     public static final MSGTYPE TYPE=MSGTYPE.TYPE_EMOJI;
-    public EmojiMessage(ResultSet rs) throws SQLException, DatabaseDamagedException {
-        super(rs);
-        init(rs);
+    public EmojiMessage(MessageDO messageDO) throws SQLException, DatabaseDamagedException {
+        super(messageDO);
+        init(messageDO);
     }
 
-    private void init(ResultSet rrs) throws SQLException {
+    private void init(MessageDO messageDO) throws SQLException {
         //TODO:* WTF TALKER
-        md5= rrs.getString("imgPath");
+        md5= messageDO.getImgPath();
     }
 }

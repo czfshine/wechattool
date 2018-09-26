@@ -1,6 +1,7 @@
 package cn.czfshine.wechat.msg;
 
 import cn.czfshine.wechat.database.DatabaseDamagedException;
+import cn.czfshine.wechat.database.pojo.MessageDO;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.ResultSet;
@@ -11,12 +12,12 @@ import java.sql.SQLException;
  * @date:18-2-21
  **/
 public class MessageFactory {
-     public static BaseMessage getMessage(ResultSet rs) throws SQLException, UnknowMassageTypeException, DatabaseDamagedException {
-        int type= rs.getInt("type");
-        MSGTYPE msgtype=MSGTYPE.getType(type);
+     public static BaseMessage getMessage(MessageDO messageDO) throws SQLException, UnknowMassageTypeException, DatabaseDamagedException {
+
+        MSGTYPE msgtype=MSGTYPE.getType(messageDO.getType());
         if(msgtype.getClazz()!=UnknowMessage.class){
             try {
-                return (BaseMessage) msgtype.getClazz().getConstructor(ResultSet.class).newInstance(rs);
+                return (BaseMessage) msgtype.getClazz().getConstructor(MessageDO.class).newInstance(messageDO);
             } catch (InstantiationException e) {
                 e.printStackTrace();
             } catch (IllegalAccessException e) {

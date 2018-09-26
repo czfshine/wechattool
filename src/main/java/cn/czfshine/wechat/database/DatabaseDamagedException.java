@@ -8,4 +8,5 @@ package cn.czfshine.wechat.database;
  */
 
 public class DatabaseDamagedException extends Exception {
+
 }
