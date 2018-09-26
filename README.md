@@ -36,7 +36,7 @@
 
 * Java版
 ```java
-import cn.czfshine.wechat.contant.Chatroom;
+import cn.czfshine.wechat.content.Chatroom;
 import cn.czfshine.wechat.image.ImagePool;
 import cn.czfshine.wechat.msg.ImageMessage;
 import cn.czfshine.wechat.msg.BaseMessage;

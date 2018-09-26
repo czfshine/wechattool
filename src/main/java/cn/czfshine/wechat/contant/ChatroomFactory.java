@@ -24,7 +24,10 @@ public class ChatroomFactory {
             res= new GroupChatroom(rc.getUsername(), rc.getNickname());
 
         } else if (rc.getUsername().startsWith("gh_")) { //服务号
-            res=new ServiceChatroom(rc.getUsername(), rc.getNickname());
+            res=new ServiceChatroom(rc.getUsername(), rc.getNickname(),
+                    Talker.getInstance(rc.getUsername(),rc.getNickname(),
+                            rc.getConRemark(),
+                            rc.getAlias()));
 
         } else { //其他的假设是个人聊天
             res=new PersonChatroom(rc.getUsername(), rc.getNickname(),

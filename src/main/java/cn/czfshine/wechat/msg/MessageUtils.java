@@ -31,4 +31,5 @@ public class MessageUtils {
     public static void statisType(List<BaseMessage> msgs) {
         statisType(msgs.toArray(new BaseMessage[msgs.size()]));
     }
+
 }

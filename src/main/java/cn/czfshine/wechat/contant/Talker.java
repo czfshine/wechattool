@@ -2,8 +2,6 @@ package cn.czfshine.wechat.contant;
 
 
 import cn.czfshine.wechat.msg.BaseMessage;
-import org.docx4j.openpackaging.Base;
-import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,8 +48,11 @@ public class Talker {
 
     public static Talker getInstance(String username){
         if(!allTalker.containsKey(username))
-            LoggerFactory.getLogger("talker")
-                    .warn("talker {} 没有注册,当前talker数量为{}",username,allTalker.size());
+        {
+            Talker talker = new Talker(username);
+            allTalker.put(username, talker);
+            return talker;
+        }
         return allTalker.getOrDefault(username,null);
     }
 
@@ -63,6 +64,9 @@ public class Talker {
             allTalker.put(username,talker);
             return talker;
         }
+    }
+    public static void removeInstance(String username){
+        allTalker.remove(username);
     }
 
     public List<BaseMessage> getMessages() {
@@ -78,6 +82,18 @@ public class Talker {
         this.remark = remark;
         this.wxid = wxid;
         messages=new ArrayList<>();
+
+    }
+
+    /**
+     * 单纯使用用户名构建talker
+     * 主要是解析消息时统一操作，理论上使用该方法创建的Talker都是群，
+     * 也就是会被真正发送的用户覆盖，不会被使用，所以其他属性不要赋初值，
+     * 假如抛出NPE，肯定出现逻辑错误了
+     * @param username
+     */
+    private Talker(String username){
+        this.username=username;
     }
 
     @Override

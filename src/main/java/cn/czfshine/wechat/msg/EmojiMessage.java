@@ -25,5 +25,6 @@ public class EmojiMessage  extends BaseMessage implements Serializable {
     private void init(MessageDO messageDO) throws SQLException {
         //TODO:* WTF TALKER
         md5= messageDO.getImgPath();
+        setTalker(messageDO.getContent());
     }
 }

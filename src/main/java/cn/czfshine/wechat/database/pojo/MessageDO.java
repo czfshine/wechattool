@@ -23,7 +23,7 @@ public class MessageDO {
     private String talker;
 
     @Column
-    private String contant;
+    private String content;
 
     @Column
     private String imgPath;
@@ -68,12 +68,12 @@ public class MessageDO {
         this.talker = talker;
     }
 
-    public String getContant() {
-        return contant;
+    public String getContent() {
+        return content;
     }
 
-    public void setContant(String contant) {
-        this.contant = contant;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getImgPath() {
@@ -92,7 +92,7 @@ public class MessageDO {
                 ", isSend=" + isSend +
                 ", createTime=" + createTime +
                 ", talker='" + talker + '\'' +
-                ", contant='" + contant + '\'' +
+                ", content='" + content + '\'' +
                 ", imgPath='" + imgPath + '\'' +
                 '}';
     }

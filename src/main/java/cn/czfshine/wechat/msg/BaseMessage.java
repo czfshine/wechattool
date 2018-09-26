@@ -5,6 +5,8 @@ import cn.czfshine.wechat.contant.ChatroomFactory;
 import cn.czfshine.wechat.contant.Talker;
 import cn.czfshine.wechat.database.DatabaseDamagedException;
 import cn.czfshine.wechat.database.pojo.MessageDO;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.sql.ResultSet;
@@ -89,6 +91,22 @@ public abstract class BaseMessage implements Serializable {
                     this.talker.equals(b.talker);*/
         }
         return false;
+    }
+    protected String setTalker(String content){
+        if(!talker.getUsername().equals("me")){
+            if(chatroom.getUid().endsWith("@chatroom")){
+
+                talker = Talker.getInstance(content.substring(0, content.indexOf(":")));
+                if(talker.getUsername().equals(chatroom.getUid())){
+                    LoggerFactory.getLogger("funndy").warn("哇啊！微信群居然会发消息啦{}",this);
+                    Talker.removeInstance(chatroom.getUid());
+                    talker=Talker.getInstance(chatroom.getUid(),chatroom.getNickname(),
+                            chatroom.getNickname(),chatroom.getUid());
+                }
+                return  StringEscapeUtils.escapeXml11(content.substring(content.indexOf(":")+2));
+            }
+        }
+        return content;
     }
 
 }

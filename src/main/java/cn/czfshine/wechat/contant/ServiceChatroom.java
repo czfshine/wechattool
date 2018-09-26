@@ -12,8 +12,9 @@ public class ServiceChatroom extends Chatroom {
     {
         return talker;
     }
-    public ServiceChatroom(String uid, String nickname) {
+    public ServiceChatroom(String uid, String nickname,Talker talker) {
         super(uid, nickname);
+        this.talker=talker;
     }
 
     @Override

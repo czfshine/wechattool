@@ -7,7 +7,6 @@ import cn.czfshine.wechat.image.ImagePool;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -32,14 +31,7 @@ public class ImageMessage extends BaseMessage implements Serializable {
 
     private void init(MessageDO messageDO) throws SQLException {
         md5 =messageDO.getImgPath();
-        String  content=messageDO.getContant();
-
-        if(!talker.getUsername().equals("me")){
-            if(chatroom.getUid().endsWith("@chatroom")){
-                talker = Talker.getInstance(content.substring(0,content.indexOf(":")));
-            }
-        }
-
+        setTalker(messageDO.getContent());
         if(md5.startsWith("THUMBNAIL_DIRPATH://th_")){
             md5=md5.substring(23);
             ImagePool.getThepool().add(md5);

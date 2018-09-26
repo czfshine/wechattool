@@ -46,7 +46,7 @@ public enum MSGTYPE implements Serializable {
 
     /*未处理*/
     //TODO
-    TYPE_CUSTOM_EMOJI (1048625,UnknowMessage.class);
+    TYPE_CUSTOM_EMOJI (1048625, CustomEmojiMessage.class);
 
     private int id;
 

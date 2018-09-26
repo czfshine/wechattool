@@ -195,9 +195,10 @@ public class MsgDataBase implements Serializable {
             } catch (DatabaseDamagedException e) {
                 logger.warn("在数据库{}第{}条消息损坏", datapath, "" + count);
             } catch (UnknowMassageTypeException w) {
-                logger.warn("类型{}未知，内容为：{}\n\t", mdo.getType(), mdo.getContant());
+                logger.warn("类型{}未知，内容为：{}\n\t", mdo.getType(), mdo.getContent());
             } catch (Exception e) {
                 logger.error("在数据库{}第{}条消息出错", datapath, "" + count);
+                System.out.println(mdo);
                 throw e;
             }
         }
@@ -211,10 +212,17 @@ public class MsgDataBase implements Serializable {
 
 
     private BaseMessage parseMsgRow(MessageDO mdo) throws SQLException, DatabaseDamagedException, UnknowMassageTypeException {
-        BaseMessage message = MessageFactory.getMessage(mdo);
-        message.getTalker().addMessage(message);
-        message.getChatroom().addMessage(message);
-        return message;
+
+        try{
+            BaseMessage message = MessageFactory.getMessage(mdo);
+            message.getTalker().addMessage(message);
+            message.getChatroom().addMessage(message);
+            return message;
+        }catch (Exception e){
+            e.printStackTrace();
+            System.out.println(mdo);
+        }
+        return null;
     }
 
     private List<String> ParseLabels(String labelstr){

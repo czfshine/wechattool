@@ -1,9 +1,10 @@
 package cn.czfshine.wechat.msg;
 
+import cn.czfshine.wechat.contant.Talker;
 import cn.czfshine.wechat.database.DatabaseDamagedException;
 import cn.czfshine.wechat.database.pojo.MessageDO;
+import org.apache.commons.lang3.StringEscapeUtils;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -19,6 +20,6 @@ public class XmlMessage extends BaseMessage {
         init(messageDO);
     }
     public  void init(MessageDO messageDO) throws SQLException {
-        xml=messageDO.getContant();
+        xml=setTalker(messageDO.getContent());
     }
 }

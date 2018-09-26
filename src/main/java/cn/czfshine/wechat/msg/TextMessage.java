@@ -1,7 +1,6 @@
 package cn.czfshine.wechat.msg;
 
 
-import cn.czfshine.wechat.contant.Chatroom;
 import cn.czfshine.wechat.contant.Talker;
 import cn.czfshine.wechat.database.DatabaseDamagedException;
 import cn.czfshine.wechat.database.pojo.MessageDO;
@@ -9,7 +8,6 @@ import cn.czfshine.wechat.output.PlainTextable;
 import org.apache.commons.lang3.StringEscapeUtils;
 
 import java.io.Serializable;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -34,14 +32,9 @@ public class TextMessage extends BaseMessage implements PlainTextable,Serializab
         init(messageDO);
     }
     private void init(MessageDO messageDO) throws SQLException, DatabaseDamagedException {
-        content= messageDO.getContant();
+        content= messageDO.getContent();
 
-        if(!talker.getUsername().equals("me")){
-            if(chatroom.getUid().endsWith("@chatroom")){
-                talker = Talker.getInstance(content.substring(0, content.indexOf(":")));
-                content=StringEscapeUtils.escapeXml11(content.substring(content.indexOf(":")+2));
-            }
-        }
+        content=setTalker(content);
     }
     @Override
     public String toString(){

@@ -4,7 +4,6 @@ import cn.czfshine.wechat.contant.Talker;
 import cn.czfshine.wechat.database.DatabaseDamagedException;
 import cn.czfshine.wechat.database.pojo.MessageDO;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -20,7 +19,7 @@ public class PromptMessage extends BaseMessage {
     }
 
     public void init(MessageDO messageDO) throws SQLException {
-        text=messageDO.getContant();
+        text=messageDO.getContent();
         talker= Talker.getInstance("system");
     }
 }

@@ -20,5 +20,6 @@ public class VideoMessage extends BaseMessage {
     }
     private void init(MessageDO messageDO) throws SQLException {
         md5=messageDO.getImgPath();
+        setTalker(messageDO.getContent());
     }
 }
