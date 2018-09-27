@@ -109,4 +109,13 @@ public abstract class BaseMessage implements Serializable {
         return content;
     }
 
+    @Override
+    public String toString() {
+        return "BaseMessage{" +
+                "msgSvrId=" + msgSvrId +
+                ", time=" + time +
+                ", talker=" + talker +
+                ", chatroom=" + chatroom +
+                '}';
+    }
 }

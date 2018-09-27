@@ -4,11 +4,16 @@ import org.nutz.dao.entity.annotation.Column;
 import org.nutz.dao.entity.annotation.Id;
 import org.nutz.dao.entity.annotation.Table;
 
+import java.util.Objects;
+
 @Table("message")
 public class MessageDO {
 
     @Id
     private  int msgid;
+
+    @Column
+    private long msgSvrId;
 
     @Column
     private int type;
@@ -34,6 +39,14 @@ public class MessageDO {
 
     public void setMsgid(int msgid) {
         this.msgid = msgid;
+    }
+
+    public long getMsgSvrId() {
+        return msgSvrId;
+    }
+
+    public void setMsgSvrId(long msgSvrId) {
+        this.msgSvrId = msgSvrId;
     }
 
     public int getType() {
@@ -95,5 +108,25 @@ public class MessageDO {
                 ", content='" + content + '\'' +
                 ", imgPath='" + imgPath + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        MessageDO messageDO = (MessageDO) o;
+        return getMsgid() == messageDO.getMsgid() &&
+                getMsgSvrId() == messageDO.getMsgSvrId() &&
+                getType() == messageDO.getType() &&
+                getIsSend() == messageDO.getIsSend() &&
+                getCreateTime() == messageDO.getCreateTime() &&
+                Objects.equals(getTalker(), messageDO.getTalker()) &&
+                Objects.equals(getContent(), messageDO.getContent()) &&
+                Objects.equals(getImgPath(), messageDO.getImgPath());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getMsgid(), getMsgSvrId(), getType(), getIsSend(), getCreateTime(), getTalker(), getContent(), getImgPath());
     }
 }

@@ -27,4 +27,12 @@ public class EmojiMessage  extends BaseMessage implements Serializable {
         md5= messageDO.getImgPath();
         setTalker(messageDO.getContent());
     }
+
+    @Override
+    public String toString() {
+        return  super.toString()+
+                "EmojiMessage{" +
+                "md5='" + md5 + '\'' +
+                '}';
+    }
 }
