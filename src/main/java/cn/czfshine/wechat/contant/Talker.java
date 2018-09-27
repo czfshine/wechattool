@@ -72,8 +72,7 @@ public class Talker {
     }
 
     public void addMessage(BaseMessage msg){
-        if(!messages.contains(msg))
-            messages.add(msg);
+        messages.add(msg);
     }
     private Talker(String username, String nickname, String remark, String wxid) {
         this.username = username;

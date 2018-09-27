@@ -61,16 +61,13 @@ public class DataBase {
 
     private void MergeDatabases(){
         logger.info("开始合并数据库：");
-        List<BaseMessage> msgres=new ArrayList<>();
-
-        Map<String, Chatroom> contactMap = new HashMap<>();
 
         for(MsgDataBase db : msgDataBases){
            /* msgres=MergeMessageList(msgres,db.getMessages());
             contactMap=MergeContact(contactMap,db.getContacts());*///todo
         }
 
-        allMessage= new ArrayList<>(MessageFactory.allMessages.values());
+        allMessage= MessageFactory.listMessage();
         allContact= ChatroomFactory.getAllChatroom();
     }
 

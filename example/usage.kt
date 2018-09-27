@@ -82,7 +82,7 @@ fun main(args: Array<String>) {
     //我们可以获得如下的数据
     println(talker.username)//唯一标识符
     println(talker.nickname)//昵称
-    println(talker.messages)
+    println(talker.messages.size)
 
     //现在假设要获取某个群里面的某个人的所有聊天记录，可以这样
     when(chatroom){
@@ -99,5 +99,4 @@ fun main(args: Array<String>) {
             .filter { e -> e is TextMessage }
             .mapToInt { e -> (e as TextMessage).content.length }
             .sum())
-
 }

@@ -103,7 +103,7 @@ public abstract class BaseMessage implements Serializable {
                     talker=Talker.getInstance(chatroom.getUid(),chatroom.getNickname(),
                             chatroom.getNickname(),chatroom.getUid());
                 }
-                return  StringEscapeUtils.escapeXml11(content.substring(content.indexOf(":")+2));
+                return  content.substring(content.indexOf(":")+2);
             }
         }
         return content;

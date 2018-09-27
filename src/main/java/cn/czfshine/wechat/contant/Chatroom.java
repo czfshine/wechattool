@@ -43,8 +43,10 @@ public class Chatroom implements Serializable {
      */
     public void addMessage(BaseMessage msg){
 
-        if(!messages.contains(msg))
+        if(!messages.contains(msg)){
             messages.add(msg);
+        }
+
     }
 
 

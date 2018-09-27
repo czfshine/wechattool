@@ -51,7 +51,7 @@ public class DocxFile {
         writeDocx();
     }
     public void toDocxFile() throws IOException, NotMessageOfContactException {
-        boolean mkdirs = new File("data/output/docx/").mkdirs();
+        new File("data/output/docx/").mkdirs();
         toDocxFile("data/output/docx/"+ chatroom.getNickname().replaceAll("[/\\\\:*?<>|]","")+".docx");
     }
 

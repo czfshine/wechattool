@@ -20,6 +20,6 @@ public class XmlMessage extends BaseMessage {
         init(messageDO);
     }
     public  void init(MessageDO messageDO) throws SQLException {
-        xml=setTalker(messageDO.getContent());
+        xml=StringEscapeUtils.escapeXml11(setTalker(messageDO.getContent()));
     }
 }

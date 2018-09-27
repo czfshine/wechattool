@@ -25,11 +25,11 @@ public class GroupChatroom extends Chatroom {
     private List<Talker> talkers;
 
 
-    public void AddMember(Talker member){
+    public void addMember(Talker member){
         members.add(member);
     }
 
-    public void AddTalker(Talker talker){
+    public void addTalker(Talker talker){
         talkers.add(talker);
     }
 
