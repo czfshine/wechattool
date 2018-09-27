@@ -115,7 +115,7 @@ public class MessageDO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MessageDO messageDO = (MessageDO) o;
-        return getMsgid() == messageDO.getMsgid() &&
+        return
                 getMsgSvrId() == messageDO.getMsgSvrId() &&
                 getType() == messageDO.getType() &&
                 getIsSend() == messageDO.getIsSend() &&
@@ -125,8 +125,15 @@ public class MessageDO {
                 Objects.equals(getImgPath(), messageDO.getImgPath());
     }
 
+    private int hash;
+    private boolean cached=false;
     @Override
     public int hashCode() {
-        return Objects.hash(getMsgid(), getMsgSvrId(), getType(), getIsSend(), getCreateTime(), getTalker(), getContent(), getImgPath());
+        if(cached==false){
+            hash=Objects.hash(getMsgSvrId(), getType(),
+                    getIsSend(), getCreateTime(), getTalker(), getContent(), getImgPath());
+            cached=true;
+        }
+        return hash;
     }
 }

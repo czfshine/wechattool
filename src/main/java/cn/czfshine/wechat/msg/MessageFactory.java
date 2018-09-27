@@ -22,26 +22,20 @@ public class MessageFactory {
         logger = LoggerFactory.getLogger("msgFACT");
     }
 
-    public static Map<Long,BaseMessage> allMessages;
-    public static Map<Long,MessageDO> allMsgDO;
+    public static Map<MessageDO,BaseMessage> allMessages;
     static {
         allMessages=new HashMap<>(100000);
-        allMsgDO=new HashMap<>(100000);
+
     }
 
     public static BaseMessage getMessage(MessageDO messageDO) throws UnknowMassageTypeException {
 
-        if(allMessages.containsKey(messageDO.getMsgSvrId())){
+        if(allMessages.containsKey(messageDO)){
 
-            if(allMsgDO.get(messageDO.getMsgSvrId()).equals(messageDO)){
-                return allMessages.get(messageDO.getMsgSvrId());
-            }
-            else {
-                //这种情况应该是错误而不是警告，因为数据一致性已经被破坏，后续处理可能出错
-                logger.error("有两条消息的SVRID:{}一样，但是DO不一样:{}-{}",
-                        messageDO.getMsgSvrId(),messageDO,allMsgDO.get(messageDO.getMsgSvrId()));
-                //为了数据完整性，即使这样也还是让它创建一个新的message，然后覆盖map里原来的message
-            }
+            //既然已经存在，那么在某个chatroom或者talker的聊天列表里面就肯定存在这个对象，不必重新返回一次
+            //logger.error("重复！");
+            return null;
+            //return allMessages.get(messageDO.getMsgSvrId());
         }
 
 
@@ -49,8 +43,7 @@ public class MessageFactory {
         if(msgtype.getClazz()!= UnknownMessage.class){
             try {
                 BaseMessage message=(BaseMessage) msgtype.getClazz().getConstructor(MessageDO.class).newInstance(messageDO);
-                allMessages.put(messageDO.getMsgSvrId(),message);
-                allMsgDO.put(messageDO.getMsgSvrId(),messageDO);
+                allMessages.put(messageDO,message);
                 return message;
             } catch (Exception e){
                 //理论上这一分支应该不会执行的：）

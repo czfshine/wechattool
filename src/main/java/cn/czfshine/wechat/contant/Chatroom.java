@@ -5,9 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 对话对象，指代一个会话，包括朋友，群组，公众号，服务号等
@@ -21,14 +20,14 @@ public class Chatroom implements Serializable {
     protected  String uid; //唯一标识符
     protected  String nickname; //昵称
 
-    protected List<BaseMessage> messages=new ArrayList<>();
+    protected Set<BaseMessage> messages=new HashSet<>(1000);
 
 
     /**
      * @return 得到该对话的所有消息
      */
     public List<BaseMessage> getMessages() {
-        return messages;
+        return messages.stream().collect(Collectors.toList());
     }
 
 
@@ -43,16 +42,18 @@ public class Chatroom implements Serializable {
      * @param msg 待增加的消息
      */
     public void addMessage(BaseMessage msg){
-        messages.add(msg);
+
+        if(!messages.contains(msg))
+            messages.add(msg);
     }
 
 
     /**
      * 对当前的所有消息按时间排序
      */
-    private void sortMessage(){
-        messages.sort( Comparator.comparingLong((BaseMessage m)->m.getTime()));
-    }
+    //private void sortMessage(){
+    //    messages.sort( Comparator.comparingLong((BaseMessage m)->m.getTime()));
+    //}
 
     public String getUid() {
         return uid;

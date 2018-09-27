@@ -1,7 +1,9 @@
 package cn.czfshine.wechat.database;
 
 import cn.czfshine.wechat.contant.Chatroom;
+import cn.czfshine.wechat.contant.ChatroomFactory;
 import cn.czfshine.wechat.msg.BaseMessage;
+import cn.czfshine.wechat.msg.MessageFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -67,8 +69,9 @@ public class DataBase {
            /* msgres=MergeMessageList(msgres,db.getMessages());
             contactMap=MergeContact(contactMap,db.getContacts());*///todo
         }
-        allMessage=msgres;
-        allContact=contactMap;
+
+        allMessage= new ArrayList<>(MessageFactory.allMessages.values());
+        allContact= ChatroomFactory.getAllChatroom();
     }
 
     private List<BaseMessage> MergeMessageList(List<BaseMessage> a,List<BaseMessage> b){

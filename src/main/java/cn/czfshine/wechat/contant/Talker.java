@@ -3,10 +3,8 @@ package cn.czfshine.wechat.contant;
 
 import cn.czfshine.wechat.msg.BaseMessage;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class Talker {
 
@@ -17,7 +15,7 @@ public class Talker {
     private List<String> labels;
     private String wxid;
 
-    private List<BaseMessage> messages;
+    protected Set<BaseMessage> messages;
 
     private static Map<String ,Talker> allTalker;
     static {
@@ -70,18 +68,19 @@ public class Talker {
     }
 
     public List<BaseMessage> getMessages() {
-        return messages;
+        return messages.stream().collect(Collectors.toList());
     }
 
     public void addMessage(BaseMessage msg){
-        messages.add(msg);
+        if(!messages.contains(msg))
+            messages.add(msg);
     }
     private Talker(String username, String nickname, String remark, String wxid) {
         this.username = username;
         this.nickname = nickname;
         this.remark = remark;
         this.wxid = wxid;
-        messages=new ArrayList<>();
+        messages=new HashSet<>(1000);
 
     }
 

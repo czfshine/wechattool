@@ -185,7 +185,9 @@ public class MsgDataBase implements Serializable {
 
         for(MessageDO mdo:query){
             count++;
-
+            //if(count%1000==0){
+            //    logger.info("正在读取第{}条记录",count);
+            //}
             try {
                 BaseMessage msg = parseMsgRow(mdo);
                 if (msg != null) {
@@ -215,6 +217,10 @@ public class MsgDataBase implements Serializable {
 
         try{
             BaseMessage message = MessageFactory.getMessage(mdo);
+            if(message==null){
+                return null;
+            }
+
             message.getTalker().addMessage(message);
             message.getChatroom().addMessage(message);
             return message;

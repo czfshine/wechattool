@@ -98,7 +98,7 @@ public abstract class BaseMessage implements Serializable {
 
                 talker = Talker.getInstance(content.substring(0, content.indexOf(":")));
                 if(talker.getUsername().equals(chatroom.getUid())){
-                    LoggerFactory.getLogger("funndy").warn("哇啊！微信群居然会发消息啦{}",this);
+                    //LoggerFactory.getLogger("funndy").warn("哇啊！微信群居然会发消息啦{}",this);
                     Talker.removeInstance(chatroom.getUid());
                     talker=Talker.getInstance(chatroom.getUid(),chatroom.getNickname(),
                             chatroom.getNickname(),chatroom.getUid());
