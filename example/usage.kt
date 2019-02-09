@@ -6,7 +6,12 @@ import cn.czfshine.wechat.contant.ServiceChatroom
 import cn.czfshine.wechat.database.DataBase
 import cn.czfshine.wechat.msg.ImageMessage
 import cn.czfshine.wechat.msg.TextMessage
+import java.io.BufferedOutputStream
 import java.io.File
+import java.io.OutputStream
+import java.io.OutputStreamWriter
+import java.util.*
+import java.util.stream.Collectors
 import kotlin.streams.toList
 
 /**
@@ -95,8 +100,13 @@ fun main(args: Array<String>) {
 
     /****数据使用*****/
     //1.统计所有文本消息的长度
-    println(allMessage.stream()
+    var listt = (allMessage.stream()
             .filter { e -> e is TextMessage }
-            .mapToInt { e -> (e as TextMessage).content.length }
-            .sum())
+            .map { e -> (e as TextMessage).content }.collect(Collectors.toList()));
+    var  a =OutputStreamWriter(BufferedOutputStream( File("./1.csv").outputStream()));
+    for(l in listt){
+        a.write(l);
+        a.write("\n");
+    }
+
 }
