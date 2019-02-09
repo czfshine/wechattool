@@ -236,6 +236,7 @@ public class DocxFile {
     @Nullable
     private String getImagePath(@NotNull ImageMessage message){
 
+        /*
         long id =message.getMsgSvrId();
         Image image =imagePool.getBigImageFromMsgid(id);
 
@@ -245,7 +246,8 @@ public class DocxFile {
                 return null;
             }
         }
-        return image.getPath();
+        return image.getPath();*/
+        return null;
     }
     private StringBuilder relationshipsXml =new StringBuilder();
     @NotNull

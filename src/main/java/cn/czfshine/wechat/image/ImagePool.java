@@ -44,6 +44,7 @@ public class ImagePool  implements Serializable {
      * 在数据目录下搜索相应的图片，并将图片加入图片池里
      * @param obj 可以是BigImage 或者md5的字符串
      */
+    /*
     public void add(Object obj){
 
         if(obj instanceof BigImage){
@@ -82,10 +83,10 @@ public class ImagePool  implements Serializable {
             }
 
         }
-    }
+    }*/
 
 
-
+    /*
     private void findImageFiles(BigImage bigImage) throws BigImageFileLoseException {
 
         String filename=bigImage.getFilename();
@@ -99,7 +100,7 @@ public class ImagePool  implements Serializable {
 
 
     }
-
+*/
 
     /**
      * @param md5 图片的md5码
@@ -171,9 +172,6 @@ public class ImagePool  implements Serializable {
     }
     public  int getLoseThumbnailFileCount(){
         return losethumbnailfile.size();
-    }
-    public BigImage getBigImageFromMsgid(long msgid){
-        return (BigImage) bigimagepool.getOrDefault(msgid,null);
     }
 
     public Image getThumbnaImageByMd5(String md5){

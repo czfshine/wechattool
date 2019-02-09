@@ -30,13 +30,14 @@ public void after() throws Exception {
 */ 
 @Test
 public void testAdd() throws Exception { 
-//TODO: Test goes here... 
+//TODO: Test goes here...
+    /*
     ImageDatabase db=new ImageDatabase("data/db/decrypted171028.db");
     List<BigImage> images = db.getBigImageInfoFromDatabase();
     ImagePool pool=ImagePool.getThepool();
     for(BigImage image:images){
         pool.add(image);
-    }
+    }*/
 }
 
 

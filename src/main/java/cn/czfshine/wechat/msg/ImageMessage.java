@@ -34,7 +34,8 @@ public class ImageMessage extends BaseMessage implements Serializable {
         setTalker(messageDO.getContent());
         if(md5.startsWith("THUMBNAIL_DIRPATH://th_")){
             md5=md5.substring(23);
-            ImagePool.getThepool().add(md5);
+            //todo
+            //ImagePool.getThepool().add(md5);
 
         }else{
             LoggerFactory.getLogger("imgmsg").error("错误的图片文件名{}",md5);
