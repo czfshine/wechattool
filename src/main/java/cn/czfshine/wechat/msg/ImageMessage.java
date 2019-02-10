@@ -1,8 +1,8 @@
 package cn.czfshine.wechat.msg;
 
-import cn.czfshine.wechat.contant.Talker;
 import cn.czfshine.wechat.database.DatabaseDamagedException;
 import cn.czfshine.wechat.database.pojo.MessageDO;
+import cn.czfshine.wechat.image.Image;
 import cn.czfshine.wechat.image.ImagePool;
 import org.slf4j.LoggerFactory;
 
@@ -28,20 +28,28 @@ public class ImageMessage extends BaseMessage implements Serializable {
         init(messageDO);
     }
 
+    public Image getImage() {
+        return image;
+    }
 
+    private Image image;
+    private boolean loseimgfile=false;
     private void init(MessageDO messageDO) throws SQLException {
         md5 =messageDO.getImgPath();
+        long msgSvrId = messageDO.getMsgSvrId();
+        image=ImagePool.getThepool().getImageBySrvId(msgSvrId);
+        if(image==null){
+            image=ImagePool.getThepool().getImageByThumbPath(md5);
+        }
+        if(image==null){
+            loseimgfile=true;
+        }
         setTalker(messageDO.getContent());
         if(md5.startsWith("THUMBNAIL_DIRPATH://th_")){
             md5=md5.substring(23);
-            //todo
-            //ImagePool.getThepool().add(md5);
-
         }else{
             LoggerFactory.getLogger("imgmsg").error("错误的图片文件名{}",md5);
         }
-
-
     }
 
     @Override
@@ -50,4 +58,7 @@ public class ImageMessage extends BaseMessage implements Serializable {
     }
 
 
+    public boolean isLoseimgfile() {
+        return loseimgfile;
+    }
 }

@@ -31,11 +31,13 @@ public void after() throws Exception {
 @Test
 public void testAdd() throws Exception { 
 //TODO: Test goes here...
+
+    ImageDatabase db=new ImageDatabase("/home/czfshine/workplace/wechat/data/db/decrypted20190209.db");
+    List<Image> bigImageInfoFromDatabase = db.getBigImageInfoFromDatabase();
+
     /*
-    ImageDatabase db=new ImageDatabase("data/db/decrypted171028.db");
-    List<BigImage> images = db.getBigImageInfoFromDatabase();
     ImagePool pool=ImagePool.getThepool();
-    for(BigImage image:images){
+    /*for(Image image:bigImageInfoFromDatabase){
         pool.add(image);
     }*/
 }

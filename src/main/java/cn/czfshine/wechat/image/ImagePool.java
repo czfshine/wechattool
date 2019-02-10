@@ -23,18 +23,30 @@ public class ImagePool  implements Serializable {
     public static void loadPool(ImagePool pool){
         thepool=pool;
     }
-
     public static ImagePool getThepool(){
         return thepool;
     }
+
+    ///优先级如下
+
+    //SvrId->Image
+    private Map<String,Image> Svridpool=new HashMap<>();
+    //ThumbnailImageName ->Image
+    private Map<String,Image> Thumbpool=new HashMap<>();
+    //BigImgName->Image
+    private Map<String,Image> Bigpool=new HashMap<>();
+    //md5->Image
     private Map<String,Image> pool=new HashMap<>();
 
-    private Map<Long,Image> bigimagepool=new HashMap<>();
 
-    private String[] imagerootpath={"data/image"};
+    //图片数据目录//todo
+    private String[] imagerootpath={"/home/czfshine/workplace/wechat/data/image"
+            //, "/media/czfshine/9C746533746510F6/wc/data/image"
+    };
 
+    //缺失的文件
     private Set<String> losefile=new HashSet<>();
-
+    //缺失的预览图
     private Set<String> losethumbnailfile=new HashSet<>();
 
     Logger logger=LoggerFactory.getLogger("impool");
@@ -44,63 +56,54 @@ public class ImagePool  implements Serializable {
      * 在数据目录下搜索相应的图片，并将图片加入图片池里
      * @param obj 可以是BigImage 或者md5的字符串
      */
-    /*
-    public void add(Object obj){
 
-        if(obj instanceof BigImage){
-            BigImage bigimage =(BigImage) obj;
-            if(pool.containsKey(bigimage.getFilename())) {
-                return;
-            }
+    public void addImage(String svrid, Image image){
+        if(Svridpool.containsKey(svrid)){
+            return;
+        }
+        if(Bigpool.containsKey(image.getBigImgName())){
+            return;
+        }
+        if(Thumbpool.containsKey(image.getThumbImgName())){
+            return;
+        }
+
+        //1.找大图
+        if(image.getBigImgName()!=null){
             try {
 
-                findImageFiles(bigimage);
-                bigimagepool.put(bigimage.getMsgid(),bigimage);
-            } catch (BigImageFileLoseException e) {
+                String path=findImageFiles(image.getBigImgName());
+                if(path!=null){
+                    image.setBigImgPath(path);
+                    Bigpool.put(image.getBigImgName(),image);
+                    Svridpool.put(svrid,image);
 
-
-                if(! losefile.contains(e.getFilename())){
-                    //logger.warn("图片{}文件丢失",e.getFilename());
+                }else{
+                    losefile.add(image.getBigImgName());
                 }
-                losefile.add(e.getFilename());
-
-            }
-
-        }else if (obj instanceof String){
-            String md5=(String) obj;
-
-            try {
-                String imageFile = findImageFiles(md5);
-                pool.put("th_"+md5,new Image(md5,imageFile));
             } catch (ImageFileLoseException e) {
-
-                if(!losethumbnailfile.contains(e.getMd5())){
-                    //logger.warn("图片{}文件丢失",e.getMd5());
-                }
-                losethumbnailfile.add(e.getMd5());
-
-
+                losefile.add(image.getBigImgName());
             }
-
-        }
-    }*/
-
-
-    /*
-    private void findImageFiles(BigImage bigImage) throws BigImageFileLoseException {
-
-        String filename=bigImage.getFilename();
-        String path;
-        if((path=checkFile(filename))!=null){
-            bigImage.setPath(path);
-            return ;
-        }else{
-            throw new BigImageFileLoseException(bigImage);
         }
 
+        //2.找预览图
+        if(image.getThumbImgName()!=null){
+            try {
 
+                String path=findImageFiles(image.getThumbImgName());
+                if(path!=null){
+                    image.setThumbImgPath(path);
+                    Thumbpool.put(image.getThumbImgName(),image);
+                    if(!Svridpool.containsKey(svrid))Svridpool.put(svrid,image);
+                }else{
+                    losethumbnailfile.add(image.getBigImgName());
+                }
+            } catch (ImageFileLoseException e) {
+                losethumbnailfile.add(image.getBigImgName());
+            }
+        }
     }
-*/
+
 
     /**
      * @param md5 图片的md5码
@@ -109,9 +112,15 @@ public class ImagePool  implements Serializable {
      */
     private String findImageFiles(String md5) throws ImageFileLoseException {
         String path;
+
+        if(md5.startsWith("THUMBNAIL_DIRPATH://")){
+            md5=md5.substring(23);
+        }
+
         if((path=checkFile(md5))!=null){
             return path;
         }else{
+            //logger.info("can't find {} ",md5);
             throw new ImageFileLoseException(md5);
         }
     }
@@ -122,6 +131,8 @@ public class ImagePool  implements Serializable {
      * @return 实际路径或null
      */
     private String checkFile(String filename){
+
+
         String level1=filename.substring(0,2);
         String level2=filename.substring(2,4);
         for(String path:imagerootpath){
@@ -167,14 +178,25 @@ public class ImagePool  implements Serializable {
         return null;
     }
 
-    public  int getThumbnailFileCount(){
-        return pool.size();
-    }
-    public  int getLoseThumbnailFileCount(){
-        return losethumbnailfile.size();
-    }
 
     public Image getThumbnaImageByMd5(String md5){
-        return pool.getOrDefault("th_"+md5,null);
+        return Thumbpool.getOrDefault("th_"+md5,null);
+    }
+    public int getBigImgCount(){
+        return Bigpool.size();
+    }
+    public int getThumbImgCount(){
+        return Thumbpool.size();
+    }
+
+    public Image getImageBySrvId(String id){
+        return Svridpool.getOrDefault(id,null);
+    }
+    public Image getImageBySrvId(long id){
+        return getImageBySrvId(((Long)id).toString());
+    }
+
+    public Image getImageByThumbPath(String path){
+        return Thumbpool.getOrDefault(path,null);
     }
 }

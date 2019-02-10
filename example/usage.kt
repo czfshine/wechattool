@@ -5,6 +5,7 @@ import cn.czfshine.wechat.contant.PersonChatroom
 import cn.czfshine.wechat.contant.ServiceChatroom
 import cn.czfshine.wechat.database.DataBase
 import cn.czfshine.wechat.msg.ImageMessage
+import cn.czfshine.wechat.msg.MessageUtils
 import cn.czfshine.wechat.msg.TextMessage
 import java.io.BufferedOutputStream
 import java.io.File
@@ -25,9 +26,9 @@ fun main(args: Array<String>) {
     /****数据读取********/
 
     //数据&资源目录
-    val datadir = "D:\\wc\\data"
+    val datadir = "/home/czfshine/workplace/wechat/data/"
     //数据库文件列表
-    val files = File("$datadir\\db\\").listFiles { e -> e.isFile }
+    val files = File("$datadir//db//").listFiles { e -> e.isFile }
     //读取所有数据库(参数是一个路径数组)
     val database = DataBase(files.map { e -> e.path })
 
@@ -37,6 +38,8 @@ fun main(args: Array<String>) {
     val allMessage = database.allMessage
     val allChatroom = database.allContact//todo
 
+    //输出解析结果的统计信息
+    MessageUtils.CheckMessage(allMessage);
     //1.关于消息
     val message = allMessage[0]
     //  对于一条消息，我们主要关心

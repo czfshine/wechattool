@@ -11,6 +11,7 @@ import java.io.*;
 
 public class TextOutput {
     public static void toTextFile(BaseMessage[] msgs, OutputStream file){
+        System.out.println();
         try(BufferedOutputStream bufferedOutputStream=new BufferedOutputStream(file)) {
             int len=msgs.length;
             for(int i=0;i<len;i++){

@@ -1,5 +1,6 @@
 package cn.czfshine.wechat.msg;
 
+import cn.czfshine.wechat.image.Image;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,4 +33,64 @@ public class MessageUtils {
         statisType(msgs.toArray(new BaseMessage[msgs.size()]));
     }
 
+    static int totalmsg;
+
+    static int textmsg;
+    static int oktextmsg;
+
+    static int imgmsg;
+    static int hasSmall;
+    static int hasBIg;
+    static int loseimg;
+
+    static int othermsg;
+    public static void CheckMessage(List<BaseMessage> msgs){
+
+        for (BaseMessage b:msgs
+             ) {
+
+            if(b.talker!=null && b.chatroom!=null&&b.time!=null){
+                totalmsg++;
+            }else{
+                System.out.println("消息信息缺失"+b.toString());
+                continue;
+            }
+            if(b instanceof TextMessage){
+                textmsg++;
+                if(((TextMessage)b).getContent().length()>0){
+                    oktextmsg++;
+                }
+            }else if(b instanceof ImageMessage){
+                imgmsg++;
+
+                ImageMessage im=(ImageMessage)b;
+                Image image = im.getImage();
+                if(image==null){
+                    loseimg++;
+                }else{
+                    if(image.getBigImgPath()!=null){
+                        hasBIg++;
+                    }
+                    if(image.getThumbImgPath()!=null){
+                        hasSmall++;
+                    }
+                    if(image.getBigImgPath()==null && image.getThumbImgPath()==null){
+                        loseimg++;
+                    }
+                }
+
+            }else{
+                othermsg++;
+            }
+
+
+        }
+
+        System.out.println("消息的统计信息如下:");
+        System.out.printf("一共%d条消息,其中基本消息完整的消息有%d条\n",msgs.size(),totalmsg);
+        System.out.printf("文本消息共%d条,文本内容完整的有%d条\n",textmsg,oktextmsg);
+        System.out.printf("图片消息一共%d条,原图存在的消息有%d条,预览图存在的有%d条,图片缺失的有%d条\n",
+                imgmsg,hasBIg,hasSmall,loseimg);
+
+    }
 }

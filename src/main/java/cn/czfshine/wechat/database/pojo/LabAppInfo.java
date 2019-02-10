@@ -7,7 +7,7 @@ public class LabAppInfo {
   private String expId;
   private long type;
   private long bizType;
-  private long switch;
+  private long Switch;
   private long allVer;
   private String detailUrl;
   private String weAppUser;
@@ -87,11 +87,11 @@ public class LabAppInfo {
 
 
   public long getSwitch() {
-    return switch;
+    return Switch;
   }
 
-  public void setSwitch(long switch) {
-    this.switch = switch;
+  public void setSwitch(long Switch) {
+    this.Switch = Switch;
   }
 
 

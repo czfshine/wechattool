@@ -4,6 +4,7 @@ import cn.czfshine.wechat.contant.*;
 import cn.czfshine.wechat.database.pojo.ContactLabelDO;
 import cn.czfshine.wechat.database.pojo.MessageDO;
 import cn.czfshine.wechat.database.pojo.RContactDO;
+import cn.czfshine.wechat.image.ImageDatabase;
 import cn.czfshine.wechat.image.ImagePool;
 import cn.czfshine.wechat.msg.BaseMessage;
 import cn.czfshine.wechat.msg.MessageFactory;
@@ -38,6 +39,8 @@ public class MsgDataBase implements Serializable {
     private Map<String, Chatroom> contacts;
     private Map<String, Talker>   senders;
     private Map<Integer,String> labels;
+    private ImageDatabase imageDatabase;
+
     public List<BaseMessage> getAllMessages() {
 
         return allmsgs;
@@ -118,25 +121,12 @@ public class MsgDataBase implements Serializable {
 
 
         dao = new NutDao(simpleDataSource);
-        /*
         imageDatabase=new ImageDatabase(datapath);
-        List<BigImage> images = imageDatabase.getBigImageInfoFromDatabase();
-
-        for(BigImage image:images){
-            imagePool.add(image);
-        }
-        */
+        imageDatabase.getBigImageInfoFromDatabase();
         labels=getAllLabel();
         contacts = getAllConTact();
         allmsgs = getAllMsgssage();
-        /*
-        logger.info("一共有{}条图片消息，丢失{}张预览图",
-                imagePool.getLoseThumbnailFileCount()+imagePool.getThumbnailFileCount(),
-                imagePool.getLoseThumbnailFileCount());
-        */
         //popAllMessageToContact();
-
-
     }
 
     /*==具体解析用==*/
@@ -164,10 +154,15 @@ public class MsgDataBase implements Serializable {
 
         if ((labels == null)) labels=getAllLabel();
         List<RContactDO> query = dao.query(RContactDO.class, null);
-
-        long count = query.stream().
-                peek(e -> ChatroomFactory.getChatroom(e))
-                .count();
+        long count=0;
+        /*long count = query.stream().
+                peek(ChatroomFactory::getChatroom)
+                .count();*/
+        for (RContactDO rc:query
+             ) {
+            ChatroomFactory.getChatroom(rc);
+            count++;
+        }
         logger.info("一共有{}个用户信息",count);
         return ChatroomFactory.getAllChatroom();
     }

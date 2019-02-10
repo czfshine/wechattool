@@ -11,4 +11,43 @@ import java.io.Serializable;
 public class Image implements Serializable {
     public  static final long serialVersionUID =1802252205;
 
+    public String getThumbImgName() {
+        return ThumbImgName;
+    }
+
+    public String getBigImgName() {
+        return BigImgName;
+    }
+
+    public String getBigImgPath() {
+        return BigImgPath;
+    }
+
+    public String getThumbImgPath() {
+        return ThumbImgPath;
+    }
+
+    private String BigImgPath;
+
+    public void setBigImgPath(String bigImgPath) {
+        BigImgPath = bigImgPath;
+    }
+
+    public void setThumbImgPath(String thumbImgPath) {
+        ThumbImgPath = thumbImgPath;
+    }
+
+    private String ThumbImgPath;
+
+    private String ThumbImgName;
+    private String BigImgName;
+
+    public Image(String thumbImgName){
+        this.ThumbImgName=thumbImgName;
+    }
+
+    public Image(String thumbImgName, String bigImgName) {
+        ThumbImgName = thumbImgName;
+        BigImgName = bigImgName;
+    }
 }

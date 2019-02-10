@@ -88,10 +88,14 @@ public class Talker {
      * 主要是解析消息时统一操作，理论上使用该方法创建的Talker都是群，
      * 也就是会被真正发送的用户覆盖，不会被使用，所以其他属性不要赋初值，
      * 假如抛出NPE，肯定出现逻辑错误了
+     * //todo ???
      * @param username
      */
     private Talker(String username){
         this.username=username;
+        /*todo*/
+        messages=new HashSet<>(1000);
+        /*end todo*/
     }
 
     @Override
