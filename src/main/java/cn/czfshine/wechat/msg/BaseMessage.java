@@ -13,6 +13,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 
+import static cn.czfshine.wechat.msg.MSGTYPE.TYPE_REDENVELOPE;
+
 
 /**
  * @author :  czfshine
@@ -49,7 +51,7 @@ public abstract class BaseMessage implements Serializable {
     BaseMessage(MessageDO messageDO) throws SQLException, DatabaseDamagedException {
         msgSvrId=messageDO.getMsgid();
         time= new Date(messageDO.getCreateTime());
-
+        typeid=messageDO.getType();
         chatroom= ChatroomFactory.getChatroom(messageDO.getTalker());
         if(chatroom==null) {
             throw  new DatabaseDamagedException();
@@ -65,7 +67,7 @@ public abstract class BaseMessage implements Serializable {
 
 
     protected static MSGTYPE TYPE;
-
+    protected int typeid;
     public  MSGTYPE getType() {
         try {
             return (MSGTYPE) this.getClass().getField("TYPE").get(this);
@@ -93,9 +95,13 @@ public abstract class BaseMessage implements Serializable {
         return false;
     }
     protected String setTalker(String content){
+        if(content==null) return null;
         if(!talker.getUsername().equals("me")){
             if(chatroom.getUid().endsWith("@chatroom")){
-
+                if(!content.contains(":")){
+                    talker=Talker.getInstance("me");
+                    return content;
+                }
                 talker = Talker.getInstance(content.substring(0, content.indexOf(":")));
                 if(talker.getUsername().equals(chatroom.getUid())){
                     //LoggerFactory.getLogger("funndy").warn("哇啊！微信群居然会发消息啦{}",this);
@@ -103,8 +109,26 @@ public abstract class BaseMessage implements Serializable {
                     talker=Talker.getInstance(chatroom.getUid(),chatroom.getNickname(),
                             chatroom.getNickname(),chatroom.getUid());
                 }
-                return  content.substring(content.indexOf(":")+2);
+                String substring = content.substring(content.indexOf(":") + 2);
+                if(substring.startsWith("wxid_")){
+                    return substring.substring(substring.indexOf(":")+2);
+                }
+                return substring;
             }
+        }else{
+            if(content.startsWith("wxid_")) { //todo
+
+                    if (!content.contains(":")) {
+                        return content;
+                    }
+                    String substring = content.substring(content.indexOf(":") + 2);
+                    if(substring.startsWith("wxid_")){
+                        return substring.substring(substring.indexOf(":")+2);
+                    }
+                    return substring;
+
+            }
+
         }
         return content;
     }

@@ -4,6 +4,10 @@ import cn.czfshine.wechat.contant.Talker;
 import cn.czfshine.wechat.database.DatabaseDamagedException;
 import cn.czfshine.wechat.database.pojo.MessageDO;
 import org.apache.commons.lang3.StringEscapeUtils;
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.DocumentHelper;
+import org.dom4j.io.SAXReader;
 
 import java.sql.SQLException;
 
@@ -20,6 +24,13 @@ public class XmlMessage extends BaseMessage {
         init(messageDO);
     }
     public  void init(MessageDO messageDO) throws SQLException {
-        xml=StringEscapeUtils.escapeXml11(setTalker(messageDO.getContent()));
+        xml=setTalker(messageDO.getContent());
+        xml=xml.replace("&","__and__");
+        try {
+            DocumentHelper.parseText(xml);
+        } catch (DocumentException e) {
+            e.printStackTrace();
+        }
+        System.out.println(TYPE);
     }
 }

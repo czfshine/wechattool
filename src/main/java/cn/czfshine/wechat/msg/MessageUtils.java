@@ -1,6 +1,9 @@
 package cn.czfshine.wechat.msg;
 
+import cn.czfshine.wechat.emoji.Emoji;
 import cn.czfshine.wechat.image.Image;
+import org.docx4j.dml.diagram.STOutputShapeType;
+import org.docx4j.wml.P;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,6 +49,14 @@ public class MessageUtils {
     static int othermsg;
     static int audiomsg;
     static int loseaudio;
+
+    static int videomsg;
+    static int hasv;
+    static int hast;
+
+    static int emoji;
+    static int canemoji;
+    static int prompt;
     public static void CheckMessage(List<BaseMessage> msgs){
 
         for (BaseMessage b:msgs
@@ -80,7 +91,6 @@ public class MessageUtils {
                         loseimg++;
                     }
                 }
-
             }else if (b instanceof AudioMessage){
 
                 audiomsg++;
@@ -88,11 +98,32 @@ public class MessageUtils {
                     loseaudio++;
                 }
 
-            }else{
+            }else if(b instanceof VideoMessage){
+                videomsg++;
+                if((((VideoMessage)b).getThumbImgPath())!=null){
+                    hast++;
+                }
+                if(((VideoMessage)b).getVideoPath()!=null){
+                    hasv++;
+                }
+
+            }else if(b instanceof EmojiMessage){
+                emoji++;
+                if(((EmojiMessage)b).getEmoji()!=null){
+                    Emoji emoji = ((EmojiMessage) b).getEmoji();
+                    if(emoji.getDownloadUrl()!=null || emoji.getThumbImage()!=null){
+                        canemoji++;
+                    }
+                }
+            }
+            else if(b instanceof PromptMessage){
+                /*System.out.println(((PromptMessage)b).getMsgSvrId());
+                System.out.println(((PromptMessage)b).getText());*/
+                prompt++;
+            }
+            else{
                 othermsg++;
             }
-
-
         }
 
         System.out.println("消息的统计信息如下:");
@@ -101,5 +132,9 @@ public class MessageUtils {
         System.out.printf("图片消息一共%d条,原图存在的消息有%d条,预览图存在的有%d条,图片缺失的有%d条\n",
                 imgmsg,hasBIg,hasSmall,loseimg);
         System.out.printf("语音信息一共%d条,缺失%d个音频文件\n",audiomsg,loseaudio);
+        System.out.printf("视频信息一共%d条,有%d个预览图,有%d个视频文件\n",videomsg,hast,hasv);
+        System.out.printf("表情消息一共%d条,能够使用的有%d条\n",emoji,canemoji);
+        System.out.printf("提示消息%d条\n",prompt);
+        System.out.printf("未能成功处理%d条信息\n",othermsg);
     }
 }

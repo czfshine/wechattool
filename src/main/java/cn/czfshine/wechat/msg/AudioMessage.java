@@ -3,14 +3,8 @@ package cn.czfshine.wechat.msg;
 import cn.czfshine.wechat.database.DatabaseDamagedException;
 import cn.czfshine.wechat.database.pojo.MessageDO;
 import cn.czfshine.wechat.resources.Resources;
-import org.apache.commons.codec.digest.Md5Crypt;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 /**
@@ -33,7 +27,7 @@ public class AudioMessage extends BaseMessage implements Serializable {
 
     private void init(MessageDO messageDO) throws SQLException {
         String imgPath = messageDO.getImgPath();
-        audioPath= Resources.getResources().getAudoByImgpath(imgPath);
+        audioPath= Resources.getResources().getAudioByImgpath(imgPath);
         setTalker(messageDO.getContent());
     }
 

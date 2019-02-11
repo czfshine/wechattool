@@ -4,6 +4,7 @@ import cn.czfshine.wechat.contant.*;
 import cn.czfshine.wechat.database.pojo.ContactLabelDO;
 import cn.czfshine.wechat.database.pojo.MessageDO;
 import cn.czfshine.wechat.database.pojo.RContactDO;
+import cn.czfshine.wechat.emoji.EmojiDataBase;
 import cn.czfshine.wechat.image.ImageDatabase;
 import cn.czfshine.wechat.image.ImagePool;
 import cn.czfshine.wechat.msg.BaseMessage;
@@ -114,6 +115,7 @@ public class MsgDataBase implements Serializable {
     }
 
     private NutDao dao;
+    private EmojiDataBase emojiDataBase;
     private void init() throws SQLException {
         SimpleDataSource simpleDataSource = new SimpleDataSource();
 
@@ -123,6 +125,7 @@ public class MsgDataBase implements Serializable {
         dao = new NutDao(simpleDataSource);
         imageDatabase=new ImageDatabase(datapath);
         imageDatabase.getBigImageInfoFromDatabase();
+        emojiDataBase= new EmojiDataBase(datapath);
         labels=getAllLabel();
         contacts = getAllConTact();
         allmsgs = getAllMsgssage();

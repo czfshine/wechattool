@@ -98,10 +98,55 @@ public class Resources  {
         }
         return null;
     }
-    public String getAudoByImgpath(String imgpath){
+    public String getAudioByImgpath(String imgpath){
         String s = getMd5(imgpath);
         return checkVoiceFile(s,imgpath);
     }
 
+    private String[] videoPaths={"/home/czfshine/workplace/wechat/data/video/"};
+    private String checkVideoFile(String imgpath,String fix){
+        for(String path:videoPaths){
+            File root = new File(path);
+            File[] files = root.listFiles(File::isDirectory);
+            if(files==null){
+                continue;
+            }
+            for(File videoroot :files ){
+                String imagefilepath=videoroot.getPath() + File.separator +
+                        imgpath+fix;
+                File imagefile = new File(imagefilepath);
+                if (imagefile.exists()) {
+                    return imagefilepath;
+                }
+            }
 
+        }
+        return null;
+    }
+    public String getVideoThumbByImgpath(String imgpath){
+        return checkVideoFile(imgpath,".jpg");
+    }
+    public String getVideoByImgpath(String imgpath){
+        return checkVideoFile(imgpath,".mp4");
+    }
+
+    private String[] emojiPaths={"/home/czfshine/workplace/wechat/data/emoji/"};
+    public String getEmojiThumb(String groupid,String md5){
+        for(String path:emojiPaths){
+            File root = new File(path);
+            File[] files = root.listFiles(File::isDirectory);
+            if(files==null){
+                continue;
+            }
+            for(File emojiroot :files ){
+                String imagefilepath=emojiroot.getPath() + File.separator +
+                        groupid+File.separator+md5+"_cover";
+                File imagefile = new File(imagefilepath);
+                if (imagefile.exists()) {
+                    return imagefilepath;
+                }
+            }
+        }
+        return null;
+    }
 }

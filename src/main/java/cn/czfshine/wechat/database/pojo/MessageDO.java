@@ -33,6 +33,9 @@ public class MessageDO {
     @Column
     private String imgPath;
 
+    @Column
+    private String lvbuffer;
+
     public int getMsgid() {
         return msgid;
     }
@@ -135,5 +138,13 @@ public class MessageDO {
             cached=true;
         }
         return hash;
+    }
+
+    public String getLvbuffer() {
+        return lvbuffer;
+    }
+
+    public void setLvbuffer(String lvbuffer) {
+        this.lvbuffer = lvbuffer;
     }
 }
