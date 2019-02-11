@@ -33,7 +33,7 @@ public class ImageMessage extends BaseMessage implements Serializable {
     }
 
     private Image image;
-    private boolean loseimgfile=false;
+
     private void init(MessageDO messageDO) throws SQLException {
         md5 =messageDO.getImgPath();
         long msgSvrId = messageDO.getMsgSvrId();
@@ -42,7 +42,6 @@ public class ImageMessage extends BaseMessage implements Serializable {
             image=ImagePool.getThepool().getImageByThumbPath(md5);
         }
         if(image==null){
-            loseimgfile=true;
         }
         setTalker(messageDO.getContent());
         if(md5.startsWith("THUMBNAIL_DIRPATH://th_")){
@@ -58,7 +57,4 @@ public class ImageMessage extends BaseMessage implements Serializable {
     }
 
 
-    public boolean isLoseimgfile() {
-        return loseimgfile;
-    }
 }

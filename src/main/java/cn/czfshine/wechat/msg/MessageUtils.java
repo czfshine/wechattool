@@ -44,6 +44,8 @@ public class MessageUtils {
     static int loseimg;
 
     static int othermsg;
+    static int audiomsg;
+    static int loseaudio;
     public static void CheckMessage(List<BaseMessage> msgs){
 
         for (BaseMessage b:msgs
@@ -79,6 +81,13 @@ public class MessageUtils {
                     }
                 }
 
+            }else if (b instanceof AudioMessage){
+
+                audiomsg++;
+                if(((AudioMessage)b).getAudioPath()==null){
+                    loseaudio++;
+                }
+
             }else{
                 othermsg++;
             }
@@ -91,6 +100,6 @@ public class MessageUtils {
         System.out.printf("文本消息共%d条,文本内容完整的有%d条\n",textmsg,oktextmsg);
         System.out.printf("图片消息一共%d条,原图存在的消息有%d条,预览图存在的有%d条,图片缺失的有%d条\n",
                 imgmsg,hasBIg,hasSmall,loseimg);
-
+        System.out.printf("语音信息一共%d条,缺失%d个音频文件\n",audiomsg,loseaudio);
     }
 }
