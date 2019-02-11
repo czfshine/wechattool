@@ -20,14 +20,14 @@ public enum MSGTYPE implements Serializable {
     TYPE_EMOJI (47,EmojiMessage.class,"表情"),
 
     /**提示类**/
-    TYPE_YUYIN(64,PromptMessage.class),//微信语音聊天
+    TYPE_YUYIN(64,PromptMessage.class,"微信语音聊天"),
     TYPE_VOIP (50,PromptMessage.class),
     TYPE_SYSTEM (10000,PromptMessage.class),
 
     /**富文本，基于xml**/
-    TYPE_NAMECARD (42,XmlMessage.class),
-    TYPE_LOCATION(48,XmlMessage.class),
-    TYPE_LINK (49,XmlMessage.class) ,
+    TYPE_NAMECARD (42,XmlMessage.class,"名片"),
+    TYPE_LOCATION(48,XmlMessage.class,"位置"),
+    TYPE_LINK (49,XmlMessage.class,"链接") ,
     TYPE_REDENVELOPE (436207665,XmlMessage.class),
     TYPE_LOCATION_SHARING (1879048186,XmlMessage.class),
     TYPE_LOCATION_SHARING_D( -1879048186,XmlMessage.class),//todo ？？？？？
@@ -38,17 +38,21 @@ public enum MSGTYPE implements Serializable {
     TYPE_SHEAR(268435505,XmlMessage.class),//别的应用的分享
     TYPE_APP_MSG (16777265,XmlMessage.class),
     TYPE_APP_NOTION(318767153,XmlMessage.class),//公众号应用消息
-    TYPE_MP_TUIWEN(285212721,XmlMessage.class),//公众号推文
+
     TYPE_GROUP(10002,XmlMessage.class),//群相关的系统通知
     TYPE_APP(570425393,XmlMessage.class),
     TYPE_JUAN(452984881,XmlMessage.class),
     TYPE_CLOUD(35,XmlMessage.class),
 
+    /**链接**/
+    TYPE_MP_TUIWEN(285212721,LinkMessage.class),//公众号推文
+
     /*未处理*/
     //TODO
-    TYPE_CUSTOM_EMOJI (1048625, CustomEmojiMessage.class);
+    TYPE_CUSTOM_EMOJI (1048625, CustomEmojiMessage.class),
 
-    private int id;
+    TYPE_UNKNOW(-1,UnknownMessage.class);
+    public  final int id;
 
     private String typename="";
     public Class getClazz() {
@@ -73,7 +77,7 @@ public enum MSGTYPE implements Serializable {
                 return t;
             }
         }
-        throw new UnknowMassageTypeException(typeid);
+        return TYPE_UNKNOW;
     }
 
     @Override
@@ -83,4 +87,5 @@ public enum MSGTYPE implements Serializable {
         }
         return "无名类型"+id;
     }
+
 }
