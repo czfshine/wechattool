@@ -25,7 +25,7 @@ public enum MSGTYPE implements Serializable {
     TYPE_SYSTEM (10000,PromptMessage.class),
 
     /**富文本，基于xml**/
-    TYPE_NAMECARD (42,XmlMessage.class,"名片"),
+    TYPE_BUSINESSCARD(42,BusinessCardMessage.class,"名片"),
     TYPE_LOCATION(48,XmlMessage.class,"位置"),
     TYPE_LINK (49,XmlMessage.class,"链接") ,
     TYPE_REDENVELOPE (436207665,XmlMessage.class),

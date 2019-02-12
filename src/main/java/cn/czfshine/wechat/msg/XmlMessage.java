@@ -18,6 +18,7 @@ import java.sql.SQLException;
 public class XmlMessage extends BaseMessage {
     public  final MSGTYPE TYPE;
     protected String xml;
+    protected Document document;
     public XmlMessage(MessageDO messageDO) throws SQLException, DatabaseDamagedException, UnknowMassageTypeException {
         super(messageDO);
         TYPE=MSGTYPE.getType(messageDO.getType());
@@ -27,7 +28,7 @@ public class XmlMessage extends BaseMessage {
         xml=setTalker(messageDO.getContent());
         xml=xml.replace("&","__and__");
         try {
-            DocumentHelper.parseText(xml);
+            document = DocumentHelper.parseText(xml);
         } catch (DocumentException e) {
             e.printStackTrace();
         }
