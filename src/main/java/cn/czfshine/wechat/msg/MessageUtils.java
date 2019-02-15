@@ -57,6 +57,7 @@ public class MessageUtils {
     static int emoji;
     static int canemoji;
     static int prompt;
+    static int xml;
     public static void CheckMessage(List<BaseMessage> msgs){
 
         for (BaseMessage b:msgs
@@ -121,6 +122,9 @@ public class MessageUtils {
                 System.out.println(((PromptMessage)b).getText());*/
                 prompt++;
             }
+            else if(b instanceof XmlMessage){
+                xml++;
+            }
             else{
                 othermsg++;
             }
@@ -135,6 +139,7 @@ public class MessageUtils {
         System.out.printf("视频信息一共%d条,有%d个预览图,有%d个视频文件\n",videomsg,hast,hasv);
         System.out.printf("表情消息一共%d条,能够使用的有%d条\n",emoji,canemoji);
         System.out.printf("提示消息%d条\n",prompt);
+        System.out.printf("xml消息%d条\n",xml);
         System.out.printf("未能成功处理%d条信息\n",othermsg);
     }
 }

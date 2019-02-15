@@ -1,5 +1,7 @@
 package cn.czfshine.wechat.msg;
 
+import cn.czfshine.wechat.msg.xmlmsg.*;
+
 import java.io.Serializable;
 
 /**
@@ -26,21 +28,21 @@ public enum MSGTYPE implements Serializable {
 
     /**富文本，基于xml**/
     TYPE_BUSINESSCARD(42,BusinessCardMessage.class,"名片"),
-    TYPE_LOCATION(48,XmlMessage.class,"位置"),
-    TYPE_LINK (49,XmlMessage.class,"链接") ,
-    TYPE_REDENVELOPE (436207665,XmlMessage.class),
-    TYPE_LOCATION_SHARING (1879048186,XmlMessage.class),
-    TYPE_LOCATION_SHARING_D( -1879048186,XmlMessage.class),//todo ？？？？？
-    TYPE_YUNDONG(-1879048185,XmlMessage.class),//微信运动日提示
-    TYPE_YUNDONG_ZHAN(-1879048183,XmlMessage.class),//微信运动赞
-    TYPE_GROUP_MONEY(503316529,XmlMessage.class),//群收款
-    TYPE_MENRY(419430449,XmlMessage.class),//转账
-    TYPE_SHEAR(268435505,XmlMessage.class),//别的应用的分享
-    TYPE_APP_MSG (16777265,XmlMessage.class),
-    TYPE_APP_NOTION(318767153,XmlMessage.class),//公众号应用消息
+    TYPE_LOCATION(48, LocationMessage.class,"位置"),
+    TYPE_LINK (49, XmlLinkMessage.class,"链接") ,
+    TYPE_REDENVELOPE (436207665,RedEnvelopeMessage.class,"红包"),
+    TYPE_LOCATION_SHARING (1879048186,XmlMessage.class,"位置共享"),
+    TYPE_LOCATION_SHARING_D( -1879048186,XmlMessage.class,"位置共享"),
+    TYPE_SPORT(-1879048185, SportMessage.class,"微信运动"),//微信运动日提示
+    TYPE_SPOERINTERACTION(-1879048183, SportInteractionMessage.class,"微信运动赞"),//微信运动赞
+    TYPE_GROUP_MONEY(503316529,XmlMessage.class,"群收款"),//群收款
+    TYPE_TRANSFER(419430449, TransferMessage.class,"转帐"),//转账
+    TYPE_SHEAR(268435505,AppShareMessage.class,"应用分享"),//别的应用的分享
+    TYPE_APP_MSG (16777265,NotionMessage.class,"应用消息"),
+    TYPE_APP_NOTION(318767153,NotionMessage.class,"公众号提醒"),//公众号应用消息
 
-    TYPE_GROUP(10002,XmlMessage.class),//群相关的系统通知
-    TYPE_APP(570425393,XmlMessage.class),
+    TYPE_GROUP(10002,XmlMessage.class,"群通知"),//群相关的系统通知
+    TYPE_APP(570425393,GroupMessage.class,"邀请"),
     TYPE_JUAN(452984881,XmlMessage.class),
     TYPE_CLOUD(35,XmlMessage.class),
 
