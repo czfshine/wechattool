@@ -1,12 +1,9 @@
 package cn.czfshine.wechat.msg;
 
-import cn.czfshine.wechat.database.DatabaseDamagedException;
 import cn.czfshine.wechat.database.pojo.MessageDO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.InvocationTargetException;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,20 +21,33 @@ public class MessageFactory {
         logger = LoggerFactory.getLogger("msgFACT");
     }
 
-    public static Map<MessageDO,BaseMessage> allMessages;
+    private static List<BaseMessage> allMessages;
+    //Svrid ->msg
+    private static Map<Long,BaseMessage> serveridMsg;
+    //create time ->msg (if svrid==0 or null)
+    private static Map<Long,BaseMessage> createTimeMsg;
     static {
-        allMessages=new HashMap<>(100000);
-
+        allMessages=new ArrayList<>(100000);
+        serveridMsg=new HashMap<>(100000);
+        createTimeMsg=new HashMap<>(100000);
     }
+
 
     public static BaseMessage getMessage(MessageDO messageDO) throws UnknowMassageTypeException {
 
-        if(allMessages.containsKey(messageDO)){
+        //去重算法
+        if(messageDO.getMsgSvrId()==0){
+            if(createTimeMsg.containsKey(messageDO.getCreateTime())){
+                //既然已经存在，那么在某个chatroom或者talker的聊天列表里面就肯定存在这个对象，不必重新返回一次
+                //logger.error("重复！");
+                return null;
+                //return allMessages.get(messageDO.getMsgSvrId());
+            }
 
-            //既然已经存在，那么在某个chatroom或者talker的聊天列表里面就肯定存在这个对象，不必重新返回一次
-            //logger.error("重复！");
-            return null;
-            //return allMessages.get(messageDO.getMsgSvrId());
+        }else{
+            if(serveridMsg.containsKey(messageDO.getMsgSvrId())){
+               return null;
+            }
         }
 
 
@@ -45,7 +55,14 @@ public class MessageFactory {
         if(msgtype.getClazz()!= UnknownMessage.class){
             try {
                 BaseMessage message=(BaseMessage) msgtype.getClazz().getConstructor(MessageDO.class).newInstance(messageDO);
-                allMessages.put(messageDO,message);
+                allMessages.add(message);
+
+                if(messageDO.getMsgSvrId()==0){
+                    createTimeMsg.put(messageDO.getCreateTime(),message);
+                }else{
+                    serveridMsg.put(messageDO.getMsgSvrId(),message);
+                }
+
                 return message;
             } catch (Exception e){
                 //理论上这一分支应该不会执行的：）
@@ -59,8 +76,6 @@ public class MessageFactory {
     }
 
     public static List<BaseMessage> listMessage(){
-        ArrayList<BaseMessage> baseMessages = new ArrayList<>(allMessages.values());
-        allMessages=null;
-        return baseMessages;
+        return allMessages;
     }
 }

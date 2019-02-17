@@ -18,8 +18,8 @@ public class ChatroomFactory {
     }
 
     public static Chatroom getChatroom(RContactDO rc){
-
-        Chatroom res;
+        if(!allChatroom.containsKey(rc.getUsername())){
+            Chatroom res;
         if (rc.getUsername().endsWith("@chatroom")) { //微信群
             res= new GroupChatroom(rc.getUsername(), rc.getNickname());
 
@@ -35,8 +35,13 @@ public class ChatroomFactory {
                             rc.getConRemark(),
                             rc.getAlias()));
         }
-        allChatroom.put(rc.getUsername(),res);
-        return res;
+            allChatroom.put(rc.getUsername(),res);
+            return res;
+        }else{
+            return allChatroom.get(rc.getUsername());
+        }
+
+
     }
     public static Map<String,Chatroom> getAllChatroom(){
         return  allChatroom;

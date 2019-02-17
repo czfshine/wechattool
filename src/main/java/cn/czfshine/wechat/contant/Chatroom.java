@@ -27,7 +27,9 @@ public class Chatroom implements Serializable {
      * @return 得到该对话的所有消息
      */
     public List<BaseMessage> getMessages() {
-        return messages.stream().collect(Collectors.toList());
+        ArrayList<BaseMessage> baseMessages = new ArrayList<>(messages);
+        baseMessages.sort(Comparator.comparingLong((BaseMessage m) -> m.getTime()));
+        return baseMessages;
     }
 
 

@@ -1,5 +1,6 @@
 package cn.czfshine.wechat.example
 
+import cn.czfshine.wechat.contant.ChatroomFactory
 import cn.czfshine.wechat.contant.GroupChatroom
 import cn.czfshine.wechat.contant.PersonChatroom
 import cn.czfshine.wechat.contant.ServiceChatroom
@@ -7,10 +8,8 @@ import cn.czfshine.wechat.database.DataBase
 import cn.czfshine.wechat.msg.ImageMessage
 import cn.czfshine.wechat.msg.MessageUtils
 import cn.czfshine.wechat.msg.TextMessage
-import java.io.BufferedOutputStream
-import java.io.File
-import java.io.OutputStream
-import java.io.OutputStreamWriter
+import cn.czfshine.wechat.output.TextOutput
+import java.io.*
 import java.util.*
 import java.util.stream.Collectors
 import kotlin.streams.toList
@@ -81,6 +80,13 @@ fun main(args: Array<String>) {
 
     }
 
+    //2.2通过特定的id获取chatroom
+    var username="wxid_t4dczlb6g51622";
+
+    val chatroom1 = ChatroomFactory.getChatroom(username)
+
+    println(chatroom1)
+
     //talker就是能发送消息的实体，包括用户，系统，公众号等
     //不像其他的，它没有子类，因为所有的talker基本上功能相同
 
@@ -111,5 +117,14 @@ fun main(args: Array<String>) {
         a.write(l);
         a.write("\n");
     }
+    //2.使用导出器导出
+
+    //2.1 纯文本
+
+    //由于导出器需要一个OutputStream，先构造一个
+    //会把上面chatroom1对应的聊天记录导出成纯文本，要导出所有chatroom的聊天记录遍历allChatroom就行
+    //注意：消息已经按时间排序了的吧？？todo
+    val fileOutputStream = FileOutputStream("./output/txt/" + chatroom1.nickname + ".txt")
+    TextOutput.toTextFile(chatroom1.messages.toTypedArray(),fileOutputStream);
 
 }

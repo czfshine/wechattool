@@ -7,7 +7,10 @@ import cn.czfshine.wechat.msg.MessageFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
+import java.nio.file.Path;
 import java.sql.SQLException;
 import java.util.*;
 
@@ -16,18 +19,25 @@ import java.util.*;
  * @date:2018/9/22 19:28
  */
 
-public class DataBase {
+public class DataBase implements Serializable {
 
+    private static final long serialVersionUID = 8391485975957658012L;
     private List<BaseMessage> allMessage;
     private Map<String, Chatroom> allContact;
+    private List<String> datafiles;
+
+    //database path ->msgdatabase object
+    private Map<String,MsgDataBase> msgDataBases;
+
     public DataBase(List<String> datafiles){
         logger.info("开始解析数据库：");
-        msgDataBases=new LinkedList<>();
+        this.datafiles=datafiles;
+        msgDataBases=new HashMap<>();
         for(String path:datafiles){
             try{
                 logger.info("开始解析数据库{}：",path);
                 MsgDataBase msgDataBase=readMsgDB(path);
-                msgDataBases.add(msgDataBase);
+                msgDataBases.put(path,msgDataBase);
 
             } catch (Exception e) {
                 logger.error("解析数据库{}失败：",path);
@@ -43,7 +53,6 @@ public class DataBase {
     public Map<String, Chatroom> getAllContact(){
         return allContact;
     }
-    private List<MsgDataBase> msgDataBases;
     private static  Logger logger;
     static {
         logger = LoggerFactory.getLogger("Database");
@@ -62,10 +71,11 @@ public class DataBase {
     private void MergeDatabases(){
         logger.info("开始合并数据库：");
 
+        /*
         for(MsgDataBase db : msgDataBases){
            /* msgres=MergeMessageList(msgres,db.getMessages());
-            contactMap=MergeContact(contactMap,db.getContacts());*///todo
-        }
+            contactMap=MergeContact(contactMap,db.getContacts());///todo
+        }*/
 
         allMessage= MessageFactory.listMessage();
         allContact= ChatroomFactory.getAllChatroom();
@@ -121,5 +131,21 @@ public class DataBase {
         }
         logger.info("合并会话消息，总数{},重复{}", res.size(), a.size() + b.size() - res.size());
         return res;
+    }
+
+    // database path -> save database object file path
+    private Map<String,String> savepath=new HashMap<>();
+    private void save(String path) throws IOException {
+        for (String p:datafiles
+             ) {
+            File file = new File(p);
+            String name = file.getName();
+            String s = path + File.separator + name + ".out";
+            savepath.put(p,s);
+
+            MsgDataBase msgDataBase = msgDataBases.get(p);
+            msgDataBase.save(s);
+        }
+
     }
 }

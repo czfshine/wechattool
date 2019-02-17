@@ -15,7 +15,11 @@ public interface PlainTextable {
 
     default String getHead(BaseMessage msg){
         SimpleDateFormat dateformat = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分ss秒");
-        return  String.format("%s     :",dateformat.format(msg.getTime()));
+        String remark = msg.getTalker().getRemark();
+        if(remark==null || remark.equals("")){
+            remark=msg.getTalker().getNickname();
+        }
+        return  String.format("%s     [%s]:",dateformat.format(msg.getTime()),remark);
 
     };
 }

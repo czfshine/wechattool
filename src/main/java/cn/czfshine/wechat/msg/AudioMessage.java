@@ -2,6 +2,7 @@ package cn.czfshine.wechat.msg;
 
 import cn.czfshine.wechat.database.DatabaseDamagedException;
 import cn.czfshine.wechat.database.pojo.MessageDO;
+import cn.czfshine.wechat.output.PlainTextable;
 import cn.czfshine.wechat.resources.Resources;
 
 import java.io.Serializable;
@@ -13,7 +14,7 @@ import java.sql.SQLException;
  * @date:2018/2/21 10:20
  */
 
-public class AudioMessage extends BaseMessage implements Serializable {
+public class AudioMessage extends BaseMessage implements Serializable, PlainTextable {
     //private Logger logger=LoggerFactory.getLogger("audM");
     private static final long serialVersionUID = -7734023615186363037L;
     private String audioPath;
@@ -33,5 +34,10 @@ public class AudioMessage extends BaseMessage implements Serializable {
 
     public String getAudioPath() {
         return audioPath;
+    }
+
+    @Override
+    public String toPlainText() {
+        return "[语音][路径"+audioPath+"]";
     }
 }
